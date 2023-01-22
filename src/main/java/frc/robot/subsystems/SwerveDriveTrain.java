@@ -6,8 +6,13 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.Pigeon2;
-
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 
 public class SwerveDriveTrain {
@@ -17,10 +22,16 @@ public class SwerveDriveTrain {
     private SwerveModule right_back;
     private SwerveModule left_back;
 
-    private Translation2d right_front_location = new Translation2d(0.5, 0.5);
-    private Translation2d left_front_location = new Translation2d(-0.5, 0.5);
-    private Translation2d right_back_location = new Translation2d(0.5, -0.5);
-    private Translation2d left_back_location = new Translation2d(-0.5, -0.5);
+    private Translation2d right_front_location = new Translation2d(wheel_to_center, wheel_to_center);
+    private Translation2d left_front_location = new Translation2d(-wheel_to_center, wheel_to_center);
+    private Translation2d right_back_location = new Translation2d(wheel_to_center, -wheel_to_center);
+    private Translation2d left_back_location = new Translation2d(-wheel_to_center, -wheel_to_center);
+
+    // only used for pose estimators
+    private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(right_front_location, left_front_location,
+            right_back_location, left_back_location);
+
+    private SwerveDrivePoseEstimator poseEstimator;
 
     private ADIS16448_IMU gyro;
     private Pigeon2 imu;
@@ -47,6 +58,11 @@ public class SwerveDriveTrain {
         } else {
             starting_yaw = 0;
         }
+
+        // these VecBuilders are basically how much to trust the trust state, local
+        // measurement, and vision in respectively
+        poseEstimator = new SwerveDrivePoseEstimator(new Rotation2d(starting_yaw), startingPose, kinematics,
+                VecBuilder.fill(0.05, 0.05, 0.05), VecBuilder.fill(0.05), VecBuilder.fill(0.05, 0.05, 0.05));
 
         target_angle = angle();
     }
@@ -207,6 +223,38 @@ public class SwerveDriveTrain {
         makeX();
     }
 
+    public Rotation2d getRotation() {
+        return new Rotation2d(angle());
+    }
+
+    /**
+     * Updates the position using the swerve module encoders.
+     * should be called once every loop
+     */
+    public void updatePose() {
+        var moduleStates = new SwerveModuleState[] { right_front.getState(), left_front.getState(),
+                right_back.getState(), left_back.getState() };
+        poseEstimator.update(getRotation(), moduleStates);
+    }
+
+    public Pose2d getPose() {
+        return poseEstimator.getEstimatedPosition();
+    }
+
+    public void resetPose(Pose2d pose) {
+        poseEstimator.resetPosition(pose, getRotation());
+    }
+
+    /**
+     * Call this to update the pose using vision (apriltags, tf, etc.)
+     * 
+     * @param estimatedPose the Pose2d that the robot vision thinks it is at
+     * @param timestamp when the vision data was taken (in seconds for some reason)
+     */
+    public void updatePoseWithVision(Pose2d estimatedPose, double timestamp) {
+        poseEstimator.addVisionMeasurement(startingPose, f_pivot);
+    }
+
 }
 
 class SwerveModule { // each module requires 2 Talon FX motors
@@ -221,6 +269,9 @@ class SwerveModule { // each module requires 2 Talon FX motors
     private double[] target_motion_vector = { 0, 0 };
     private double target_turning_factor = 0;
     private double[] target_overall_vector = { 0, 0 };
+
+    private double prevTime = System.nanoTime();
+    private double prevEncoderVals = driving_motor.getSelectedSensorPosition();
 
     public SwerveModule(int direction_motor_port, int driving_motor_port, Translation2d position, double tolerance_) {
         // position: relative position from the center of the circumcircle
@@ -303,6 +354,10 @@ class SwerveModule { // each module requires 2 Talon FX motors
         return normalizeAngle(direction_motor.getSelectedSensorPosition(0) / ticks_per_radian);
     }
 
+    private Rotation2d getRotation() {
+        return new Rotation2d(getAngle());
+    }
+
     private void setModule(double[] vector) {
         double magnitude_ = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
 
@@ -328,5 +383,31 @@ class SwerveModule { // each module requires 2 Talon FX motors
                 Math.abs(error) < 0.02 ? 0 : Math.max(Math.min(error * 4.0, 1), -1));
         // max power at 0.25 radians
         driving_motor.set(ControlMode.PercentOutput, Math.abs(error) < tolerance ? 0 : magnitude * negate);
+    }
+
+    public SwerveModuleState getState() {
+        return new SwerveModuleState(getSpeed(), getRotation());
+    }
+
+    private double getSpeed() {
+        double currentEncoderVal = driving_motor.getSelectedSensorPosition();
+        double currentTime = System.nanoTime();
+
+        // encoder units per nano second
+        double speed = (currentEncoderVal - prevEncoderVals) / (currentTime - prevTime);
+
+        speed *= 1_000_000_000.0; // convert to encoder units per second
+
+        speed /= 2048.0; // convert to rotations per second
+
+        speed *= 8.14; // gear ratio
+
+        speed *= 2 * wheel_radius; // convert to meters per second
+
+        prevTime = currentTime;
+        prevEncoderVals = currentEncoderVal;
+
+        return speed;
+
     }
 }

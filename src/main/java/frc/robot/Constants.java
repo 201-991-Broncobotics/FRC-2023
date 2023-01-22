@@ -1,6 +1,7 @@
 package frc.robot;
 
-import java.lang.Math;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
@@ -9,15 +10,16 @@ public final class Constants {
     public static final boolean show_data = false; // should only be true if use_pigeon2
     public static final boolean use_ADIS16448 = false;
     public static final boolean use_pigeon2 = false;
-        // only one of these should be true
+    // only one of these should be true
 
     // drivetrain
 
-    public static final double ticks_per_radian = 2048.0 * 12.8 / (2.0 * Math.PI); // 2048 ticks per revolution with a 12.8 L1 gear ratio
+    public static final double ticks_per_radian = 2048.0 * 12.8 / (2.0 * Math.PI); // 2048 ticks per revolution with a
+                                                                                   // 12.8 L1 gear ratio
 
-    public static final int rf_driving = 3, rf_direction = 2, lf_driving = 4, lf_direction = 5, 
-                            rb_driving = 0, rb_direction = 1, lb_driving = 6, lb_direction = 7; // port number
-    
+    public static final int rf_driving = 3, rf_direction = 2, lf_driving = 4, lf_direction = 5,
+            rb_driving = 0, rb_direction = 1, lb_driving = 6, lb_direction = 7; // port number
+
     public static final boolean absolute_directing = false; // can only be true if use_ADIS16448 or use_pigeon2 is true
 
     public static final int imu_port = 0; // only if using pigeon
@@ -28,9 +30,11 @@ public final class Constants {
 
     public static final int f_pivot = 0, s_pivot = 0; // port number
 
-    public static final double first_arm_initial_angle = -30; // 0 means straight horizontal, positive means counterclockwise
-    public static final double second_arm_initial_angle = 30; // 0 means straight in line with first arm, positive means counterclockwise
-                                        // both in degrees
+    public static final double first_arm_initial_angle = -30; // 0 means straight horizontal, positive means
+                                                              // counterclockwise
+    public static final double second_arm_initial_angle = 30; // 0 means straight in line with first arm, positive means
+                                                              // counterclockwise
+    // both in degrees
 
     public static final double first_arm_weight = 10; // pounds
     public static final double second_arm_weight = 16; // including the claw
@@ -40,26 +44,41 @@ public final class Constants {
 
     public static final double target_angular_speed = 30; // degrees per second
 
+    /** distance from center of robot to the center of the wheels in METERS (🤮) */
+    public static final double wheel_to_center = 0.288925;
+
+    /** radius of the wheels in METERS (🤮) */
+    public static final double wheel_radius = 0.10033 / 2;
+
+    public static final Pose2d startingPose = new Pose2d();
+
     // static functions
 
     public static double normalizeAngle(double angle) {
-        while (angle > Math.PI) { angle -= 2.0 * Math.PI; }
-        while (angle < 0 - Math.PI) { angle += 2.0 * Math.PI; }
+        while (angle > Math.PI) {
+            angle -= 2.0 * Math.PI;
+        }
+        while (angle < 0 - Math.PI) {
+            angle += 2.0 * Math.PI;
+        }
 
-        if (Math.abs(angle) > Math.PI * 0.999999) angle = Math.PI * 0.999999; // if we're at -pi, reset to positive pi
+        if (Math.abs(angle) > Math.PI * 0.999999)
+            angle = Math.PI * 0.999999; // if we're at -pi, reset to positive pi
 
         return angle;
     }
 
     public static double vectorToAngle(double[] vector) {
-        if (vector[0] == 0) vector[0] = 0.001;
-        if (vector[1] == 0) vector[1] = 0.001;
-        
+        if (vector[0] == 0)
+            vector[0] = 0.001;
+        if (vector[1] == 0)
+            vector[1] = 0.001;
+
         return Math.atan(vector[0] / vector[1]) + Math.PI * (vector[1] > 0 ? 0 : 1) * (vector[0] > 0 ? 1 : -1);
     }
 
     public static double[] angleToVector(double angle) {
-        return new double[] {Math.sin(angle), Math.cos(angle)};
+        return new double[] { Math.sin(angle), Math.cos(angle) };
     }
 
     public static void pause(double seconds) {
@@ -74,7 +93,8 @@ public final class Constants {
             throw new IllegalArgumentException("You can only use one IMU");
         }
         if ((!(use_pigeon2 || use_ADIS16448)) && (show_data || absolute_directing)) {
-            throw new IllegalArgumentException("If you're not using an IMU, you can't show your position data and you also can't do absolute direction");
+            throw new IllegalArgumentException(
+                    "If you're not using an IMU, you can't show your position data and you also can't do absolute direction");
         }
     }
 }
