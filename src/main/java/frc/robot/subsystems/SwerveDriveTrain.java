@@ -271,7 +271,7 @@ class SwerveModule { // each module requires 2 Talon FX motors
     private double[] target_overall_vector = { 0, 0 };
 
     private double prevTime = System.nanoTime();
-    private double prevEncoderVals = driving_motor.getSelectedSensorPosition();
+    private double prevEncoderVals;
 
     public SwerveModule(int direction_motor_port, int driving_motor_port, Translation2d position, double tolerance_) {
         // position: relative position from the center of the circumcircle
@@ -280,6 +280,8 @@ class SwerveModule { // each module requires 2 Talon FX motors
         direction_motor.setSelectedSensorPosition(0, 0, 0);
 
         driving_motor = new TalonFX(driving_motor_port);
+
+        prevEncoderVals =  driving_motor.getSelectedSensorPosition(); 
 
         direction_motor.setNeutralMode(NeutralMode.Brake);
         driving_motor.setNeutralMode(NeutralMode.Brake);
@@ -400,7 +402,7 @@ class SwerveModule { // each module requires 2 Talon FX motors
 
         speed /= 2048.0; // convert to rotations per second
 
-        speed *= 8.14; // gear ratio
+        speed /= 8.14; // gear ratio
 
         speed *= 2 * wheel_radius; // convert to meters per second
 
