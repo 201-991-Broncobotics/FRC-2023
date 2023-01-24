@@ -1,16 +1,22 @@
-package frc.robot;
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
 
+package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Odometry;
-
+//import edu.wpi.first.wpilibj2.command.Command;
+//import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.SwerveDriveTrain;
 
 import static frc.robot.Constants.*;
 
 public class Robot extends TimedRobot {
+  //private Command m_autonomousCommand;
+  //private RobotContainer m_robotContainer;
 
   private SwerveDriveTrain swerve;
   private XboxController driver;
@@ -18,13 +24,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    //m_robotContainer = new RobotContainer();
     swerve = new SwerveDriveTrain();
     odom = new Odometry();
   }
 
   @Override
-  public void robotPeriodic() {
+  public void robotPeriodic() { //autonomous command OR all non-driving teleOp Commands
     odom.update();
+    //CommandScheduler.getInstance().run();
     if (show_data) {
       double[][] temp = swerve.getWheelData();
       SmartDashboard.putNumber("angle", swerve.angle());
@@ -41,7 +49,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    // note these will only work if we have imu
+    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    //if (m_autonomousCommand != null) {
+    //  m_autonomousCommand.schedule();
+    //}
     swerve.turnClockwise(45);
     pause(0.5);
     swerve.turnToDegree(-90);
@@ -57,6 +69,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     driver = new XboxController(0);
+;    //if (m_autonomousCommand != null) {
+    //  m_autonomousCommand.cancel();
+    //}
   }
 
   @Override

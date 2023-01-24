@@ -21,19 +21,17 @@ public class Odometry {
 
     private double angle;
     private final double starting_angle;
+    
     private ADIS16448_IMU gyro;
 
     private Pigeon2 imu;
-    private double[] quaternion = new double[4];
 
     public Odometry() {
         if (use_pigeon2) {
             imu = new Pigeon2(0);
-            imu.get6dQuaternion(quaternion);
             starting_angle = imu.getYaw(); // .getRoll(), .getPitch() or .getYaw()
         } else if (use_ADIS16448) {
             gyro = new ADIS16448_IMU();
-                
             starting_angle = gyro.getAngle() * Math.PI / 180.0; // .getGyroAngleX(), .getGyroAngleY(), .getGyroAngleZ()
             // don't calibrate or reset because we do that in SwerveDriveTrain, and we define this after our SwerveDriveTrain
         } else {
@@ -44,29 +42,15 @@ public class Odometry {
     }
 
     public double[] getPosition() {
-        if (use_pigeon2) {
-            update(); // for the ADIS16448 it will mess up if we update here
-            return new double[] {
-                quaternion[0], quaternion[1], quaternion[2], quaternion[3], angle
-            };
-        } else if (use_ADIS16448) {
-            return new double[] {
-                previous_three_x_positions[2], 
-                previous_three_y_positions[2], 
-                angle
-            };
-        } else {
-            return new double[] {
-                0, 0, 0 // nothing happens... lol
-            };
-        }
+        return new double[] {
+            previous_three_x_positions[2], 
+            previous_three_y_positions[2], 
+            angle
+        };
     }
 
     public void update() {
-        if (use_pigeon2) {
-            angle = angle();
-            imu.get6dQuaternion(quaternion);
-        } else if (use_ADIS16448) {
+        if (use_pigeon2 || use_ADIS16448) {
             double[] XYAccel = getXYAccel(); // first is X accel, second is Y accel
             // angle also updates
 
@@ -148,10 +132,21 @@ public class Odometry {
             // "X" : Forward
             // "Y" : Sideways (right is positive)
         angle = angle();
-        return new double[] {
-            gyro.getAccelX() * Math.sin(angle) + gyro.getAccelY() * Math.cos(angle), 
-            gyro.getAccelX() * Math.cos(angle) - gyro.getAccelY() * Math.sin(angle)
-        };
+        if (use_pigeon2) {
+            short[] acc = new short[3];
+            imu.getBiasedAccelerometer(acc);
+            return new double[] {
+                acc[0] * Math.sin(angle) + acc[1] * Math.cos(angle), 
+                acc[0] * Math.cos(angle) - acc[1] * Math.sin(angle)
+            };
+        } else if (use_ADIS16448) {
+            return new double[] {
+                gyro.getAccelX() * Math.sin(angle) + gyro.getAccelY() * Math.cos(angle), 
+                gyro.getAccelX() * Math.cos(angle) - gyro.getAccelY() * Math.sin(angle)
+            };
+        } else {
+            return new double[] {0, 0};
+        }
     }
 
     /* function: (both are the same)

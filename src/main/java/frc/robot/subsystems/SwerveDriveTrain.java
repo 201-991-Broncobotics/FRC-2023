@@ -17,10 +17,7 @@ import edu.wpi.first.wpilibj.ADIS16448_IMU;
 
 public class SwerveDriveTrain {
 
-    private SwerveModule right_front;
-    private SwerveModule left_front;
-    private SwerveModule right_back;
-    private SwerveModule left_back;
+    private SwerveModule[] wheels; // RF, LF, RB, LB
 
     private Translation2d right_front_location = new Translation2d(wheel_to_center, wheel_to_center);
     private Translation2d left_front_location = new Translation2d(-wheel_to_center, wheel_to_center);
@@ -40,21 +37,24 @@ public class SwerveDriveTrain {
     private double target_angle;
 
     public SwerveDriveTrain() {
-        right_front = new SwerveModule(rf_direction, rf_driving, right_front_location, 25);
-        left_front = new SwerveModule(lf_direction, lf_driving, left_front_location, 25);
-        right_back = new SwerveModule(rb_direction, rb_driving, right_back_location, 25);
-        left_back = new SwerveModule(lb_direction, lb_driving, left_back_location, 25);
+
+        wheels = new SwerveModule[] {
+                new SwerveModule(rf_direction, rf_driving, right_front_location),
+                new SwerveModule(lf_direction, lf_driving, left_front_location),
+                new SwerveModule(rb_direction, rb_driving, right_back_location),
+                new SwerveModule(lb_direction, lb_driving, left_back_location)
+        };
 
         if (use_pigeon2) {
             imu = new Pigeon2(imu_port);
             imu.addYaw(0 - imu.getYaw());
-            starting_yaw = imu.getYaw(); // also .getRoll(), .getPitch() or .getYaw()
+            starting_yaw = imu.getYaw() * Math.PI / 180.0; // .getRoll(), .getPitch() or .getYaw()
         } else if (use_ADIS16448) {
             gyro = new ADIS16448_IMU();
             gyro.calibrate();
             gyro.reset();
-            starting_yaw = gyro.getAngle() * Math.PI / 180.0; // it goes in degrees which is kinda stupid but who cares
-            // also .getAngle(), .getGyroAngleX(), .getGyroAngleY(), or .getGyroAngleZ()
+            starting_yaw = gyro.getAngle() * Math.PI / 180.0;
+            // .getAngle(), .getGyroAngleX(), .getGyroAngleY(), or .getGyroAngleZ()
         } else {
             starting_yaw = 0;
         }
@@ -68,10 +68,10 @@ public class SwerveDriveTrain {
     }
 
     public double angle() {
-        if (use_pigeon2) {
-            return normalizeAngle(starting_yaw - imu.getYaw() * Math.PI / 180.0);
+        if (use_pigeon2) { // clockwise increases angle() and yaw
+            return normalizeAngle(imu.getYaw() * Math.PI / 180.0 - starting_yaw);
         } else if (use_ADIS16448) {
-            return normalizeAngle(starting_yaw - gyro.getAngle() * Math.PI / 180.0);
+            return normalizeAngle(gyro.getAngle() * Math.PI / 180.0 - starting_yaw);
         } else {
             return 0; // robot acts as if it's always pointing straight ahead
         }
@@ -79,7 +79,7 @@ public class SwerveDriveTrain {
 
     public double[][] getWheelData() {
         return new double[][] {
-                right_front.getTargets(), left_front.getTargets(), right_back.getTargets(), left_back.getTargets()
+                wheels[0].getTargets(), wheels[1].getTargets(), wheels[2].getTargets(), wheels[3].getTargets()
         };
     }
 
@@ -93,92 +93,97 @@ public class SwerveDriveTrain {
             return;
         }
 
-        double mgn = Math.sqrt(left_stick_x * left_stick_x + left_stick_y * left_stick_y);
-        double mgn2 = Math.sqrt(right_stick_x * right_stick_x + right_stick_y * right_stick_y);
+        double left_stick_magnitude = Math.sqrt(left_stick_x * left_stick_x + left_stick_y * left_stick_y);
+        double right_stick_magnitude = Math.sqrt(right_stick_x * right_stick_x + right_stick_y * right_stick_y);
 
-        if (mgn < 0.2 && mgn2 < 0.2) {
+        if (left_stick_magnitude < joystick_deadzone) {
+            left_stick_magnitude = 0;
+        }
+        if (right_stick_magnitude < joystick_deadzone) {
+            right_stick_magnitude = 0;
+            right_stick_x = 0;
+        }
+
+        if (left_stick_magnitude == 0 && right_stick_magnitude == 0) { // both sticks are in dead zones, so we don't do
+                                                                       // anything
             double error = normalizeAngle(target_angle - angle());
-            if (Math.abs(error) < 0.02) {
+
+            if (Math.abs(error) < 0.02) { // if we are close enough to our target then brake
                 brake();
                 return;
             }
-            double[] strafevector = { 0, 0 };
+
+            double[] strafevector = { 0, 0 }; // otherwise we try to turn toward the target
             double turningfactor = Math.max(Math.min(error * 4.0, 1), -1);
             drive(strafevector, turningfactor, 1);
             return;
         }
 
-        double left_stick_angle = vectorToAngle(new double[] { left_stick_x, left_stick_y });
-        double strafe_angle = normalizeAngle(left_stick_angle - angle());
-        double[] strafevector = angleToVector(strafe_angle);
-        strafevector[0] *= mgn;
-        strafevector[1] *= mgn;
+        double[] strafevector = angleToVector(
+                normalizeAngle(vectorToAngle(new double[] { left_stick_x, left_stick_y }) - angle()));
+        strafevector[0] *= left_stick_magnitude;
+        strafevector[1] *= left_stick_magnitude; // this handles it if left joystick is within the dead zone
+
         double turning_factor;
 
         if (absolute_directing) {
-            double right_stick_angle = vectorToAngle(new double[] { right_stick_x, right_stick_y });
-            double error = normalizeAngle(right_stick_angle - angle());
-            turning_factor = Math.max(Math.min(error * 4.0, 1), -1) * (mgn2 > 0.2 ? mgn2 : 0);
+            turning_factor = Math
+                    .max(Math.min(normalizeAngle(vectorToAngle(new double[] { right_stick_x, right_stick_y }) - angle())
+                            * directing_sensitivity, 1), -1)
+                    * right_stick_magnitude;
             // if the right button isn't pressed we don't want to turn
         } else {
-            turning_factor = (mgn2 > 0.2 ? right_stick_x : 0);
+            turning_factor = right_stick_x;
         }
 
         if (turning_factor == 0) {
-            double error = normalizeAngle(target_angle - angle());
-            turning_factor = Math.max(Math.min(error * 4.0, 1), -1);
+            turning_factor = Math.max(Math.min(normalizeAngle(target_angle - angle()) * directing_sensitivity, 1), -1);
         } else {
             target_angle = angle();
         }
 
-        double multiplier = Math.min(speed_factor, 1) / Math.max(Math.max(
-                Math.max(right_front.calculateTotalPower(strafevector, turning_factor),
-                        left_front.calculateTotalPower(strafevector, turning_factor)),
-                Math.max(right_back.calculateTotalPower(strafevector, turning_factor),
-                        left_back.calculateTotalPower(strafevector, turning_factor))),
-                1.0);
+        double multiplier = Math.min(speed_factor, 1) / Math.sqrt(Math.max(Math.max(
+                Math.max(wheels[0].calculateSquaredPower(strafevector, turning_factor),
+                        wheels[1].calculateSquaredPower(strafevector, turning_factor)),
+                Math.max(wheels[2].calculateSquaredPower(strafevector, turning_factor),
+                        wheels[3].calculateSquaredPower(strafevector, turning_factor))),
+                1.0));
         drive(strafevector, turning_factor, multiplier);
     }
 
     public void makeX() {
-        right_front.makeX();
-        left_front.makeX();
-        right_back.makeX();
-        left_back.makeX();
+        for (int i = 0; i < 4; i++) {
+            wheels[i].makeX();
+        }
     }
 
     public void brake() {
-        right_front.brake();
-        left_front.brake();
-        right_back.brake();
-        left_back.brake();
+        for (int i = 0; i < 4; i++) {
+            wheels[i].brake();
+        }
     }
 
     private void drive(double[] strafevector, double turningfactor, double multiplier) {
-        right_front.drive(strafevector, turningfactor, multiplier);
-        left_front.drive(strafevector, turningfactor, multiplier);
-        right_back.drive(strafevector, turningfactor, multiplier);
-        left_back.drive(strafevector, turningfactor, multiplier);
+        for (int i = 0; i < 4; i++) {
+            wheels[i].drive(strafevector, turningfactor, multiplier);
+        }
     }
 
     // Autonomous
 
-    public void turnClockwise(double degrees) {
+    public void turnClockwise(double degrees) { // we can make this negative to turn clockwise
         turnToDegree(angle() * 180 / Math.PI + degrees);
     }
 
-    public void turnToDegree(double degrees) {
+    public void turnToDegree(double degrees) { // we can make this negative as well
+        // note that this doesn't do optimized direction, but it will always turn less
+        // than 180 degrees
         double target_angle = normalizeAngle(degrees * Math.PI / 180.0);
-        double[] strafevector = { 0, 0 };
 
-        drive(strafevector, 0, 0.001);
-
-        pause(0.5);
-
-        while (Math.abs(normalizeAngle(target_angle - angle())) > 0.05) { // 2.8 degrees
-            double error = normalizeAngle(target_angle - angle());
-            double turningfactor = Math.max(Math.min(error * 4.0, 1), -1);
-            drive(strafevector, turningfactor, 1);
+        double error = normalizeAngle(target_angle - angle());
+        while (error > 0.05) { // 2.8 degrees
+            error = normalizeAngle(target_angle - angle());
+            drive(new double[] { 0, 0 }, Math.max(Math.min(error * directing_sensitivity, 1), -1), 1);
         }
 
         brake();
@@ -193,14 +198,20 @@ public class SwerveDriveTrain {
     }
 
     public void strafe(double[] vector, double power) {
-        double angle = normalizeAngle(vectorToAngle(vector) - angle());
-        double[] strafevector = angleToVector(angle);
-        drive(strafevector, 0, 0.001);
+        double start_time = System.nanoTime() / 1000000000.0;
 
-        pause(0.5);
+        while (System.nanoTime() / 1000000000.0 < start_time + 0.1) {
+            drive(angleToVector(normalizeAngle(vectorToAngle(vector) - angle())), 0, 0.01); // turn the wheels to our
+                                                                                            // target position first
+        }
+        brake();
 
-        drive(strafevector, 0, power);
+        pause(0.1);
+
+        drive(angleToVector(normalizeAngle(vectorToAngle(vector) - angle())), 0, power);
     } // what we can do is have the drive function stop once we cross a specific limit
+
+    // Game-Specific Commands
 
     public void autoBalance() {
         turnToDegree(0); // point straight ahead
@@ -211,7 +222,7 @@ public class SwerveDriveTrain {
             if (use_pigeon2) {
                 error = imu.getRoll();
             } else {
-                error = gyro.getGyroAngleX(); // I *think* this is roll but I don't know for sure
+                error = gyro.getGyroAngleX(); // I think this is roll but I don't know for sure
             }
             if (Math.abs(error) > 1.5) { // if we are more than 1.5 degrees off
                 drive(new double[] { 0, 1.0 }, 0, 0.1 * error / Math.abs(error)); // go forward or backward depending on
@@ -220,7 +231,12 @@ public class SwerveDriveTrain {
                 run = false;
             }
         }
-        makeX();
+
+        double start_time = System.nanoTime() / 1000000000.0;
+        while (System.nanoTime() / 1000000000.0 < start_time + 0.5) {
+            makeX();
+        }
+        brake();
     }
 
     public Rotation2d getRotation() {
@@ -232,8 +248,12 @@ public class SwerveDriveTrain {
      * should be called once every loop
      */
     public void updatePose() {
-        var moduleStates = new SwerveModuleState[] { right_front.getState(), left_front.getState(),
-                right_back.getState(), left_back.getState() };
+        var moduleStates = new SwerveModuleState[4];
+
+        for (int i = 0; i < 4; i++) {
+            moduleStates[i] = wheels[i].getState();
+        }
+
         poseEstimator.update(getRotation(), moduleStates);
     }
 
@@ -249,12 +269,12 @@ public class SwerveDriveTrain {
      * Call this to update the pose using vision (apriltags, tf, etc.)
      * 
      * @param estimatedPose the Pose2d that the robot vision thinks it is at
-     * @param timestamp when the vision data was taken (in seconds for some reason)
+     * @param timestamp     when the vision data was taken (in seconds for some
+     *                      reason)
      */
     public void updatePoseWithVision(Pose2d estimatedPose, double timestamp) {
         poseEstimator.addVisionMeasurement(startingPose, f_pivot);
     }
-
 }
 
 class SwerveModule { // each module requires 2 Talon FX motors
@@ -264,8 +284,7 @@ class SwerveModule { // each module requires 2 Talon FX motors
 
     private final double x_;
     private final double y_;
-    private final double tolerance;
-
+    private final double tolerance = max_error * Math.PI / 180.0;
     private double[] target_motion_vector = { 0, 0 };
     private double target_turning_factor = 0;
     private double[] target_overall_vector = { 0, 0 };
@@ -273,7 +292,7 @@ class SwerveModule { // each module requires 2 Talon FX motors
     private double prevTime = System.nanoTime();
     private double prevEncoderVals;
 
-    public SwerveModule(int direction_motor_port, int driving_motor_port, Translation2d position, double tolerance_) {
+    public SwerveModule(int direction_motor_port, int driving_motor_port, Translation2d position) {
         // position: relative position from the center of the circumcircle
         // units don't matter, they just have to be consistent
         direction_motor = new TalonFX(direction_motor_port);
@@ -281,7 +300,7 @@ class SwerveModule { // each module requires 2 Talon FX motors
 
         driving_motor = new TalonFX(driving_motor_port);
 
-        prevEncoderVals =  driving_motor.getSelectedSensorPosition(); 
+        prevEncoderVals = driving_motor.getSelectedSensorPosition();
 
         direction_motor.setNeutralMode(NeutralMode.Brake);
         driving_motor.setNeutralMode(NeutralMode.Brake);
@@ -293,14 +312,12 @@ class SwerveModule { // each module requires 2 Talon FX motors
 
         x_ = position.getY() / radius; // ex, (1, 2) --> (2, -1); clockwise rotation
         y_ = 0 - position.getX() / radius;
-
-        tolerance = tolerance_ * Math.PI / 180.0;
     }
 
-    public double calculateTotalPower(double[] strafevector, double turnfactor) {
+    public double calculateSquaredPower(double[] strafevector, double turnfactor) {
         double x = strafevector[0] + turnfactor * x_; // positive turnfactor -> rotate clockwise
         double y = strafevector[1] + turnfactor * y_;
-        return Math.sqrt(x * x + y * y);
+        return x * x + y * y;
     }
 
     public void drive(double[] strafevector, double turnfactor, double multiplier) {
@@ -314,7 +331,7 @@ class SwerveModule { // each module requires 2 Talon FX motors
         target_overall_vector[0] = vector[0];
         target_overall_vector[1] = vector[1];
 
-        setModule(vector);
+        setModule(vectorToAngle(vector), Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]));
     }
 
     public void brake() {
@@ -335,14 +352,19 @@ class SwerveModule { // each module requires 2 Talon FX motors
 
         if (Math.abs(error) > Math.PI / 2.0)
             error += Math.PI * (error > 0 ? -1 : 1);
+        if (Math.abs(error) > Math.PI / 2.0)
+            error += Math.PI * (error > 0 ? -1 : 1);
+        if (Math.abs(error) < 0.02)
+            error = 0;
 
         direction_motor.set(ControlMode.PercentOutput,
                 Math.abs(error) < 0.02 ? 0 : Math.max(Math.min(error * 4.0, 1), -1));
+        direction_motor.set(ControlMode.PercentOutput, Math.max(Math.min(error * directing_motor_sensitivity, 1), -1));
         driving_motor.set(ControlMode.PercentOutput, 0);
 
         target_motion_vector[0] = 0;
         target_motion_vector[1] = 0;
-        target_turning_factor = error * 4.0;
+        target_turning_factor = 0;
         target_overall_vector[0] = -y_;
         target_overall_vector[1] = x_;
     }
@@ -360,31 +382,27 @@ class SwerveModule { // each module requires 2 Talon FX motors
         return new Rotation2d(getAngle());
     }
 
-    private void setModule(double[] vector) {
-        double magnitude_ = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
-
-        if (magnitude_ == 0) {
-            brake();
-            return;
-        }
-
-        setModule(vectorToAngle(vector), magnitude_);
-    }
-
     private void setModule(double angle, double magnitude) {
         double error = normalizeAngle(angle - getAngle()); // power the wheel forward if error > 0
 
         int negate = 1;
 
         if (Math.abs(error) > Math.PI / 2.0) { // if we're more than 90 degrees away, invert angle and power
-            negate = -1;
-            error += Math.PI * (error > 0 ? -1 : 1);
-        }
+            if (Math.abs(error) > Math.PI / 2.0) { // if we're more than 90 degrees away, invert angle and power
+                negate = -1;
+                error += Math.PI * (error > 0 ? -1 : 1);
+            }
+            if (Math.abs(error) < 0.02) {
+                error = 0;
+            }
 
-        direction_motor.set(ControlMode.PercentOutput,
-                Math.abs(error) < 0.02 ? 0 : Math.max(Math.min(error * 4.0, 1), -1));
-        // max power at 0.25 radians
-        driving_motor.set(ControlMode.PercentOutput, Math.abs(error) < tolerance ? 0 : magnitude * negate);
+            direction_motor.set(ControlMode.PercentOutput,
+                    Math.abs(error) < 0.02 ? 0 : Math.max(Math.min(error * 4.0, 1), -1));
+            // max power at 0.25 radians
+            direction_motor.set(ControlMode.PercentOutput,
+                    Math.max(Math.min(error * directing_motor_sensitivity, 1), -1));
+            driving_motor.set(ControlMode.PercentOutput, Math.abs(error) < tolerance ? 0 : magnitude * negate);
+        }
     }
 
     public SwerveModuleState getState() {
