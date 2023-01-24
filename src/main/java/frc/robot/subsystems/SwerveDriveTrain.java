@@ -422,7 +422,7 @@ class SwerveModule { // each module requires 2 Talon FX motors
 
         speed /= 8.14; // gear ratio
 
-        speed *= 2 * wheel_radius; // convert to meters per second
+        speed *= 2 * Math.PI * wheel_radius; // convert to meters per second
 
         prevTime = currentTime;
         prevEncoderVals = currentEncoderVal;
