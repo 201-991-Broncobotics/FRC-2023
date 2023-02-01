@@ -35,8 +35,18 @@ public class RobotContainer {
     private final Swerve s_Swerve = new Swerve();
 
     private double target_heading = s_Swerve.getYaw().getDegrees();
-    private final double rc_p = 0.025;
     private final double cappppping = 0.4;
+    private final double max_error = 10; // anything greater than this will go to capping power
+
+    private final double calibration_time = 0.5; // in seconds
+    private double last_time = System.currentTimeMillis();
+
+    public double errorToDouble(double error_in_percent) { // ex. if we are 3* off and 30* is max error, we get 0.1
+        // error_in_percent will always be positive (not zero or negative)
+        return Math.pow(error_in_percent, 1);
+        // make sure this is always between 0 and 1
+        // basic p control --> return error_in_percent;
+    }
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -59,9 +69,23 @@ public class RobotContainer {
         double current_angle = s_Swerve.getYaw().getDegrees();
         if (Math.abs(turning) > 0.1) {
             target_heading = current_angle;
+            last_time = System.currentTimeMillis();
             return turning;
         }
-        return Math.max(Math.min((target_heading - current_angle) * rc_p, cappppping), -cappppping);
+        if (System.currentTimeMillis() - last_time < calibration_time * 1000) {
+            target_heading = current_angle;
+            return 0;
+        }
+        double error_in_percent = Math.max(Math.min((target_heading - current_angle) / max_error, 1), -1);
+        if (error_in_percent == 0) {
+            return 0;
+        }
+        int multiplier = 1;
+        if (error_in_percent < 0) {
+            error_in_percent = 0 - error_in_percent;
+            multiplier = -1;
+        }
+        return errorToDouble(error_in_percent) * cappppping * multiplier;
     }
 
     /**
