@@ -88,6 +88,11 @@ public class RobotContainer {
         return errorToDouble(error_in_percent) * cappppping * multiplier;
     }
 
+    public void resetGyro(){
+        s_Swerve.zeroGyro();
+        target_heading = s_Swerve.getYaw().getDegrees(); // should be 0 but just to be safe :)
+    }
+
     /**
      * Use this method to define your button->command mappings. Buttons can be created by
      * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -96,7 +101,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        zeroGyro.onTrue(new InstantCommand(() -> resetGyro()));
     }
 
     /**
