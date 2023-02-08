@@ -11,6 +11,7 @@ import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import java.util.function.DoubleSupplier;
+import java.util.function.IntSupplier;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,6 +31,8 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+
+    private final IntSupplier pov = () -> driver.getPOV();
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -76,6 +79,9 @@ public class RobotContainer {
             target_heading = current_angle;
             return 0;
         }
+        if (pov.getAsInt() != -1) {
+            target_heading = 0 - pov.getAsInt();
+        }
         double error_in_percent = Math.max(Math.min((target_heading - current_angle) / max_error, 1), -1);
         if (error_in_percent == 0) {
             return 0;
@@ -102,6 +108,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> resetGyro()));
+
     }
 
     /**
