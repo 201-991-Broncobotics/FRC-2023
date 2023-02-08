@@ -34,7 +34,7 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
 
-    private double target_heading = s_Swerve.getYaw().getDegrees();
+    private double target_heading = 0; // s_Swerve resets the imu
     private final double cappppping = 0.4;
     private final double max_error = 10; // anything greater than this will go to capping power
 
@@ -90,7 +90,7 @@ public class RobotContainer {
 
     public void resetGyro(){
         s_Swerve.zeroGyro();
-        target_heading = s_Swerve.getYaw().getDegrees(); // should be 0 but just to be safe :)
+        target_heading = 0; // should be 0 but just to be safe :)
     }
 
     /**
