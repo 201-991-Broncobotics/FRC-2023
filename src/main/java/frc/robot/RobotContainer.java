@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -39,15 +40,15 @@ public class RobotContainer {
 
     // codding
     private double target_heading = 0; // s_Swerve resets the imu
-    private final double cappppping = 0.7;
-    private final double max_error = 60; // anything greater than this will go to capping power
+    private final double cappppping = 0.6;
+    private final double max_error = 50; // anything greater than this will go to capping power
 
     private final double calibration_time = 0.5; // in seconds
     private double last_time = System.currentTimeMillis();
 
     public double errorToDouble(double error_in_percent) { // ex. if we are 3* off and 30* is max error, we get 0.1
         // error_in_percent will always be positive (not zero or negative)
-        return Math.pow(error_in_percent, 0.9);
+        return Math.pow(error_in_percent, 0.5);
         // make sure this is always between 0 and 1
         // basic p control --> return error_in_percent;
     }
@@ -99,6 +100,7 @@ public class RobotContainer {
             error_in_percent = 0 - error_in_percent;
             multiplier = -1;
         }
+        SmartDashboard.putNumber("eip", error_in_percent);
         return errorToDouble(error_in_percent) * cappppping * multiplier;
     }
 
