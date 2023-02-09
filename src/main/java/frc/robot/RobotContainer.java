@@ -32,11 +32,12 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
-    private final IntSupplier pov = () -> driver.getPOV();
+    private final IntSupplier pov = () -> 0 - driver.getPOV();
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
 
+    // codding
     private double target_heading = 0; // s_Swerve resets the imu
     private final double cappppping = 0.4;
     private final double max_error = 10; // anything greater than this will go to capping power
@@ -79,8 +80,8 @@ public class RobotContainer {
             target_heading = current_angle;
             return 0;
         }
-        if (pov.getAsInt() != -1) {
-            target_heading = 0 - pov.getAsInt();
+        if (pov.getAsInt() % 90 == 0) {
+            target_heading += (pov.getAsInt() - ((int) target_heading) + 180) % 360 - 180;
         }
         double error_in_percent = Math.max(Math.min((target_heading - current_angle) / max_error, 1), -1);
         if (error_in_percent == 0) {

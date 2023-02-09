@@ -145,4 +145,36 @@ public final class Constants {
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
+
+    public static final class DoubleArm {
+        public static final double joystick_deadzone = 0.2;
+
+        public static final double arm_sensitivity = 5; // inches per second for arm
+
+        public static final double min_x = 10, min_y = -45; 
+                // inches
+        
+        public static final double clipping_one = 1.1, clipping_two = 0.9; // first should be > 1, second should be < 1
+    
+        public static final double first_arm_length = 32, second_arm_length = 20; // inches
+    
+        public static final int first_motor_ID = 0, second_motor_ID = 0; // IDs
+    
+        public static final double first_encoder_zero = 1239, second_encoder_zero = -1247; // can be negative
+                    // encoder reading when both arms are straight ahead; can be negative
+    
+        public static final double switching_angle = -90; // always concave down
+    
+        public static final double first_motor_max_power = 1.0, second_motor_max_power = 1.0;
+    
+        public static final double first_motor_min_error = 1.0, second_motor_min_error = 1.0;
+    
+        public static final double first_motor_max_error = 15.0, second_motor_max_error = 15.0;
+    
+        public static final double k_exponent = 1.5; // 1.0 for a normal PID
+    
+        public static final int first_encoder_channel_A = 0, first_encoder_channel_B = 0, second_encoder_channel_A = 0, second_encoder_channel_B = 0;
+    
+        public static final boolean invert_first_motor = false, invert_second_motor = false, invert_first_encoder = false, invert_second_encoder = false;
+    }
 }
