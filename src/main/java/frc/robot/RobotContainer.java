@@ -39,15 +39,15 @@ public class RobotContainer {
 
     // codding
     private double target_heading = 0; // s_Swerve resets the imu
-    private final double cappppping = 0.4;
-    private final double max_error = 10; // anything greater than this will go to capping power
+    private final double cappppping = 0.7;
+    private final double max_error = 60; // anything greater than this will go to capping power
 
     private final double calibration_time = 0.5; // in seconds
     private double last_time = System.currentTimeMillis();
 
     public double errorToDouble(double error_in_percent) { // ex. if we are 3* off and 30* is max error, we get 0.1
         // error_in_percent will always be positive (not zero or negative)
-        return Math.pow(error_in_percent, 1);
+        return Math.pow(error_in_percent, 0.9);
         // make sure this is always between 0 and 1
         // basic p control --> return error_in_percent;
     }
@@ -68,6 +68,13 @@ public class RobotContainer {
         configureButtonBindings();
     }
 
+    public static double normalizeAngle(double angle) {
+        while (angle > 180) { angle -= 360; }
+        while (angle <= -180) { angle += 360; }
+
+        return angle;
+    }
+
     public double getTurning(DoubleSupplier con_turn) {
         double turning = con_turn.getAsDouble();
         double current_angle = s_Swerve.getYaw().getDegrees();
@@ -81,7 +88,7 @@ public class RobotContainer {
             return 0;
         }
         if (pov.getAsInt() % 90 == 0) {
-            target_heading += (pov.getAsInt() - ((int) target_heading) + 180) % 360 - 180;
+            target_heading = normalizeAngle(pov.getAsInt() - current_angle) + current_angle;
         }
         double error_in_percent = Math.max(Math.min((target_heading - current_angle) / max_error, 1), -1);
         if (error_in_percent == 0) {

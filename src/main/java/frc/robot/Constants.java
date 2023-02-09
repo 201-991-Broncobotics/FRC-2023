@@ -160,7 +160,7 @@ public final class Constants {
     
         public static final int first_motor_ID = 0, second_motor_ID = 0; // IDs
     
-        public static final double first_encoder_zero = 1239, second_encoder_zero = -1247; // can be negative
+        public static final double first_encoder_zero = 90, second_encoder_zero = -170; // can be negative
                     // encoder reading when both arms are straight ahead; can be negative
     
         public static final double switching_angle = -90; // always concave down
