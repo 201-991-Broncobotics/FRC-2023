@@ -64,7 +64,7 @@ public class Swerve extends SubsystemBase {
         if (rotation == 0) {
             if (System.currentTimeMillis() - last_time < calibration_time * 1000) {
                 target_heading = current_heading;
-            } else if (Math.abs(target_heading - current_heading) > 0.1) {
+            } else if (Math.abs(target_heading - current_heading) > tolerance) {
                 double error_in_percent = Math.max(Math.min((target_heading - current_heading) / maximum_error, 1), -1);
                 int multiplier = 1;
                 if (error_in_percent < 0) {
@@ -72,6 +72,8 @@ public class Swerve extends SubsystemBase {
                     multiplier = -1;
                 }
                 rotation = Math.pow(error_in_percent, exponent) * maximum_power * multiplier * Constants.BaseFalconSwerve.maxAngularVelocity;
+            } else {
+                rotation = translation.getNorm() * correction;
             }
         } else {
             target_heading = current_heading;

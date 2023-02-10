@@ -54,6 +54,10 @@ public class Limelight {
         SmartDashboard.putNumber("Robot Heading", vals[1]);
         SmartDashboard.putNumber("Robot x", vals[2]);
         SmartDashboard.putNumber("Robot z", vals[3]);
+        
+        SmartDashboard.putNumberArray("April Tag IDs?????", NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDoubleArray(new double[6]));
+        
+        SmartDashboard.putNumber("Maybe its supposed to be an integer tho", NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDouble(0));
     }
 
     public static void setPipeline(int number) {
