@@ -40,8 +40,10 @@ public class RobotContainer {
 
     // codding
     private double target_heading = 0; // s_Swerve resets the imu
-    private final double cappppping = 0.6;
-    private final double max_error = 50; // anything greater than this will go to capping power
+    private final double cappppping = 0.8;
+    private final double max_error = 70; // anything greater than this will go to capping power
+
+    // best tuned so far: 0.6 as cappppping, 50 as max_error, 0.5 as exponent
 
     private final double calibration_time = 0.5; // in seconds
     private double last_time = System.currentTimeMillis();
@@ -118,6 +120,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> resetGyro()));
+        (new JoystickButton(driver, XboxController.Button.kA.value)).toggleOnTrue(new AlignWithApriltag(s_Swerve));
 
     }
 

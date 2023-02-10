@@ -38,7 +38,7 @@ public class Limelight {
         turnOffLED();
     }
 
-    private static double[] getData() {
+    public static double[] getData() {
         if (tv.getAsDouble() == 0) return new double[] {-12, -12, -12, -12};
         return new double[] {
             tid.getAsDouble(), 
