@@ -20,6 +20,8 @@ public class AlignWithApriltag extends CommandBase {
     public void execute() {
         if (Limelight.getData()[0] == -12) return;
         SmartDashboard.putNumberArray("yeah", Limelight.getData());
+        SmartDashboard.putNumber("target turning", Math.max(Math.min(Limelight.getData()[1] * 0.1, 0.3), -0.3));
+        SmartDashboard.putNumber("target strafing", Math.max(Math.min(Limelight.getData()[2] * 3, 0.3), -0.3));
         if (Math.abs(Limelight.getData()[1]) >= 3) { // turn, maximally if off by 30 degrees
             swerve.drive(new Translation2d(0, 0), Math.max(Math.min(Limelight.getData()[1] * 0.1, 0.3), -0.3) * Constants.BaseFalconSwerve.maxAngularVelocity, false, true);
         } else { // strafe, maximally at 10 cm away
