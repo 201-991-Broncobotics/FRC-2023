@@ -20,18 +20,24 @@ public class AlignWithApriltag extends CommandBase {
     public void execute() {
         if (Limelight.getData()[0] == -12) return;
         if (Math.abs(Limelight.getData()[1]) >= 3) { // turn, maximally if off by 30 degrees
-            swerve.drive(new Translation2d(0, 0), Math.max(Math.min(Limelight.getData()[1] * 0.1, 0.3), -0.3) * Constants.BaseFalconSwerve.maxAngularVelocity, false, false);
+            swerve.drive(new Translation2d(0, 0), Math.max(Math.min(Limelight.getData()[1] * 0.1, 0.3), -0.3) * Constants.BaseFalconSwerve.maxAngularVelocity, false, true);
         } else { // strafe, maximally at 10 cm away
-            swerve.drive(new Translation2d(Math.max(Math.min(Limelight.getData()[2] * 3, 0.3), -0.3), 0).times(Constants.BaseFalconSwerve.maxSpeed), 0, false, false);
+            swerve.drive(new Translation2d(Math.max(Math.min(Limelight.getData()[2] * 3, 0.3), -0.3), 0).times(Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
         }
     }
 
     @Override
     public boolean isFinished() {
+        boolean returner = false;
         if (Limelight.getData()[0] == -12) {
             SmartDashboard.putNumber("detected tag", Limelight.getData()[0]);
-            return true;
+            returner = true;
+        } else {
+            returner = ((Math.abs(Limelight.getData()[1]) < 3.5) && (Math.abs(Limelight.getData()[2]) < 0.025));
         }
-        return ((Math.abs(Limelight.getData()[1]) < 3.5) && (Math.abs(Limelight.getData()[2]) < 0.025));
+        if (returner) { // what we do on last loop
+            swerve.drive(new Translation2d(0, 0), 0, false, true);
+        }
+        return returner;
     }
 }

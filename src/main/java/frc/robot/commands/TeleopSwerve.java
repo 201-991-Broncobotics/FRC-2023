@@ -18,8 +18,9 @@ public class TeleopSwerve extends CommandBase {
     private DoubleSupplier rotationSup;
     private BooleanSupplier robotCentricSup;
     private IntSupplier targetSup;
+    private DoubleSupplier slowSup;
 
-    public TeleopSwerve(Swerve s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup, IntSupplier targetSup) {
+    public TeleopSwerve(Swerve s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup, IntSupplier targetSup, DoubleSupplier slowSup) {
         this.s_Swerve = s_Swerve;
         addRequirements(s_Swerve);
 
@@ -28,6 +29,7 @@ public class TeleopSwerve extends CommandBase {
         this.rotationSup = rotationSup;
         this.robotCentricSup = robotCentricSup;
         this.targetSup = targetSup;
+        this.slowSup = slowSup;
     }
 
     @Override
@@ -41,7 +43,7 @@ public class TeleopSwerve extends CommandBase {
 
         /* Drive */
         s_Swerve.drive(
-            new Translation2d(translationVal, strafeVal).times(Constants.BaseFalconSwerve.maxSpeed), 
+            new Translation2d(translationVal, strafeVal).times(Constants.BaseFalconSwerve.maxSpeed).times(slowSup.getAsDouble()), 
             rotationVal * Constants.BaseFalconSwerve.maxAngularVelocity, 
             !robotCentricSup.getAsBoolean(), 
             true

@@ -155,7 +155,8 @@ public final class Constants {
         public static final double joystick_deadzone = 0.2;
         public static final int translationAxis = XboxController.Axis.kLeftY.value, 
                           strafeAxis = XboxController.Axis.kLeftX.value,
-                          rotationAxis = XboxController.Axis.kRightX.value, 
+                          rotationAxis = XboxController.Axis.kRightX.value,
+                          slowAxis = XboxController.Axis.kRightTrigger.value, 
                           zeroGyroButton = XboxController.Button.kY.value, 
                           robotCentricButton = XboxController.Button.kLeftBumper.value;
 

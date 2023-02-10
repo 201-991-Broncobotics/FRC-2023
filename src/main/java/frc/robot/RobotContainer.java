@@ -44,7 +44,8 @@ public class RobotContainer {
                 () -> -driver.getRawAxis(strafeAxis), 
                 () -> -driver.getRawAxis(rotationAxis), 
                 () -> robotCentric.getAsBoolean(), 
-                () -> -driver.getPOV()
+                () -> -driver.getPOV(), 
+                () -> 1 - 0.66 * driver.getRawAxis(slowAxis) // what we multiply translation speed by; rotation speed is NOT affected
             )
         );
 
