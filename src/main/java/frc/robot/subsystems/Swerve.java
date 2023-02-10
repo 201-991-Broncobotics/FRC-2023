@@ -17,11 +17,15 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import static frc.robot.Constants.SwerveConstants.*;
 
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
+
+    private double last_time;
+    private double target_heading;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.BaseFalconSwerve.pigeonID);
@@ -44,7 +48,36 @@ public class Swerve extends SubsystemBase {
         swerveOdometry = new SwerveDriveOdometry(Constants.BaseFalconSwerve.swerveKinematics, getYaw(), getModulePositions());
     }
 
+    public static double normalizeAngle(double degrees) {
+        if (degrees < 0) return ((degrees - 180) % 360 + 180);
+        return ((degrees + 180) % 360 - 180);
+    }
+
+    public void setTargetHeading(double target) {
+        target_heading = normalizeAngle(target - getYaw().getDegrees()) + getYaw().getDegrees();
+        last_time = System.currentTimeMillis() - (calibration_time + 1) * 1000;
+    }
+
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+
+        double current_heading = getYaw().getDegrees();
+        if (rotation == 0) {
+            if (System.currentTimeMillis() - last_time < calibration_time * 1000) {
+                target_heading = current_heading;
+            } else if (Math.abs(target_heading - current_heading) > 0.1) {
+                double error_in_percent = Math.max(Math.min((target_heading - current_heading) / maximum_error, 1), -1);
+                int multiplier = 1;
+                if (error_in_percent < 0) {
+                    error_in_percent = 0 - error_in_percent;
+                    multiplier = -1;
+                }
+                rotation = Math.pow(error_in_percent, exponent) * maximum_power * multiplier * Constants.BaseFalconSwerve.maxAngularVelocity;
+            }
+        } else {
+            target_heading = current_heading;
+            last_time = System.currentTimeMillis();
+        }
+
         SwerveModuleState[] swerveModuleStates =
             Constants.BaseFalconSwerve.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -100,6 +133,8 @@ public class Swerve extends SubsystemBase {
 
     public void zeroGyro(){
         gyro.setYaw(0);
+        target_heading = 0;
+        last_time = System.currentTimeMillis();
     }
 
     public Rotation2d getYaw() {

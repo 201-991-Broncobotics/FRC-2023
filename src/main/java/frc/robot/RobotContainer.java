@@ -68,10 +68,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        zeroGyro.onTrue(new InstantCommand(() -> {
-            s_Swerve.zeroGyro();
-            TeleopSwerve.resetGyro();
-        }));
+        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
 
         tagAligner.toggleOnTrue(new AlignWithApriltag(s_Swerve));
 
