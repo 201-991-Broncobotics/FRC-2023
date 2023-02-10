@@ -12,7 +12,7 @@ import static frc.robot.Constants.DoubleArmConstants.*;
 
 public class DoubleArm extends SubsystemBase {
 
-    private CANSparkMax first_motor, second_motor;
+    private CANSparkMax first_motor, first_motor_follower, second_motor;
     private Encoder first_encoder, second_encoder;
 
     public double[] target_xy = new double[2];
@@ -20,9 +20,12 @@ public class DoubleArm extends SubsystemBase {
 
     public DoubleArm() { // Initialize the motors, encoders, and target positions
         first_motor = new CANSparkMax(first_motor_ID, MotorType.kBrushless); // NEO Motors are brushless
+        first_motor_follower = new CANSparkMax(first_motor_follower_ID, MotorType.kBrushless);
         second_motor = new CANSparkMax(second_motor_ID, MotorType.kBrushless);
 
         first_motor.setInverted(invert_first_motor);
+        first_motor_follower.follow(first_motor, false); // follows it in the same direction
+                    // we may have to change this part, I'm not sure
         second_motor.setInverted(invert_second_motor);
         // we want it so powering the motors rotates the arms counterclockwise
 

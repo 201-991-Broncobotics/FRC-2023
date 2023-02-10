@@ -31,9 +31,12 @@ public class RobotContainer {
     private final JoystickButton robotCentric = new JoystickButton(driver, robotCentricButton);
     private final JoystickButton tagAligner = new JoystickButton(driver, tagAlignerButton);
 
+    /* Operator Buttons */
+    private final JoystickButton topGoal = new JoystickButton(operator, topGoalButton);
+
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
-    private final DoubleArm doubleArm = new DoubleArm();
+    // private final DoubleArm doubleArm = new DoubleArm();
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -49,13 +52,14 @@ public class RobotContainer {
             )
         );
 
+        /*
         doubleArm.setDefaultCommand(
             new TeleopDoubleArm(
                 doubleArm, 
                 () -> operator.getRawAxis(horizAxis),
                 () -> -operator.getRawAxis(vertAxis)
             )
-        );
+        ); // */
 
         // Configure the button bindings
         configureButtonBindings();
@@ -70,9 +74,10 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-
         tagAligner.toggleOnTrue(new AlignWithApriltag(s_Swerve));
 
+        /* Operator Buttons */
+        // topGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(40, 14)));
     }
 
     /**
