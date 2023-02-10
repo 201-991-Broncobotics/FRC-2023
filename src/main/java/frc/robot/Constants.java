@@ -7,13 +7,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.XboxController;
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
-    public static final class Swerve {
+    public static final class BaseFalconSwerve {
         public static final int pigeonID = 0;
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
@@ -146,8 +147,31 @@ public final class Constants {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
 
-    public static final class DoubleArm {
+    public static final class AprilTagAlignmentConstants {
+        public static final int tagAlignerButton = XboxController.Button.kA.value;
+    }
+
+    public static final class SwerveConstants {
         public static final double joystick_deadzone = 0.2;
+        public static final int translationAxis = XboxController.Axis.kLeftY.value, 
+                          strafeAxis = XboxController.Axis.kLeftX.value,
+                          rotationAxis = XboxController.Axis.kRightX.value, 
+                          zeroGyroButton = XboxController.Button.kY.value, 
+                          robotCentricButton = XboxController.Button.kLeftBumper.value;
+
+        public static final double maximum_power = 0.8, 
+                             maximum_error = 70, // degrees
+                             exponent = 0.5, 
+                             calibration_time = 0.5; // seconds
+
+            // best tuned so far: 0.6 as cappppping, 50 as max_error, 0.5 as exponent
+    }
+    public static final class DoubleArmConstants {
+
+        // Controlling
+        public static final double joystick_deadzone = 0.2;
+        public static final int horizAxis = XboxController.Axis.kLeftX.value, 
+                                vertAxis = XboxController.Axis.kLeftY.value;
 
         public static final double arm_sensitivity = 5; // inches per second for arm
 
@@ -162,6 +186,7 @@ public final class Constants {
     
         public static final double first_encoder_zero = 90, second_encoder_zero = -170; // can be negative
                     // encoder reading when both arms are straight ahead; can be negative
+                    // degrees pretty much
     
         public static final double switching_angle = -90; // always concave down
     

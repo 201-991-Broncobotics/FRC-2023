@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import static frc.robot.Constants.DoubleArm.*;
+import static frc.robot.Constants.DoubleArmConstants.*;
 
 public class DoubleArm extends SubsystemBase {
 
