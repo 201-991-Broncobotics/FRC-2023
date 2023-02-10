@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -11,6 +12,7 @@ import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import java.util.function.DoubleSupplier;
+import java.util.function.IntSupplier;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -31,12 +33,27 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
+    private final IntSupplier pov = () -> 0 - driver.getPOV();
+
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
 
-    private double target_heading = s_Swerve.getYaw().getDegrees();
-    private final double rc_p = 0.025;
-    private final double cappppping = 0.4;
+    // codding
+    private double target_heading = 0; // s_Swerve resets the imu
+    private final double cappppping = 0.8;
+    private final double max_error = 70; // anything greater than this will go to capping power
+
+    // best tuned so far: 0.6 as cappppping, 50 as max_error, 0.5 as exponent
+
+    private final double calibration_time = 0.5; // in seconds
+    private double last_time = System.currentTimeMillis();
+
+    public double errorToDouble(double error_in_percent) { // ex. if we are 3* off and 30* is max error, we get 0.1
+        // error_in_percent will always be positive (not zero or negative)
+        return Math.pow(error_in_percent, 0.5);
+        // make sure this is always between 0 and 1
+        // basic p control --> return error_in_percent;
+    }
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -54,14 +71,44 @@ public class RobotContainer {
         configureButtonBindings();
     }
 
+    public static double normalizeAngle(double angle) {
+        while (angle > 180) { angle -= 360; }
+        while (angle <= -180) { angle += 360; }
+
+        return angle;
+    }
+
     public double getTurning(DoubleSupplier con_turn) {
         double turning = con_turn.getAsDouble();
         double current_angle = s_Swerve.getYaw().getDegrees();
         if (Math.abs(turning) > 0.1) {
             target_heading = current_angle;
+            last_time = System.currentTimeMillis();
             return turning;
         }
-        return Math.max(Math.min((target_heading - current_angle) * rc_p, cappppping), -cappppping);
+        if (System.currentTimeMillis() - last_time < calibration_time * 1000) {
+            target_heading = current_angle;
+            return 0;
+        }
+        if (pov.getAsInt() % 90 == 0) {
+            target_heading = normalizeAngle(pov.getAsInt() - current_angle) + current_angle;
+        }
+        double error_in_percent = Math.max(Math.min((target_heading - current_angle) / max_error, 1), -1);
+        if (error_in_percent == 0) {
+            return 0;
+        }
+        int multiplier = 1;
+        if (error_in_percent < 0) {
+            error_in_percent = 0 - error_in_percent;
+            multiplier = -1;
+        }
+        SmartDashboard.putNumber("eip", error_in_percent);
+        return errorToDouble(error_in_percent) * cappppping * multiplier;
+    }
+
+    public void resetGyro(){
+        s_Swerve.zeroGyro();
+        target_heading = 0; // should be 0 but just to be safe :)
     }
 
     /**
@@ -72,7 +119,9 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        zeroGyro.onTrue(new InstantCommand(() -> resetGyro()));
+        (new JoystickButton(driver, XboxController.Button.kA.value)).toggleOnTrue(new AlignWithApriltag(s_Swerve));
+
     }
 
     /**
