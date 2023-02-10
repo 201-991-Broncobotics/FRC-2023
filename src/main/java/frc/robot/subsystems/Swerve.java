@@ -73,7 +73,7 @@ public class Swerve extends SubsystemBase {
                 }
                 rotation = Math.pow(error_in_percent, exponent) * maximum_power * multiplier * Constants.BaseFalconSwerve.maxAngularVelocity;
             } else {
-                rotation = translation.getNorm() * correction;
+                rotation = translation.getNorm() / Constants.BaseFalconSwerve.maxSpeed * Constants.BaseFalconSwerve.maxAngularVelocity * correction;
             }
         } else {
             target_heading = current_heading;
