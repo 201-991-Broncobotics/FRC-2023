@@ -25,7 +25,7 @@ public class Swerve extends SubsystemBase {
     public Pigeon2 gyro;
 
     private double last_time;
-    private double target_heading;
+    public double target_heading;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.BaseFalconSwerve.pigeonID);
@@ -51,6 +51,10 @@ public class Swerve extends SubsystemBase {
     public static double normalizeAngle(double degrees) {
         if (degrees < 0) return ((degrees - 180) % 360 + 180);
         return ((degrees + 180) % 360 - 180);
+    }
+
+    public void changeHeading(double delta) {
+        setTargetHeading(getYaw().getDegrees() + delta);
     }
 
     public void setTargetHeading(double target) {

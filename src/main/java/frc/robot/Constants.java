@@ -160,12 +160,12 @@ public final class Constants {
                           zeroGyroButton = XboxController.Button.kY.value, 
                           robotCentricButton = XboxController.Button.kLeftBumper.value;
 
-        public static final double maximum_power = 0.8, 
-                             maximum_error = 70, // degrees
+        public static final double maximum_power = 0.6, 
+                             maximum_error = 50, // degrees
                              exponent = 0.5, 
                              calibration_time = 0.5, // seconds
                              tolerance = 2, // degrees
-                             correction = 0.5; // If we're going at full speed, how much do we need to correct by as a % - must be experimentally determined
+                             correction = 0; // If we're going at full speed, how much do we need to correct by as a % - must be experimentally determined
 
             // best tuned so far: 0.6 as cappppping, 50 as max_error, 0.5 as exponent
     }

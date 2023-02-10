@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Limelight {
@@ -16,9 +17,9 @@ public class Limelight {
     private static DoubleSupplier tid = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDoubleArray(new double[1])[0];
     
     private static DoubleSupplier[] position = new DoubleSupplier[] {
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDoubleArray(new double[6])[4], 
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDoubleArray(new double[6])[0], 
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDoubleArray(new double[6])[2]
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_cameraspace").getDoubleArray(new double[6])[4], 
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_cameraspace").getDoubleArray(new double[6])[0], 
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_cameraspace").getDoubleArray(new double[6])[2]
     }; // Where the camera is, relative to april tag
 
     /*
@@ -54,10 +55,9 @@ public class Limelight {
         SmartDashboard.putNumber("Robot Heading", vals[1]);
         SmartDashboard.putNumber("Robot x", vals[2]);
         SmartDashboard.putNumber("Robot z", vals[3]);
+        SmartDashboard.putNumberArray("April Tag IDs?????", NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_cameraspace").getDoubleArray(new double[6]));
         
-        SmartDashboard.putNumberArray("April Tag IDs?????", NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDoubleArray(new double[6]));
-        
-        SmartDashboard.putNumber("Maybe its supposed to be an integer tho", NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDouble(0));
+        SmartDashboard.putNumber("Maybe its supposed to be an integer tho", NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_cameraspace").getDouble(-3));
     }
 
     public static void setPipeline(int number) {

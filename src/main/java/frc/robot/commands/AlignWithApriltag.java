@@ -18,29 +18,35 @@ public class AlignWithApriltag extends CommandBase {
 
     @Override
     public void execute() {
-        if (Limelight.getData()[0] == -12) return;
-        SmartDashboard.putNumberArray("yeah", Limelight.getData());
-        SmartDashboard.putNumber("target turning", Math.max(Math.min(Limelight.getData()[1] * 0.1, 0.3), -0.3));
-        SmartDashboard.putNumber("target strafing", Math.max(Math.min(Limelight.getData()[2] * 3, 0.3), -0.3));
-        if (Math.abs(Limelight.getData()[1]) >= 3) { // turn, maximally if off by 30 degrees
-            swerve.drive(new Translation2d(0, 0), Math.max(Math.min(Limelight.getData()[1] * 0.1, 0.3), -0.3) * Constants.BaseFalconSwerve.maxAngularVelocity, false, true);
-        } else { // strafe, maximally at 10 cm away
-            swerve.drive(new Translation2d(Math.max(Math.min(Limelight.getData()[2] * 3, 0.3), -0.3), 0).times(Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
+        while (Limelight.getData()[1] > 1 && Limelight.getData()[0] != -12) {
+            if (Limelight.getData()[2] + 0.1 > 0.01) {
+                swerve.drive(new Translation2d(0, -0.1 * Constants.BaseFalconSwerve.maxSpeed), -0.05 * Constants.BaseFalconSwerve.maxAngularVelocity, false, true);
+            } else if (Limelight.getData()[2] + 0.1 < -0.01) {
+                swerve.drive(new Translation2d(0, 0.1 * Constants.BaseFalconSwerve.maxSpeed), -0.05 * Constants.BaseFalconSwerve.maxAngularVelocity, false, true);
+            } else {
+                swerve.drive(new Translation2d(), -0.05 * Constants.BaseFalconSwerve.maxAngularVelocity, false, true);
+            }
+        }
+        while (Limelight.getData()[1] < -1 && Limelight.getData()[0] != -12) {
+            if (Limelight.getData()[2] + 0.1 > 0.01) {
+                swerve.drive(new Translation2d(0, -0.1 * Constants.BaseFalconSwerve.maxSpeed), 0.05 * Constants.BaseFalconSwerve.maxAngularVelocity, false, true);
+            } else if (Limelight.getData()[2] + 0.1 < -0.01) {
+                swerve.drive(new Translation2d(0, 0.1 * Constants.BaseFalconSwerve.maxSpeed), 0.05 * Constants.BaseFalconSwerve.maxAngularVelocity, false, true);
+            } else {
+                swerve.drive(new Translation2d(), 0.05 * Constants.BaseFalconSwerve.maxAngularVelocity, false, true);
+            }
+        }
+        while (Limelight.getData()[2] + 0.1 > 0.01 && Limelight.getData()[0] != -12) {
+            swerve.drive(new Translation2d(0, -0.1 * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
+        }
+        
+        while (Limelight.getData()[2] + 0.1 < -0.01 && Limelight.getData()[0] != -12) {
+            swerve.drive(new Translation2d(0, 0.1 * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
         }
     }
 
     @Override
     public boolean isFinished() {
-        boolean returner = false;
-        if (Limelight.getData()[0] == -12) {
-            SmartDashboard.putNumber("detected tag", Limelight.getData()[0]);
-            returner = true;
-        } else {
-            returner = ((Math.abs(Limelight.getData()[1]) < 3.5) && (Math.abs(Limelight.getData()[2]) < 0.025));
-        }
-        if (returner) { // what we do on last loop
-            swerve.drive(new Translation2d(0, 0), 0, false, true);
-        }
-        return returner;
+        return true;
     }
 }
