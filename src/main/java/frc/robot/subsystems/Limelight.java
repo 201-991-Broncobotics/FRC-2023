@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Limelight {
@@ -55,9 +54,9 @@ public class Limelight {
         SmartDashboard.putNumber("Robot Heading", vals[1]);
         SmartDashboard.putNumber("Robot x", vals[2]);
         SmartDashboard.putNumber("Robot z", vals[3]);
-        SmartDashboard.putNumberArray("April Tag IDs?????", NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_cameraspace").getDoubleArray(new double[6]));
+        SmartDashboard.putNumberArray("April Tag IDs?????", NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDoubleArray(new double[6]));
         
-        SmartDashboard.putNumber("Maybe its supposed to be an integer tho", NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_cameraspace").getDouble(-3));
+        SmartDashboard.putNumber("Maybe its supposed to be an integer tho", NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDouble(-3));
     }
 
     public static void setPipeline(int number) {

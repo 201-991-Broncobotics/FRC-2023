@@ -25,7 +25,7 @@ public class Swerve extends SubsystemBase {
     public Pigeon2 gyro;
 
     private double last_time;
-    public double target_heading;
+    private double target_heading;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.BaseFalconSwerve.pigeonID);
