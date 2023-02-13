@@ -48,7 +48,7 @@ public class RobotContainer {
                 () -> -driver.getRawAxis(rotationAxis), 
                 () -> robotCentric.getAsBoolean(), 
                 () -> -driver.getPOV(), 
-                () -> 1 - 0.9 * driver.getRawAxis(slowAxis) // what we multiply translation speed by; rotation speed is NOT affected
+                () -> 1 - 0.75 * driver.getRawAxis(slowAxis) // what we multiply translation speed by; rotation speed is NOT affected
             )
         );
 
@@ -74,7 +74,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-        tagAligner.toggleOnTrue(new AlignWithApriltag(s_Swerve));
+        tagAligner.toggleOnFalse(new AlignWithApriltag(s_Swerve, () -> driver.getRawButton(tagAlignerButton)));
+                    // toggle on false because otherwise it throws an error :(
 
         /* Operator Buttons */
         // topGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(40, 14)));

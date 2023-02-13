@@ -13,12 +13,12 @@ public class Limelight {
     // private static DoubleSupplier ty = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(-100);
     // private static DoubleSupplier ta = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(-1);
 
-    private static DoubleSupplier tid = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDoubleArray(new double[1])[0];
+    private static DoubleSupplier tid = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDouble(-2);
     
     private static DoubleSupplier[] position = new DoubleSupplier[] {
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_cameraspace").getDoubleArray(new double[6])[4], 
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_cameraspace").getDoubleArray(new double[6])[0], 
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_cameraspace").getDoubleArray(new double[6])[2]
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDoubleArray(new double[6])[4], 
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDoubleArray(new double[6])[0], 
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDoubleArray(new double[6])[2]
     }; // Where the camera is, relative to april tag
 
     /*
@@ -50,13 +50,10 @@ public class Limelight {
 
     public static void displayData() {
         double[] vals = getData();
-        SmartDashboard.putNumber("April Tag IDs", vals[0]);
+        SmartDashboard.putNumber("April Tag ID", vals[0]);
         SmartDashboard.putNumber("Robot Heading", vals[1]);
         SmartDashboard.putNumber("Robot x", vals[2]);
         SmartDashboard.putNumber("Robot z", vals[3]);
-        SmartDashboard.putNumberArray("April Tag IDs?????", NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDoubleArray(new double[6]));
-        
-        SmartDashboard.putNumber("Maybe its supposed to be an integer tho", NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDouble(-3));
     }
 
     public static void setPipeline(int number) {
