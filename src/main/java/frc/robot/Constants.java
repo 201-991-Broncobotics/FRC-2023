@@ -157,9 +157,8 @@ public final class Constants {
         
         public static final double max_angular_tolerance = 10; // degrees
 
-        public static final int angle_trials = 25; // longer means slower but more accurate
-
-        public static final int distance_trials = 10; // longer means slower but more accurate
+        public static final int angle_trials = 25, 
+                                distance_trials = 10; // longer means slower but more accurate
     }
 
     public static final class SwerveConstants {

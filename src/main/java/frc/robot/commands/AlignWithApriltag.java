@@ -82,7 +82,7 @@ public class AlignWithApriltag extends CommandBase {
             if (Math.abs(Limelight.getData()[1]) > max_angular_tolerance) {
                 i--;
             } else {
-                prev_x[i] += Limelight.getData()[2] / distance_trials;
+                prev_x[i] += Limelight.getData()[2] / (1.0 * distance_trials);
                 prev_x_average += prev_x[i];
             }
             Timer.delay(0.01);
@@ -103,7 +103,7 @@ public class AlignWithApriltag extends CommandBase {
                 // guess based on previous two if our thing doesn't make sense
                 prev_x[current_index] = 2 * prev_x[(current_index + distance_trials - 1) % distance_trials] - prev_x[(current_index + distance_trials - 2) % distance_trials];
             } else {
-                prev_x[current_index] = Limelight.getData()[2] / distance_trials;
+                prev_x[current_index] = Limelight.getData()[2] / (1.0 * distance_trials);
             }
             prev_x_average += prev_x[current_index];
             current_index = (current_index + 1) % distance_trials;
