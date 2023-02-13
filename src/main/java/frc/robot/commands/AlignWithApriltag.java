@@ -45,7 +45,7 @@ public class AlignWithApriltag extends CommandBase {
 
         double target_heading = Swerve.normalizeAngle(swerve.getYaw().getDegrees() + angular_offset); // target pose = where we want to 
 
-        while ((Math.abs(Swerve.normalizeAngle(target_heading - swerve.getYaw().getDegrees())) > 4) && (!driver.getRawButton(tagAlignerButton))) {
+        while ((Math.abs(Swerve.normalizeAngle(target_heading - swerve.getYaw().getDegrees())) > 4) && (!driver.getRawButton(tagAlignerExitButton))) {
             if (Swerve.normalizeAngle(target_heading - swerve.getYaw().getDegrees()) < 0) {
                 swerve.drive(new Translation2d(), -rotation_speed * Constants.BaseFalconSwerve.maxAngularVelocity, false, true);
             } else {
@@ -55,7 +55,7 @@ public class AlignWithApriltag extends CommandBase {
 
         swerve.setTargetHeading(target_heading);
 
-        while ((Limelight.getData()[2] == -12) && (!driver.getRawButton(tagAlignerButton))) { // while we can't see the apriltag
+        while ((Limelight.getData()[2] == -12) && (!driver.getRawButton(tagAlignerExitButton))) { // while we can't see the apriltag
             if (angular_offset < 0) {
                 swerve.drive(new Translation2d(0, strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
             } else {
@@ -90,7 +90,7 @@ public class AlignWithApriltag extends CommandBase {
 
         swerve.setTargetHeading(target_heading);
 
-        while ((Math.abs(offset * 0.0254 - prev_x_average) > sideways_tolerance * 0.0254) && (!driver.getRawButton(tagAlignerButton)) && (Limelight.getData()[2] != -12)) {
+        while ((Math.abs(offset * 0.0254 - prev_x_average) > sideways_tolerance * 0.0254) && (!driver.getRawButton(tagAlignerExitButton)) && (Limelight.getData()[2] != -12)) {
 
             if (offset * 0.0254 < prev_x_average) {
                 swerve.drive(new Translation2d(0, strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);

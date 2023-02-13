@@ -35,9 +35,9 @@ public class TeleopSwerve extends CommandBase {
     @Override
     public void execute() {
         /* Get Values, Deadband*/
-        double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.stickDeadband);
-        double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.stickDeadband);
-        double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
+        double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.joystick_deadzone);
+        double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.joystick_deadzone);
+        double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.joystick_deadzone);
 
         if ((rotationVal) == 0 && (targetSup.getAsInt() % 90 == 0)) s_Swerve.setTargetHeading(targetSup.getAsInt());
 

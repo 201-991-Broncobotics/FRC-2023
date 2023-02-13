@@ -4,7 +4,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
+import static frc.robot.Constants.*;
 import frc.robot.subsystems.DoubleArm;
 import static frc.robot.Constants.DoubleArmConstants.*;
 

@@ -12,7 +12,9 @@ import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
-    public static final double stickDeadband = 0.1;
+
+    /* General Constants */
+    public static final double joystick_deadzone = 0.2;
 
     public static final class BaseFalconSwerve {
         public static final int pigeonID = 0;
@@ -148,21 +150,28 @@ public final class Constants {
     }
 
     public static final class AprilTagAlignmentConstants {
-        public static final int tagAlignerButton = XboxController.Button.kA.value;
+
+        /* Control Buttons */
+
+        public static final int tagAlignerButton = XboxController.Button.kA.value,
+                                tagAlignerExitButton = XboxController.Button.kA.value;
+
+        /* Variables */
+
+        public static final int angle_trials = 25, 
+                                distance_trials = 10; // longer means slower but more accurate
 
         public static final double offset = 0.1, // in inches
                                    sideways_tolerance = 0.5, // in inches
                                    strafe_speed = 0.15, 
-                                   rotation_speed = 0.15; // percentage of maxima
-        
-        public static final double max_angular_tolerance = 10; // degrees
-
-        public static final int angle_trials = 25, 
-                                distance_trials = 10; // longer means slower but more accurate
+                                   rotation_speed = 0.15, // percentage of maxima
+                                   max_angular_tolerance = 10; // degrees
     }
 
     public static final class SwerveConstants {
-        public static final double joystick_deadzone = 0.2;
+
+        /* Control Buttons */
+
         public static final int translationAxis = XboxController.Axis.kLeftY.value, 
                           strafeAxis = XboxController.Axis.kLeftX.value,
                           rotationAxis = XboxController.Axis.kRightX.value,
@@ -171,6 +180,8 @@ public final class Constants {
                           robotCentricButton = XboxController.Button.kLeftBumper.value,
                           brakeButton = XboxController.Button.kX.value;
 
+        /* Variables */
+        
         public static final double maximum_power = 0.6, 
                              maximum_error = 50, // degrees
                              exponent = 0.5, 
@@ -178,53 +189,57 @@ public final class Constants {
                              tolerance = 2, // degrees
                              correction = 0; // If we're going at full speed, how much do we need to correct by as a % - must be experimentally determined
 
-            // best tuned so far: 0.6 as cappppping, 50 as max_error, 0.5 as exponent
+            // best tuned so far: 0.6 as maximum_power, 50 as max_error, 0.5 as exponent
     }
     public static final class DoubleArmConstants {
 
-        // Controlling
-        public static final double joystick_deadzone = 0.2;
+        /* Control Buttons */
+
         public static final int horizAxis = XboxController.Axis.kLeftX.value, 
                                 vertAxis = XboxController.Axis.kLeftY.value, 
                                 topGoalButton = XboxController.Button.kA.value, 
                                 resetEncodersButton = XboxController.Button.kStart.value;
 
-        public static final double arm_sensitivity = 5; // inches per second for arm
+        /* CAN IDs and Input Channels */
 
-        public static final double min_x = 10, 
-                                   min_y = -45; 
-                                    // inches
-        
-        public static final double clipping_one = 1.1, 
-                                   clipping_two = 0.9; // first should be > 1, second should be < 1
-    
-        public static final double first_arm_length = 32, 
-                                   second_arm_length = 20; // inches
-    
         public static final int first_motor_ID = 0, 
                                 first_motor_follower_ID = 0, 
-                                second_motor_ID = 0; // IDs
-    
-        public static final double switching_angle = -90; // always concave down
-    
-        public static final double first_motor_max_power = 1.0,
-                                   second_motor_max_power = 1.0;
-    
-        public static final double first_motor_min_error = 0.5, 
-                                   second_motor_min_error = 0.5;
-    
-        public static final double first_motor_max_error = 5.0, 
-                                   second_motor_max_error = 5.0;
-    
-        public static final double k_exponent = 1.5; // 1.0 for a normal PID
-    
-        public static final int first_encoder_channel = 0, 
-                                second_encoder_channel = 0;
+                                second_motor_ID = 0, // CAN IDs
+                                first_encoder_channel = 0, 
+                                second_encoder_channel = 0; // Analog Input Channels
+
+        /* Motor Variables */
     
         public static final boolean invert_first_motor = false, 
                                     invert_first_motor_follower = false, 
                                     invert_second_motor = false, 
                                     invert_first_encoder = false, 
                                     invert_second_encoder = false;
+
+        /* Variables */
+        
+        public static final double arm_sensitivity = 5, // inches per second
+
+                                   min_x = 10, 
+                                   min_y = -45, // inches
+
+                                   clipping_one = 1.1, 
+                                   clipping_two = 0.9, // first should be > 1, second should be < 1
+
+                                   first_arm_length = 32, 
+                                   second_arm_length = 20, // inches
+
+                                   switching_angle = -90, // always concave down
+
+                                   first_motor_max_power = 1.0,
+                                   second_motor_max_power = 1.0,
+
+                                   first_motor_min_error = 0.5, 
+                                   second_motor_min_error = 0.5,
+
+                                   first_motor_max_error = 5.0, 
+                                   second_motor_max_error = 5.0,
+                                   
+                                   k_exponent = 1.5; // 1.0 for a normal PID
     }
 }
