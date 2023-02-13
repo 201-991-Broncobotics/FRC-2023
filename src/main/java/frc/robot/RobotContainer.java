@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -23,16 +22,18 @@ import static frc.robot.Constants.DoubleArmConstants.*;
  */
 public class RobotContainer {
     /* Controllers */
-    private final Joystick driver = new Joystick(0);
-    private final Joystick operator = new Joystick(1);
+    private final XboxController driver = new XboxController(0);
+    private final XboxController operator = new XboxController(1);
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, zeroGyroButton);
     private final JoystickButton robotCentric = new JoystickButton(driver, robotCentricButton);
     private final JoystickButton tagAligner = new JoystickButton(driver, tagAlignerButton);
+    private final JoystickButton brake = new JoystickButton(driver, brakeButton);
 
     /* Operator Buttons */
     private final JoystickButton topGoal = new JoystickButton(operator, topGoalButton);
+    private final JoystickButton resetEncoders = new JoystickButton(operator, resetEncodersButton);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -74,10 +75,13 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-        tagAligner.toggleOnFalse(new AlignWithApriltag(s_Swerve, () -> driver.getRawButton(tagAlignerButton)));
+        tagAligner.toggleOnFalse(new AlignWithApriltag(s_Swerve, driver));
                     // toggle on false because otherwise it throws an error :(
-
+        
+        brake.toggleOnFalse(new Brake(s_Swerve));
+        
         /* Operator Buttons */
+        // resetEncoders.toggleOnFalse(new InstantCommand(() -> doubleArm.resetEncoders()));
         // topGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(40, 14)));
     }
 

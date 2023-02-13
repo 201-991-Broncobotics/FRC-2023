@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,7 +13,7 @@ import static frc.robot.Constants.DoubleArmConstants.*;
 public class DoubleArm extends SubsystemBase {
 
     private CANSparkMax first_motor, first_motor_follower, second_motor;
-    private Encoder first_encoder, second_encoder;
+    private AnalogEncoder first_encoder, second_encoder;
 
     public double[] target_xy = new double[2];
     private double[] target_positions = new double[2];
@@ -29,16 +29,15 @@ public class DoubleArm extends SubsystemBase {
         second_motor.setInverted(invert_second_motor);
         // we want it so powering the motors rotates the arms counterclockwise
 
-        first_encoder = new Encoder(first_encoder_channel_A, first_encoder_channel_B, invert_first_encoder, Encoder.EncodingType.k4X); // idk what channelA and B are
-        second_encoder = new Encoder(second_encoder_channel_A, second_encoder_channel_B, invert_second_encoder, Encoder.EncodingType.k4X);
+        first_encoder = new AnalogEncoder(first_encoder_channel);
+        second_encoder = new AnalogEncoder(second_encoder_channel);
         // we want it so the encoder increases when the arm goes counterclockwise - may have to adjust them
 
-        first_encoder.setDistancePerPulse(45.0 / 1024.0); // 2048 * 4 = ticks per revolution; no gear ratio
-        second_encoder.setDistancePerPulse(45.0 / 1024.0); // 360 degrees per every 8192 pulses = 45 per every 1024 = 0.0439453125
-            // 360 degrees per every 8192 ticks
+        first_encoder.setDistancePerRotation(360.0 * (invert_first_encoder ? -1 : 1)); // no gear ratio
+        second_encoder.setDistancePerRotation(360.0 * (invert_second_encoder ? -1 : 1)); // put this negative if it increases the wrong way
 
-        target_positions[0] = first_encoder.getDistance() - first_encoder_zero;
-        target_positions[1] = first_encoder.getDistance() - first_encoder_zero + second_encoder.getDistance() - second_encoder_zero; 
+        target_positions[0] = first_encoder.getDistance();
+        target_positions[1] = first_encoder.getDistance(); 
                             // if we want to reset encoders, run resetEncoders()
                             // reset encoders before Autonomous and Testing, not before TeleOp tho
         
@@ -117,37 +116,30 @@ public class DoubleArm extends SubsystemBase {
 
     public double[] getAbsoluteArmAngles() {
         return new double[] {
-            first_encoder.getDistance() - first_encoder_zero, 
-            first_encoder.getDistance() - first_encoder_zero + second_encoder.getDistance() - second_encoder_zero
+            first_encoder.getDistance(), 
+            first_encoder.getDistance() + second_encoder.getDistance()
         };
     }
 
     public double[] getData() {
-        /* Return the following:
-             * Arm 1 Raw Encoder
-             * Arm 2 Raw Encoder
-             * Arm 1 Measurement
-             * Arm 2 Relative Measurement
-             * Arm 2 Absolute Measurement
-             * Arm 1 target power
-             * Arm 2 target power
-         */
         return new double[] {
             first_encoder.getDistance(), 
-            second_encoder.getDistance(), 
-            first_encoder.getDistance() - first_encoder_zero, 
-            second_encoder.getDistance() - second_encoder_zero, 
-            first_encoder.getDistance() - first_encoder_zero + second_encoder.getDistance() - second_encoder_zero, 
+            second_encoder.getDistance(),
+            first_encoder.getDistance() + second_encoder.getDistance(),
             pidPower(
-                target_positions[0] - (first_encoder.getDistance() - first_encoder_zero), 
+                target_positions[0] - (first_encoder.getDistance()), 
                 first_motor_max_power, 
                 first_motor_min_error, 
                 first_motor_max_error),
             pidPower(
-                target_positions[1] - (first_encoder.getDistance() - first_encoder_zero + second_encoder.getDistance() - second_encoder_zero), 
+                target_positions[1] - (first_encoder.getDistance() + second_encoder.getDistance()), 
                 second_motor_max_power, 
                 second_motor_min_error, 
-                second_motor_max_error)
+                second_motor_max_error), 
+            target_xy[0], 
+            target_xy[1], 
+            target_positions[0], 
+            target_positions[1]
         };
     }
 
@@ -170,12 +162,14 @@ public class DoubleArm extends SubsystemBase {
     @Override
     public void periodic() { // PID and Telemetry
         double[] data = getData();
-        SmartDashboard.putNumber("Arm 1 Raw Encoder", data[0]);
-        SmartDashboard.putNumber("Arm 2 Raw Encoder", data[1]);
-        SmartDashboard.putNumber("Arm 1 Angle", data[2]);
-        SmartDashboard.putNumber("Arm 2 Relative Angle", data[3]);
-        SmartDashboard.putNumber("Arm 2 Absolute Angle", data[4]);
-        SmartDashboard.putNumber("Arm 1 target power", data[5]);
-        SmartDashboard.putNumber("Arm 2 target power", data[6]);
+        SmartDashboard.putNumber("Arm 1 Angle", data[0]);
+        SmartDashboard.putNumber("Arm 2 Relative Angle", data[1]);
+        SmartDashboard.putNumber("Arm 2 Absolute Angle", data[2]);
+        SmartDashboard.putNumber("Arm 1 target power", data[3]);
+        SmartDashboard.putNumber("Arm 2 target power", data[4]);
+        SmartDashboard.putNumber("Target x", data[5]);
+        SmartDashboard.putNumber("Target y", data[6]);
+        SmartDashboard.putNumber("Target 1st Angle", data[7]);
+        SmartDashboard.putNumber("Target 2nd Angle", data[8]);
     }
 }

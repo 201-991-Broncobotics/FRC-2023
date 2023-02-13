@@ -6,7 +6,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 
-public class Limelight {
+public class Limelight { // NOT a subsystem
 
     private static DoubleSupplier tv = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(-1); // 0 --> nothing, 1 --> something
     // private static DoubleSupplier tx = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(-100);

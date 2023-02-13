@@ -149,6 +149,17 @@ public final class Constants {
 
     public static final class AprilTagAlignmentConstants {
         public static final int tagAlignerButton = XboxController.Button.kA.value;
+
+        public static final double offset = 0.1, // in inches
+                                   sideways_tolerance = 0.5, // in inches
+                                   strafe_speed = 0.15, 
+                                   rotation_speed = 0.15; // percentage of maxima
+        
+        public static final double max_angular_tolerance = 10; // degrees
+
+        public static final int angle_trials = 25; // longer means slower but more accurate
+
+        public static final int distance_trials = 10; // longer means slower but more accurate
     }
 
     public static final class SwerveConstants {
@@ -158,7 +169,8 @@ public final class Constants {
                           rotationAxis = XboxController.Axis.kRightX.value,
                           slowAxis = XboxController.Axis.kRightTrigger.value, 
                           zeroGyroButton = XboxController.Button.kY.value, 
-                          robotCentricButton = XboxController.Button.kLeftBumper.value;
+                          robotCentricButton = XboxController.Button.kLeftBumper.value,
+                          brakeButton = XboxController.Button.kX.value;
 
         public static final double maximum_power = 0.6, 
                              maximum_error = 50, // degrees
@@ -175,7 +187,8 @@ public final class Constants {
         public static final double joystick_deadzone = 0.2;
         public static final int horizAxis = XboxController.Axis.kLeftX.value, 
                                 vertAxis = XboxController.Axis.kLeftY.value, 
-                                topGoalButton = XboxController.Button.kA.value;
+                                topGoalButton = XboxController.Button.kA.value, 
+                                resetEncodersButton = XboxController.Button.kStart.value;
 
         public static final double arm_sensitivity = 5; // inches per second for arm
 
@@ -193,28 +206,21 @@ public final class Constants {
                                 first_motor_follower_ID = 0, 
                                 second_motor_ID = 0; // IDs
     
-        public static final double first_encoder_zero = 90, 
-                                   second_encoder_zero = -170; // can be negative
-                    // encoder reading when both arms are straight ahead; can be negative
-                    // degrees pretty much
-    
         public static final double switching_angle = -90; // always concave down
     
         public static final double first_motor_max_power = 1.0,
                                    second_motor_max_power = 1.0;
     
-        public static final double first_motor_min_error = 1.0, 
-                                   second_motor_min_error = 1.0;
+        public static final double first_motor_min_error = 0.5, 
+                                   second_motor_min_error = 0.5;
     
-        public static final double first_motor_max_error = 15.0, 
-                                   second_motor_max_error = 15.0;
+        public static final double first_motor_max_error = 5.0, 
+                                   second_motor_max_error = 5.0;
     
         public static final double k_exponent = 1.5; // 1.0 for a normal PID
     
-        public static final int first_encoder_channel_A = 0, 
-                                first_encoder_channel_B = 0, 
-                                second_encoder_channel_A = 0, 
-                                second_encoder_channel_B = 0;
+        public static final int first_encoder_channel = 0, 
+                                second_encoder_channel = 0;
     
         public static final boolean invert_first_motor = false, 
                                     invert_second_motor = false, 
