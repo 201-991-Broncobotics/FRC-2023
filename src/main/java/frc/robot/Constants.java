@@ -222,6 +222,7 @@ public final class Constants {
                                 second_encoder_channel = 0;
     
         public static final boolean invert_first_motor = false, 
+                                    invert_first_motor_follower = false, 
                                     invert_second_motor = false, 
                                     invert_first_encoder = false, 
                                     invert_second_encoder = false;

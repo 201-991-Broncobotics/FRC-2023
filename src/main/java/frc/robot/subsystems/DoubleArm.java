@@ -24,7 +24,7 @@ public class DoubleArm extends SubsystemBase {
         second_motor = new CANSparkMax(second_motor_ID, MotorType.kBrushless);
 
         first_motor.setInverted(invert_first_motor);
-        first_motor_follower.follow(first_motor, false); // follows it in the same direction
+        first_motor_follower.follow(first_motor, invert_first_motor_follower); // follows it in the same direction
                     // we may have to change this part, I'm not sure
         second_motor.setInverted(invert_second_motor);
         // we want it so powering the motors rotates the arms counterclockwise
