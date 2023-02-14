@@ -198,11 +198,10 @@ public final class Constants {
 
         public static final int horizAxis = XboxController.Axis.kLeftX.value, 
                                 vertAxis = XboxController.Axis.kLeftY.value, 
-                                motorOneAxis = XboxController.Axis.kLeftX.value, 
-                                motorTwoAxis = XboxController.Axis.kRightX.value, 
+                                motorOneAxis = XboxController.Axis.kLeftY.value, 
+                                motorTwoAxis = XboxController.Axis.kRightY.value, 
                                 topGoalButton = XboxController.Button.kA.value, 
-                                resetEncodersButton = XboxController.Button.kStart.value, 
-                                rawPowerButton = XboxController.Button.kLeftBumper.value;
+                                resetEncodersButton = XboxController.Button.kStart.value;
 
         /* CAN IDs and Input Channels */
 
@@ -210,7 +209,7 @@ public final class Constants {
                                 first_motor_follower_ID = 22, 
                                 second_motor_ID = 23, // CAN IDs
                                 first_encoder_channel = 0, 
-                                second_encoder_channel = 0; // PWM Input Channels
+                                second_encoder_channel = 1; // PWM Input Channels
 
         /* Motor Variables */
     

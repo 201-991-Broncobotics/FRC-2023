@@ -34,11 +34,11 @@ public class RobotContainer {
     /* Operator Buttons */
     private final JoystickButton topGoal = new JoystickButton(operator, topGoalButton);
     private final JoystickButton resetEncoders = new JoystickButton(operator, resetEncodersButton);
-    private final JoystickButton rawPower = new JoystickButton(operator, rawPowerButton);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
-    private final DoubleArm doubleArm = new DoubleArm();
+    // private final DoubleArm doubleArm = new DoubleArm();
+    private final DoubleArmNoEncoders doubleArmNoEncoders = new DoubleArmNoEncoders();
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -54,13 +54,22 @@ public class RobotContainer {
             )
         );
 
+        doubleArmNoEncoders.setDefaultCommand(
+            new TeleopDoubleArmNoEncoders(
+                doubleArmNoEncoders, 
+                () -> -operator.getRawAxis(motorOneAxis),
+                () -> -operator.getRawAxis(motorTwoAxis)
+            )
+        );
+
+        /* Add this back once we have encoders wired
         doubleArm.setDefaultCommand(
             new TeleopDoubleArm(
                 doubleArm, 
                 () -> operator.getRawAxis(horizAxis),
                 () -> -operator.getRawAxis(vertAxis)
             )
-        );
+        ); */
 
         // Configure the button bindings
         configureButtonBindings();
@@ -81,13 +90,8 @@ public class RobotContainer {
         brake.toggleOnFalse(new Brake(s_Swerve));
         
         /* Operator Buttons */
-        resetEncoders.toggleOnFalse(new InstantCommand(() -> doubleArm.resetEncoders()));
-        topGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(40, 14)));
-        rawPower.onTrue(new TestingDoubleArm(
-            doubleArm, 
-            () -> operator.getRawAxis(motorOneAxis), 
-            () -> -operator.getRawAxis(motorTwoAxis)
-        ));
+        // resetEncoders.toggleOnFalse(new InstantCommand(() -> doubleArm.resetEncoders()));
+        // topGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(40, 14)));
     }
 
     /**

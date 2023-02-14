@@ -5,19 +5,20 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static frc.robot.Constants.*;
-import frc.robot.subsystems.DoubleArm;
+import frc.robot.subsystems.DoubleArmNoEncoders;
+
 import static frc.robot.Constants.DoubleArmConstants.*;
 
-public class TestingDoubleArm extends CommandBase {
+public class TeleopDoubleArmNoEncoders extends CommandBase {
 
-    private DoubleArm doubleArm;
+    private DoubleArmNoEncoders doubleArmNoEncoders;
 
     private DoubleSupplier motorOneSup;
     private DoubleSupplier motorTwoSup;
 
-    public TestingDoubleArm(DoubleArm doubleArm, DoubleSupplier motorOneSup, DoubleSupplier motorTwoSup) {
-        this.doubleArm = doubleArm;
-        addRequirements(doubleArm); // means that other functions are not allowed to access it
+    public TeleopDoubleArmNoEncoders(DoubleArmNoEncoders doubleArmNoEncoders, DoubleSupplier motorOneSup, DoubleSupplier motorTwoSup) {
+        this.doubleArmNoEncoders = doubleArmNoEncoders;
+        addRequirements(doubleArmNoEncoders); // means that other functions are not allowed to access it
 
         this.motorOneSup = motorOneSup;
         this.motorTwoSup = motorTwoSup; // sets up the double suppliers
@@ -30,15 +31,9 @@ public class TestingDoubleArm extends CommandBase {
         double motorTwoVal = MathUtil.applyDeadband(motorTwoSup.getAsDouble(), joystick_deadzone);
 
         // Move Arm
-        doubleArm.rawPowerArm(
+        doubleArmNoEncoders.rawPowerArm(
             motorOneVal * arm_sensitivity, // power????? but it's weird
             motorTwoVal * arm_sensitivity
         );
     }
-
-    @Override
-    public boolean isFinished() {
-        return true;
-    }
-
 }
