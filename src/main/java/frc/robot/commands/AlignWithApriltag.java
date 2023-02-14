@@ -10,8 +10,6 @@ import frc.robot.subsystems.Swerve;
 
 import static frc.robot.Constants.AprilTagAlignmentConstants.*;
 
-import org.opencv.features2d.FlannBasedMatcher;
-
 public class AlignWithApriltag extends CommandBase {
 
     private Swerve swerve;
