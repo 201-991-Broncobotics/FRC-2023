@@ -15,12 +15,15 @@ public class TeleopDoubleArm extends CommandBase {
     private DoubleSupplier horizSup;
     private DoubleSupplier vertSup;
 
+    private double time;
+
     public TeleopDoubleArm(DoubleArm doubleArm, DoubleSupplier horizSup, DoubleSupplier vertSup) {
         this.doubleArm = doubleArm;
         addRequirements(doubleArm); // means that other functions are not allowed to access it
 
         this.horizSup = horizSup;
         this.vertSup = vertSup; // sets up the double suppliers
+        time = System.currentTimeMillis() / 1000.0;
     }
 
     @Override
@@ -29,10 +32,12 @@ public class TeleopDoubleArm extends CommandBase {
         double horizVal = MathUtil.applyDeadband(horizSup.getAsDouble(), joystick_deadzone);
         double vertVal = MathUtil.applyDeadband(vertSup.getAsDouble(), joystick_deadzone);
 
+        double delta_time = System.currentTimeMillis() / 1000.0 - time;
+        time = System.currentTimeMillis() / 1000.0;
         // Move Arm
         doubleArm.moveArm(
-            horizVal * arm_sensitivity, 
-            vertVal * arm_sensitivity
+            horizVal * arm_sensitivity * delta_time, 
+            vertVal * arm_sensitivity * delta_time
         );
     }
 

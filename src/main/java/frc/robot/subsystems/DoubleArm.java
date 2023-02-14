@@ -75,15 +75,7 @@ public class DoubleArm extends SubsystemBase {
     }
 
     public void moveArm(double dx, double dy) {
-
-        if (dx != 0) {
-            target_xy[0] = getCurrentXY()[0] + dx;
-        } // else leave target xy constant
-        if (dy != 0) {
-            target_xy[1] = getCurrentXY()[1] + dy;
-        }
-
-        powerArm(target_xy[0], target_xy[1]);
+        powerArm(target_xy[0] + dx, target_xy[1] + dy);
     }
 
     public void powerArm(double horizontalTarget, double verticalTarget) { // in RobotContainer have a function to make them continuous
