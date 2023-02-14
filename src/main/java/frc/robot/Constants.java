@@ -213,11 +213,13 @@ public final class Constants {
 
         /* Motor Variables */
     
-        public static final boolean invert_first_motor = false, 
+        public static final boolean invert_first_motor = true, 
                                     invert_first_motor_follower = false, 
-                                    invert_second_motor = false, 
+                                    invert_second_motor = true, 
                                     invert_first_encoder = false, 
-                                    invert_second_encoder = false;
+                                    invert_second_encoder = false, 
+                                    first_motor_brake = false, 
+                                    second_motor_brake = false;
         
         public static final int first_motor_max_current = 20, // amps
                                    first_motor_follower_max_current = 20, 
@@ -231,6 +233,7 @@ public final class Constants {
         /* Variables */
         
         public static final double arm_sensitivity = 5, // inches per second
+                                   raw_arm_sensitivity = 0.8, // power ratio
 
                                    min_x = 10, 
                                    min_y = -45, // inches

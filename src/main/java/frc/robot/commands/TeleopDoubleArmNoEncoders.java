@@ -32,8 +32,8 @@ public class TeleopDoubleArmNoEncoders extends CommandBase {
 
         // Move Arm
         doubleArmNoEncoders.rawPowerArm(
-            motorOneVal * arm_sensitivity, // power????? but it's weird
-            motorTwoVal * arm_sensitivity
+            motorOneVal * raw_arm_sensitivity, // power????? but it's weird
+            motorTwoVal * raw_arm_sensitivity
         );
     }
 }

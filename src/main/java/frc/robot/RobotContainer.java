@@ -22,8 +22,8 @@ import static frc.robot.Constants.DoubleArmConstants.*;
  */
 public class RobotContainer {
     /* Controllers */
-    private final XboxController driver = new XboxController(0);
-    private final XboxController operator = new XboxController(1);
+    private final XboxController driver = new XboxController(1);
+    private final XboxController operator = new XboxController(0);
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, zeroGyroButton);

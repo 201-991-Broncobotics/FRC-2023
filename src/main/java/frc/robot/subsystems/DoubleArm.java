@@ -25,16 +25,27 @@ public class DoubleArm extends SubsystemBase {
         second_motor = new CANSparkMax(second_motor_ID, MotorType.kBrushless);
 
         first_motor.restoreFactoryDefaults();
-        first_motor.setIdleMode(IdleMode.kBrake);
         first_motor.setInverted(invert_first_motor);
 
         first_motor_follower.restoreFactoryDefaults();
-        first_motor_follower.setIdleMode(IdleMode.kBrake);
         first_motor_follower.setInverted(invert_first_motor);
         
         second_motor.restoreFactoryDefaults();
-        second_motor.setIdleMode(IdleMode.kBrake);
-        second_motor.setInverted(invert_first_motor);
+        second_motor.setInverted(invert_second_motor);
+
+        if (first_motor_brake) {
+            first_motor.setIdleMode(IdleMode.kBrake);
+            first_motor_follower.setIdleMode(IdleMode.kBrake);
+        } else {
+            first_motor.setIdleMode(IdleMode.kCoast);
+            first_motor_follower.setIdleMode(IdleMode.kCoast);
+        }
+
+        if (second_motor_brake) {
+            second_motor.setIdleMode(IdleMode.kBrake);
+        } else {
+            second_motor.setIdleMode(IdleMode.kCoast);
+        }
         
         // we want it so powering the motors rotates the arms counterclockwise
 
