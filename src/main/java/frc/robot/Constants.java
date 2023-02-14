@@ -165,7 +165,8 @@ public final class Constants {
                                    sideways_tolerance = 0.5, // in inches
                                    strafe_speed = 0.15, 
                                    rotation_speed = 0.15, // percentage of maxima
-                                   max_angular_tolerance = 10; // degrees
+                                   max_angular_tolerance = 999, // degrees
+                                   angular_tolerance = 4;
     }
 
     public static final class SwerveConstants {
@@ -197,16 +198,19 @@ public final class Constants {
 
         public static final int horizAxis = XboxController.Axis.kLeftX.value, 
                                 vertAxis = XboxController.Axis.kLeftY.value, 
+                                motorOneAxis = XboxController.Axis.kLeftX.value, 
+                                motorTwoAxis = XboxController.Axis.kRightX.value, 
                                 topGoalButton = XboxController.Button.kA.value, 
-                                resetEncodersButton = XboxController.Button.kStart.value;
+                                resetEncodersButton = XboxController.Button.kStart.value, 
+                                rawPowerButton = XboxController.Button.kLeftBumper.value;
 
         /* CAN IDs and Input Channels */
 
-        public static final int first_motor_ID = 0, 
-                                first_motor_follower_ID = 0, 
-                                second_motor_ID = 0, // CAN IDs
+        public static final int first_motor_ID = 21, 
+                                first_motor_follower_ID = 22, 
+                                second_motor_ID = 23, // CAN IDs
                                 first_encoder_channel = 0, 
-                                second_encoder_channel = 0; // Analog Input Channels
+                                second_encoder_channel = 0; // PWM Input Channels
 
         /* Motor Variables */
     
@@ -215,6 +219,15 @@ public final class Constants {
                                     invert_second_motor = false, 
                                     invert_first_encoder = false, 
                                     invert_second_encoder = false;
+        
+        public static final int first_motor_max_current = 20, // amps
+                                   first_motor_follower_max_current = 20, 
+                                   second_motor_follower_max_current = 20;
+        
+        public static final double first_motor_acceleration_time = 3, 
+                                   first_motor_voltage_compensation = 0, 
+                                   second_motor_acceleration_time = 3, 
+                                   second_motor_voltage_compensation = 0;
 
         /* Variables */
         
@@ -239,7 +252,7 @@ public final class Constants {
 
                                    first_motor_max_error = 5.0, 
                                    second_motor_max_error = 5.0,
-                                   
+
                                    k_exponent = 1.5; // 1.0 for a normal PID
     }
 }

@@ -43,9 +43,13 @@ public class AlignWithApriltag extends CommandBase {
             Timer.delay(0.01); // Limelight updates every 100hz
         }
 
+        System.out.println(swerve.getYaw().getDegrees());
+        System.out.println(angular_offset);
+        System.out.println((Math.abs(swerve.getYaw().getDegrees() + angular_offset) + max_angular_tolerance) % 90);
+
         double target_heading = Swerve.normalizeAngle(swerve.getYaw().getDegrees() + angular_offset); // target pose = where we want to 
 
-        while ((Math.abs(Swerve.normalizeAngle(target_heading - swerve.getYaw().getDegrees())) > 4) && (!driver.getRawButton(tagAlignerExitButton))) {
+        while ((Math.abs(Swerve.normalizeAngle(target_heading - swerve.getYaw().getDegrees())) > angular_tolerance) && (!driver.getRawButton(tagAlignerExitButton))) {
             if (Swerve.normalizeAngle(target_heading - swerve.getYaw().getDegrees()) < 0) {
                 swerve.drive(new Translation2d(), -rotation_speed * Constants.BaseFalconSwerve.maxAngularVelocity, false, true);
             } else {
@@ -73,6 +77,8 @@ public class AlignWithApriltag extends CommandBase {
 
         swerve.changeHeading(0);
         swerve.drive(new Translation2d(), 0, true, false); // brake
+
+        System.out.println("Ok, we got here successfully");
 
         double[] prev_x = new double[distance_trials];
         double prev_x_average = 0;

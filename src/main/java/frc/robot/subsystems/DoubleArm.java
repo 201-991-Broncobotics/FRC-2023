@@ -1,9 +1,10 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.AnalogEncoder;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,9 +14,9 @@ import static frc.robot.Constants.DoubleArmConstants.*;
 public class DoubleArm extends SubsystemBase {
 
     private CANSparkMax first_motor, first_motor_follower, second_motor;
-    private AnalogEncoder first_encoder, second_encoder;
+    private DutyCycleEncoder first_encoder, second_encoder;
 
-    public double[] target_xy = new double[2];
+    private double[] target_xy = new double[2];
     private double[] target_positions = new double[2];
 
     public DoubleArm() { // Initialize the motors, encoders, and target positions
@@ -23,23 +24,46 @@ public class DoubleArm extends SubsystemBase {
         first_motor_follower = new CANSparkMax(first_motor_follower_ID, MotorType.kBrushless);
         second_motor = new CANSparkMax(second_motor_ID, MotorType.kBrushless);
 
+        first_motor.restoreFactoryDefaults();
+        first_motor.setIdleMode(IdleMode.kBrake);
         first_motor.setInverted(invert_first_motor);
-        first_motor_follower.follow(first_motor, invert_first_motor_follower); // follows it in the same direction
-                    // we may have to change this part, I'm not sure
-        second_motor.setInverted(invert_second_motor);
+
+        first_motor_follower.restoreFactoryDefaults();
+        first_motor_follower.setIdleMode(IdleMode.kBrake);
+        first_motor_follower.setInverted(invert_first_motor);
+        
+        second_motor.restoreFactoryDefaults();
+        second_motor.setIdleMode(IdleMode.kBrake);
+        second_motor.setInverted(invert_first_motor);
+        
         // we want it so powering the motors rotates the arms counterclockwise
 
-        first_encoder = new AnalogEncoder(first_encoder_channel);
-        second_encoder = new AnalogEncoder(second_encoder_channel);
-        // we want it so the encoder increases when the arm goes counterclockwise - may have to adjust them
+        /* Hopefully these are fine with the defaults :)
+        first_motor.setOpenLoopRampRate(first_motor_acceleration_time); // maximum time for 0 to full throttle
+        first_motor.setSmartCurrentLimit(first_motor_max_current); // current limit
+        first_motor.enableVoltageCompensation(first_motor_voltage_compensation);
+        
+        first_motor_follower.setOpenLoopRampRate(first_motor_acceleration_time);
+        first_motor_follower.setSmartCurrentLimit(first_motor_max_current); // current limit
+        first_motor_follower.enableVoltageCompensation(first_motor_voltage_compensation);
+        
+        second_motor.setOpenLoopRampRate(second_motor_acceleration_time);
+        second_motor.setSmartCurrentLimit(second_motor_max_current); // current limit
+        second_motor.enableVoltageCompensation(second_motor_voltage_compensation); */
+
+        first_motor_follower.follow(first_motor, invert_first_motor_follower); // follows it in the same direction
+                    // we may have to change this part, I'm not sure
+
+        first_encoder = new DutyCycleEncoder(first_encoder_channel);
+        second_encoder = new DutyCycleEncoder(second_encoder_channel);
 
         first_encoder.setDistancePerRotation(360.0 * (invert_first_encoder ? -1 : 1)); // no gear ratio
-        second_encoder.setDistancePerRotation(360.0 * (invert_second_encoder ? -1 : 1)); // put this negative if it increases the wrong way
+        second_encoder.setDistancePerRotation(360.0 * (invert_second_encoder ? -1 : 1));
+        
+        // we want it so the encoder increases when the arm goes counterclockwise - may have to adjust them
 
         target_positions[0] = first_encoder.getDistance();
-        target_positions[1] = first_encoder.getDistance(); 
-                            // if we want to reset encoders, run resetEncoders()
-                            // reset encoders before Autonomous and Testing, not before TeleOp tho
+        target_positions[1] = first_encoder.getDistance() + second_encoder.getDistance(); // DO NOT reset them
         
         target_xy[0] = first_arm_length * Math.cos(target_positions[0] * Math.PI / 180.0) + 
                        second_arm_length * Math.cos(target_positions[1] * Math.PI / 180.0);
@@ -50,10 +74,22 @@ public class DoubleArm extends SubsystemBase {
         Timer.delay(1.0);
     }
 
+    public void moveArm(double dx, double dy) {
+
+        if (dx != 0) {
+            target_xy[0] = getCurrentXY()[0] + dx;
+        } // else leave target xy constant
+        if (dy != 0) {
+            target_xy[1] = getCurrentXY()[1] + dy;
+        }
+
+        powerArm(target_xy[0], target_xy[1]);
+    }
+
     public void powerArm(double horizontalTarget, double verticalTarget) { // in RobotContainer have a function to make them continuous
         setTargetPositions(horizontalTarget, verticalTarget);
 
-        double[] current_angles = getAbsoluteArmAngles();
+        double[] current_angles = getCurrentArmAngles();
 
         first_motor.set(pidPower(
             target_positions[0] - current_angles[0], 
@@ -71,9 +107,45 @@ public class DoubleArm extends SubsystemBase {
         // set power to arm modules
     }
 
+    public void rawPowerArm(double firstPower, double secondPower) {
+        double[] current_angles = getCurrentArmAngles();
+
+        if (firstPower != 0) {
+            target_positions[0] = current_angles[0];
+        } else {
+            firstPower = pidPower(
+                target_positions[0] - current_angles[0], 
+                first_motor_max_power, 
+                first_motor_min_error, 
+                first_motor_max_error
+            );
+        }
+
+        if (secondPower != 0) {
+            target_positions[1] = current_angles[1];
+        } else {
+            secondPower = pidPower(
+                target_positions[1] - current_angles[1], 
+                second_motor_max_power, 
+                second_motor_min_error, 
+                second_motor_max_error
+            );
+        }
+        // Only change target positions if we want to manually change them
+        // Otherwise do le PID
+
+        first_motor.set(firstPower);
+        second_motor.set(secondPower);
+    }
+
     public void resetEncoders() {
         first_encoder.reset();
         second_encoder.reset();
+        target_positions[0] = 0;
+        target_positions[1] = 0;
+        
+        target_xy[0] = first_arm_length + second_arm_length;
+        target_xy[1] = 0;
     }
 
     public void setTargetPositions(double x, double y) {
@@ -114,7 +186,16 @@ public class DoubleArm extends SubsystemBase {
             // if we are greater than our switching angle, then we are concave down; if we are less, then we are concave down
     }
 
-    public double[] getAbsoluteArmAngles() {
+    public double[] getCurrentXY() {
+        return new double[] {
+            first_arm_length * Math.cos(getCurrentArmAngles()[0] * Math.PI / 180.0) + 
+            second_arm_length * Math.cos(getCurrentArmAngles()[1] * Math.PI / 180.0), 
+            first_arm_length * Math.sin(getCurrentArmAngles()[0] * Math.PI / 180.0) + 
+            second_arm_length * Math.sin(getCurrentArmAngles()[1] * Math.PI / 180.0)
+        };
+    }
+
+    public double[] getCurrentArmAngles() {
         return new double[] {
             first_encoder.getDistance(), 
             first_encoder.getDistance() + second_encoder.getDistance()
@@ -126,6 +207,8 @@ public class DoubleArm extends SubsystemBase {
             first_encoder.getDistance(), 
             second_encoder.getDistance(),
             first_encoder.getDistance() + second_encoder.getDistance(),
+            getCurrentXY()[0], 
+            getCurrentXY()[1], 
             pidPower(
                 target_positions[0] - (first_encoder.getDistance()), 
                 first_motor_max_power, 
@@ -160,16 +243,22 @@ public class DoubleArm extends SubsystemBase {
     }
 
     @Override
-    public void periodic() { // PID and Telemetry
+    public void periodic() { // Put data to smart dashboard
         double[] data = getData();
         SmartDashboard.putNumber("Arm 1 Angle", data[0]);
         SmartDashboard.putNumber("Arm 2 Relative Angle", data[1]);
         SmartDashboard.putNumber("Arm 2 Absolute Angle", data[2]);
-        SmartDashboard.putNumber("Arm 1 target power", data[3]);
-        SmartDashboard.putNumber("Arm 2 target power", data[4]);
-        SmartDashboard.putNumber("Target x", data[5]);
-        SmartDashboard.putNumber("Target y", data[6]);
-        SmartDashboard.putNumber("Target 1st Angle", data[7]);
-        SmartDashboard.putNumber("Target 2nd Angle", data[8]);
+        SmartDashboard.putNumber("Current x", data[3]);
+        SmartDashboard.putNumber("Current y", data[4]);
+        SmartDashboard.putNumber("Arm 1 target power", data[5]);
+        SmartDashboard.putNumber("Arm 2 target power", data[6]);
+        SmartDashboard.putNumber("Target x", data[7]);
+        SmartDashboard.putNumber("Target y", data[8]);
+        SmartDashboard.putNumber("Target 1st Angle", data[9]);
+        SmartDashboard.putNumber("Target 2nd Angle", data[10]);
+
+        SmartDashboard.putNumber("Default Ramp Rate", first_motor.getOpenLoopRampRate());
+        SmartDashboard.putNumber("First Motor Current", first_motor.getOutputCurrent());
+        SmartDashboard.putNumber("Default Voltage Compensation", first_motor.getVoltageCompensationNominalVoltage());
     }
 }
