@@ -10,6 +10,8 @@ import frc.robot.subsystems.Swerve;
 
 import static frc.robot.Constants.AprilTagAlignmentConstants.*;
 
+import org.opencv.features2d.FlannBasedMatcher;
+
 public class AlignWithApriltag extends CommandBase {
 
     private Swerve swerve;
@@ -68,9 +70,9 @@ public class AlignWithApriltag extends CommandBase {
         }
 
         if (angular_offset < 0) {
-            swerve.drive(new Translation2d(0, strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
+            swerve.drive(new Translation2d(0, strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, false);
         } else {
-            swerve.drive(new Translation2d(0, -strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
+            swerve.drive(new Translation2d(0, -strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, false);
         }
         
         Timer.delay(0.3);
