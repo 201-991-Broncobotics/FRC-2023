@@ -37,8 +37,7 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
-    // private final DoubleArm doubleArm = new DoubleArm();
-    private final DoubleArmNoEncoders doubleArmNoEncoders = new DoubleArmNoEncoders();
+    private final DoubleArm doubleArm = new DoubleArm();
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -54,15 +53,15 @@ public class RobotContainer {
             )
         );
 
-        doubleArmNoEncoders.setDefaultCommand(
+        doubleArm.setDefaultCommand(
             new TeleopDoubleArmNoEncoders(
-                doubleArmNoEncoders, 
+                doubleArm, 
                 () -> -operator.getRawAxis(motorOneAxis),
                 () -> -operator.getRawAxis(motorTwoAxis)
             )
         );
 
-        /* Add this back once we have encoders wired
+        /* not working yet
         doubleArm.setDefaultCommand(
             new TeleopDoubleArm(
                 doubleArm, 
@@ -90,7 +89,7 @@ public class RobotContainer {
         brake.toggleOnFalse(new Brake(s_Swerve));
         
         /* Operator Buttons */
-        // resetEncoders.toggleOnFalse(new InstantCommand(() -> doubleArm.resetEncoders()));
+        // resetEncoders.toggleOnFalse(new InstantCommand(() -> doubleArm.resetEncoders())); - already reset W
         // topGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(40, 14)));
     }
 

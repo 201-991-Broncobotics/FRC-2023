@@ -5,20 +5,21 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static frc.robot.Constants.*;
-import frc.robot.subsystems.DoubleArmNoEncoders;
+
+import frc.robot.subsystems.DoubleArm;
 
 import static frc.robot.Constants.DoubleArmConstants.*;
 
 public class TeleopDoubleArmNoEncoders extends CommandBase {
 
-    private DoubleArmNoEncoders doubleArmNoEncoders;
+    private DoubleArm doubleArm;
 
     private DoubleSupplier motorOneSup;
     private DoubleSupplier motorTwoSup;
 
-    public TeleopDoubleArmNoEncoders(DoubleArmNoEncoders doubleArmNoEncoders, DoubleSupplier motorOneSup, DoubleSupplier motorTwoSup) {
-        this.doubleArmNoEncoders = doubleArmNoEncoders;
-        addRequirements(doubleArmNoEncoders); // means that other functions are not allowed to access it
+    public TeleopDoubleArmNoEncoders(DoubleArm doubleArm, DoubleSupplier motorOneSup, DoubleSupplier motorTwoSup) {
+        this.doubleArm = doubleArm;
+        addRequirements(doubleArm); // means that other functions are not allowed to access it
 
         this.motorOneSup = motorOneSup;
         this.motorTwoSup = motorTwoSup; // sets up the double suppliers
@@ -31,7 +32,7 @@ public class TeleopDoubleArmNoEncoders extends CommandBase {
         double motorTwoVal = MathUtil.applyDeadband(motorTwoSup.getAsDouble(), joystick_deadzone);
 
         // Move Arm
-        doubleArmNoEncoders.rawPowerArm(
+        doubleArm.brainDeadRawPowerArm(
             motorOneVal * raw_arm_sensitivity, // power????? but it's weird
             motorTwoVal * raw_arm_sensitivity_two
         );

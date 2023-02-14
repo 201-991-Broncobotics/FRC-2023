@@ -208,15 +208,15 @@ public final class Constants {
         public static final int first_motor_ID = 21, 
                                 first_motor_follower_ID = 22, 
                                 second_motor_ID = 23, // CAN IDs
-                                first_encoder_channel = 0, 
-                                second_encoder_channel = 1; // PWM Input Channels
+                                first_encoder_channel = 1, 
+                                second_encoder_channel = 0; // PWM Input Channels
 
         /* Motor Variables */
     
         public static final boolean invert_first_motor = true, 
                                     invert_first_motor_follower = false, 
                                     invert_second_motor = true, 
-                                    invert_first_encoder = false, 
+                                    invert_first_encoder = true, 
                                     invert_second_encoder = false, 
                                     first_motor_brake = false, 
                                     second_motor_brake = false;
@@ -232,7 +232,7 @@ public final class Constants {
 
         /* Variables */
         
-        public static final double arm_sensitivity = 5, // inches per second
+        public static final double arm_sensitivity = 0.1, // inches per second
                                    raw_arm_sensitivity = 0.5, // power ratio
                                    raw_arm_sensitivity_two = 0.25,
 
@@ -247,8 +247,8 @@ public final class Constants {
 
                                    switching_angle = -90, // always concave down
 
-                                   first_motor_max_power = 1.0,
-                                   second_motor_max_power = 1.0,
+                                   first_motor_max_power = 0.1,
+                                   second_motor_max_power = 0.1,
 
                                    first_motor_min_error = 0.5, 
                                    second_motor_min_error = 0.5,

@@ -141,6 +141,11 @@ public class DoubleArm extends SubsystemBase {
         second_motor.set(secondPower);
     }
 
+    public void brainDeadRawPowerArm(double firstPower, double secondPower) {
+        first_motor.set(firstPower);
+        second_motor.set(secondPower);
+    }
+
     public void resetEncoders() {
         first_encoder.reset();
         second_encoder.reset();
