@@ -218,8 +218,8 @@ public final class Constants {
                                     invert_second_motor = true, 
                                     invert_first_encoder = true, 
                                     invert_second_encoder = false, 
-                                    first_motor_brake = false, 
-                                    second_motor_brake = false;
+                                    first_motor_brake = true, 
+                                    second_motor_brake = true;
         
         public static final int first_motor_max_current = 20, // amps
                                    first_motor_follower_max_current = 20, 
