@@ -33,7 +33,7 @@ public class AlignWithApriltag extends CommandBase {
         swerve.drive(new Translation2d(), 0, true, false); // brake
 
         double angular_offset = 0;
-        for (int i = 0; i < angle_trials; i++) {
+        for (int i = 0; (i < angle_trials) && (!driver.getRawButton(tagAlignerExitButton)); i++) {
             if (Limelight.getData()[1] == -12) return;
             if ((Math.abs(swerve.getYaw().getDegrees() + Limelight.getData()[1]) + max_angular_tolerance) % 90 > 2 * max_angular_tolerance) { // this is the target angle
                 i--;
@@ -42,6 +42,8 @@ public class AlignWithApriltag extends CommandBase {
             }
             Timer.delay(0.01); // Limelight updates every 100hz
         }
+
+        if (driver.getRawButton(tagAlignerExitButton)) return;
 
         System.out.println(swerve.getYaw().getDegrees());
         System.out.println(angular_offset);
@@ -57,6 +59,8 @@ public class AlignWithApriltag extends CommandBase {
             }
         } // wait until we are good
 
+        if (driver.getRawButton(tagAlignerExitButton)) return;
+
         swerve.setTargetHeading(target_heading);
 
         while ((Limelight.getData()[2] == -12) && (!driver.getRawButton(tagAlignerExitButton))) { // while we can't see the apriltag
@@ -66,6 +70,8 @@ public class AlignWithApriltag extends CommandBase {
                 swerve.drive(new Translation2d(0, -strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
             }
         }
+
+        if (driver.getRawButton(tagAlignerExitButton)) return;
 
         if (angular_offset < 0) {
             swerve.drive(new Translation2d(0, strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, false);
@@ -84,7 +90,7 @@ public class AlignWithApriltag extends CommandBase {
         double prev_x_average = 0;
         int current_index = 0; // instead of reshuffling array each time
 
-        for (int i = 0; i < distance_trials; i++) {
+        for (int i = 0; (i < distance_trials) && (!driver.getRawButton(tagAlignerExitButton)); i++) {
             if (Math.abs(Limelight.getData()[1]) > max_angular_tolerance) {
                 i--;
             } else {
@@ -93,6 +99,8 @@ public class AlignWithApriltag extends CommandBase {
             }
             Timer.delay(0.01);
         }
+
+        if (driver.getRawButton(tagAlignerExitButton)) return;
 
         swerve.setTargetHeading(target_heading);
 
