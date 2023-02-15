@@ -205,32 +205,8 @@ public class DoubleArm extends SubsystemBase {
 
     public double[] getCurrentArmAngles() {
         return new double[] {
-            first_encoder.getDistance(), 
-            first_encoder.getDistance() + second_encoder.getDistance()
-        };
-    }
-
-    public double[] getData() {
-        return new double[] {
-            first_encoder.getDistance(), 
-            second_encoder.getDistance(),
-            first_encoder.getDistance() + second_encoder.getDistance(),
-            getCurrentXY()[0], 
-            getCurrentXY()[1], 
-            pidPower(
-                target_positions[0] - (first_encoder.getDistance()), 
-                first_motor_max_power, 
-                first_motor_min_error, 
-                first_motor_max_error),
-            pidPower(
-                target_positions[1] - (first_encoder.getDistance() + second_encoder.getDistance()), 
-                second_motor_max_power, 
-                second_motor_min_error, 
-                second_motor_max_error), 
-            target_xy[0], 
-            target_xy[1], 
-            target_positions[0], 
-            target_positions[1]
+            first_encoder.getDistance() - first_encoder_zero, 
+            first_encoder.getDistance() - first_encoder_zero + second_encoder.getDistance() - second_encoder_zero
         };
     }
 
@@ -252,18 +228,20 @@ public class DoubleArm extends SubsystemBase {
 
     @Override
     public void periodic() { // Put data to smart dashboard
-        double[] data = getData();
-        SmartDashboard.putNumber("Arm 1 Angle", data[0]);
-        SmartDashboard.putNumber("Arm 2 Relative Angle", data[1]);
-        SmartDashboard.putNumber("Arm 2 Absolute Angle", data[2]);
-        SmartDashboard.putNumber("Current x", data[3]);
-        SmartDashboard.putNumber("Current y", data[4]);
-        SmartDashboard.putNumber("Arm 1 target power", data[5]);
-        SmartDashboard.putNumber("Arm 2 target power", data[6]);
-        SmartDashboard.putNumber("Target x", data[7]);
-        SmartDashboard.putNumber("Target y", data[8]);
-        SmartDashboard.putNumber("Target 1st Angle", data[9]);
-        SmartDashboard.putNumber("Target 2nd Angle", data[10]);
+        SmartDashboard.putNumber("Encoder 1 Raw", first_encoder.getDistance());
+        SmartDashboard.putNumber("Encoder 2 Raw", second_encoder.getDistance());
+
+        SmartDashboard.putNumber("Current Angle 1", getCurrentArmAngles()[0]);
+        SmartDashboard.putNumber("Current Angle 2", getCurrentArmAngles()[1]);
+
+        SmartDashboard.putNumber("Current x", getCurrentXY()[0]);
+        SmartDashboard.putNumber("Current y", getCurrentXY()[1]);
+
+        SmartDashboard.putNumber("Target 1st Angle", target_positions[0]);
+        SmartDashboard.putNumber("Target 2nd Angle", target_positions[1]);
+
+        SmartDashboard.putNumber("Target x", target_xy[0]);
+        SmartDashboard.putNumber("Target y", target_xy[1]);
 
         SmartDashboard.putNumber("Default Ramp Rate", first_motor.getOpenLoopRampRate());
         SmartDashboard.putNumber("First Motor Current", first_motor.getOutputCurrent());

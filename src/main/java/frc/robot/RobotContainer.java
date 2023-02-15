@@ -33,7 +33,6 @@ public class RobotContainer {
 
     /* Operator Buttons */
     private final JoystickButton topGoal = new JoystickButton(operator, topGoalButton);
-    private final JoystickButton resetEncoders = new JoystickButton(operator, resetEncodersButton);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -89,7 +88,6 @@ public class RobotContainer {
         brake.toggleOnFalse(new Brake(s_Swerve));
         
         /* Operator Buttons */
-        resetEncoders.toggleOnFalse(new InstantCommand(() -> doubleArm.resetEncoders()));
         // topGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(40, 14)));
     }
 

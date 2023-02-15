@@ -200,8 +200,7 @@ public final class Constants {
                                 vertAxis = XboxController.Axis.kLeftY.value, 
                                 motorOneAxis = XboxController.Axis.kLeftY.value, 
                                 motorTwoAxis = XboxController.Axis.kRightY.value, 
-                                topGoalButton = XboxController.Button.kA.value, 
-                                resetEncodersButton = XboxController.Button.kStart.value;
+                                topGoalButton = XboxController.Button.kA.value;
 
         /* CAN IDs and Input Channels */
 
@@ -228,7 +227,9 @@ public final class Constants {
         public static final double first_motor_acceleration_time = 3, 
                                    first_motor_voltage_compensation = 0, 
                                    second_motor_acceleration_time = 3, 
-                                   second_motor_voltage_compensation = 0;
+                                   second_motor_voltage_compensation = 0, 
+                                   first_encoder_zero = -90.69, 
+                                   second_encoder_zero = 177.29;
 
         /* Variables */
         
