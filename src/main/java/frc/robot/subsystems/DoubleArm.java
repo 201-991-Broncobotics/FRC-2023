@@ -262,9 +262,5 @@ public class DoubleArm extends SubsystemBase {
         SmartDashboard.putNumber("Target y", target_xy[1]);
 
         SmartDashboard.putNumber("Error", getTotalError());
-
-        SmartDashboard.putNumber("Default Ramp Rate", first_motor.getOpenLoopRampRate());
-        SmartDashboard.putNumber("First Motor Current", first_motor.getOutputCurrent());
-        SmartDashboard.putNumber("Default Voltage Compensation", first_motor.getVoltageCompensationNominalVoltage());
     }
 }

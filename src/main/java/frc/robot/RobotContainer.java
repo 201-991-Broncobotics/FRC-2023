@@ -33,6 +33,7 @@ public class RobotContainer {
 
     /* Operator Buttons */
     private final JoystickButton topGoal = new JoystickButton(operator, topGoalButton);
+    private final JoystickButton startPos = new JoystickButton(operator, startPosButton);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -90,6 +91,7 @@ public class RobotContainer {
         
         /* Operator Buttons */
         topGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(topPosition)));
+        startPos.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(startPosition)));
     }
 
     /**

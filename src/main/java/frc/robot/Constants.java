@@ -200,7 +200,8 @@ public final class Constants {
                                 vertAxis = XboxController.Axis.kLeftY.value, 
                                 motorOneAxis = XboxController.Axis.kLeftY.value, 
                                 motorTwoAxis = XboxController.Axis.kRightY.value, 
-                                topGoalButton = XboxController.Button.kA.value;
+                                topGoalButton = XboxController.Button.kA.value, 
+                                startPosButton = XboxController.Button.kStart.value;
 
         /* CAN IDs and Input Channels */
 
@@ -233,7 +234,7 @@ public final class Constants {
 
         /* Variables */
         
-        public static final double arm_sensitivity = 4, // inches per second
+        public static final double arm_sensitivity = 10, // inches per second
                                    raw_arm_sensitivity = 0.5, // power ratio
                                    raw_arm_sensitivity_two = 0.25,
 
@@ -248,8 +249,8 @@ public final class Constants {
 
                                    switching_angle = 0, // if below horizontal --> concave up, if above horizontal --> concave down
 
-                                   first_motor_max_power = 0.1,
-                                   second_motor_max_power = 0.1,
+                                   first_motor_max_power = 0.2,
+                                   second_motor_max_power = 0.2,
 
                                    first_motor_min_error = 0.5, 
                                    second_motor_min_error = 0.5,
@@ -265,9 +266,10 @@ public final class Constants {
                                midPosition = {40, 0}, 
                                lowPosition = {20, -20}, 
                                intakePosition = {20, -40}, 
-                               idlePosition = {10, -10};
+                               idlePosition = {10, -10}, 
+                               startPosition = {-13.2, -13.2};
 
-        public static boolean debug = false; // change this to true if we want to braindeadpower
+        public static boolean debug = true; // change this to true if we want to braindeadpower
     }
 
     public static final class ClawConstants {
@@ -304,7 +306,7 @@ public final class Constants {
                                    CANCoder1_zero = 291.97, 
                                    CANCoder2_zero = 316.10, 
                                    CANCoder3_zero = 326.16, 
-                                   encoder_one_zero = -95.2, 
+                                   encoder_one_zero = -95.92, 
                                    encoder_two_zero = 178.1;
 
         // TODO: Tune these before competition
