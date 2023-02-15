@@ -150,6 +150,17 @@ public class DoubleArm extends SubsystemBase {
         
         target_xy[0] = getCurrentXY()[0];
         target_xy[1] = getCurrentXY()[1];
+
+        brake();
+    }
+
+    public void brake() {
+        first_motor.set(0);
+        second_motor.set(0);
+    }
+
+    public void setTargetPositions(double[] target) {
+        setTargetPositions(target[0], target[1]);
     }
 
     public void setTargetPositions(double x, double y) {
@@ -222,6 +233,13 @@ public class DoubleArm extends SubsystemBase {
 
     }
 
+    public double getTotalError() {
+        return Math.sqrt(
+            (getCurrentXY()[0] - target_xy[0]) * (getCurrentXY()[0] - target_xy[0]) + 
+            (getCurrentXY()[1] - target_xy[1]) * (getCurrentXY()[1] - target_xy[1])
+        );
+    }
+
     @Override
     public void periodic() { // Put data to smart dashboard
         SmartDashboard.putNumber("Encoder 1 Raw", first_encoder.getDistance());
@@ -238,6 +256,8 @@ public class DoubleArm extends SubsystemBase {
 
         SmartDashboard.putNumber("Target x", target_xy[0]);
         SmartDashboard.putNumber("Target y", target_xy[1]);
+
+        SmartDashboard.putNumber("Error", getTotalError());
 
         SmartDashboard.putNumber("Default Ramp Rate", first_motor.getOpenLoopRampRate());
         SmartDashboard.putNumber("First Motor Current", first_motor.getOutputCurrent());

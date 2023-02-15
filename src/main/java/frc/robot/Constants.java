@@ -257,6 +257,42 @@ public final class Constants {
                                    first_motor_max_error = 5.0, 
                                    second_motor_max_error = 5.0,
 
-                                   k_exponent = 1.5; // 1.0 for a normal PID
+                                   k_exponent = 1.5,  // 1.0 for a normal PID
+
+                                   tolerance = 3; // number of inches until we bing chilling
+        
+        public static double[] topPosition = {44, 12}, 
+                               midPosition = {40, 0}, 
+                               lowPosition = {20, -20}, 
+                               intakePosition = {20, -40};
+    }
+
+    public static final class ClawConstants {
+
+
+        /* Control Buttons */
+
+        public static final int intakeButton = XboxController.Button.kA.value, 
+                                outtakeButton = XboxController.Button.kA.value;
+
+        /* CAN ID */
+
+        public static final int claw_motor_ID = 24;
+
+        /* Motor Variables */
+    
+        public static final boolean claw_motor_brake = true;
+        
+        public static final int claw_motor_max_current = 20;
+        
+        public static final double claw_motor_acceleration_time = 3, 
+                                   claw_motor_voltage_compensation = 0;
+
+        /* Variables */
+        
+        public static final double intake_power = 0.1, // one should be neg, one should be positive
+                                   outtake_power = 0.1, 
+                                   intake_time = 0.5, 
+                                   outtake_time = 0.5; // seconds
     }
 }

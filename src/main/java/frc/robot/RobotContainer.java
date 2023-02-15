@@ -88,7 +88,7 @@ public class RobotContainer {
         brake.toggleOnFalse(new Brake(s_Swerve));
         
         /* Operator Buttons */
-        // topGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(40, 14)));
+        // topGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(topPosition)));
     }
 
     /**
