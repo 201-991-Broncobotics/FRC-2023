@@ -233,7 +233,7 @@ public final class Constants {
 
         /* Variables */
         
-        public static final double arm_sensitivity = 0.1, // inches per second
+        public static final double arm_sensitivity = 4, // inches per second
                                    raw_arm_sensitivity = 0.5, // power ratio
                                    raw_arm_sensitivity_two = 0.25,
 
