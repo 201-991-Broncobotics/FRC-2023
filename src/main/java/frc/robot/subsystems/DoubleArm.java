@@ -73,14 +73,12 @@ public class DoubleArm extends SubsystemBase {
         
         // we want it so the encoder increases when the arm goes counterclockwise - may have to adjust them
 
-        target_positions[0] = first_encoder.getDistance();
-        target_positions[1] = first_encoder.getDistance() + second_encoder.getDistance(); // DO NOT reset them
+        target_positions[0] = getCurrentArmAngles()[0];
+        target_positions[1] = getCurrentArmAngles()[1]; // DO NOT reset them
         
-        target_xy[0] = first_arm_length * Math.cos(target_positions[0] * Math.PI / 180.0) + 
-                       second_arm_length * Math.cos(target_positions[1] * Math.PI / 180.0);
+        target_xy[0] = getCurrentXY()[0];
 
-        target_xy[1] = first_arm_length * Math.sin(target_positions[0] * Math.PI / 180.0) + 
-                       second_arm_length * Math.sin(target_positions[1] * Math.PI / 180.0);
+        target_xy[1] = getCurrentXY()[1];
 
         Timer.delay(1.0);
     }
@@ -146,14 +144,12 @@ public class DoubleArm extends SubsystemBase {
         second_motor.set(secondPower);
     }
 
-    public void resetEncoders() {
-        first_encoder.reset();
-        second_encoder.reset();
-        target_positions[0] = 0;
-        target_positions[1] = 0;
+    public void resetPID() {
+        target_positions[0] = getCurrentArmAngles()[0];
+        target_positions[1] = getCurrentArmAngles()[1];
         
-        target_xy[0] = first_arm_length + second_arm_length;
-        target_xy[1] = 0;
+        target_xy[0] = getCurrentXY()[0];
+        target_xy[1] = getCurrentXY()[1];
     }
 
     public void setTargetPositions(double x, double y) {
