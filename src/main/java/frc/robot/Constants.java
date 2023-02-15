@@ -304,8 +304,8 @@ public final class Constants {
                                    CANCoder1_zero = 291.97, 
                                    CANCoder2_zero = 316.10, 
                                    CANCoder3_zero = 326.16, 
-                                   encoder_one_zero = -90.69, 
-                                   encoder_two_zero = 177.29;
+                                   encoder_one_zero = -95.2, 
+                                   encoder_two_zero = 178.1;
 
         // TODO: Tune these before competition
     }
