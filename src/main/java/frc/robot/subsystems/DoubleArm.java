@@ -113,6 +113,8 @@ public class DoubleArm extends SubsystemBase {
 
         if (firstPower != 0) {
             target_positions[0] = current_angles[0];
+            target_xy[0] = getCurrentXY()[0];
+            target_xy[1] = getCurrentXY()[1];
         } else {
             firstPower = pidPower(
                 target_positions[0] - current_angles[0], 
@@ -124,6 +126,8 @@ public class DoubleArm extends SubsystemBase {
 
         if (secondPower != 0) {
             target_positions[1] = current_angles[1];
+            target_xy[0] = getCurrentXY()[0];
+            target_xy[1] = getCurrentXY()[1];
         } else {
             secondPower = pidPower(
                 target_positions[1] - current_angles[1], 
@@ -163,7 +167,7 @@ public class DoubleArm extends SubsystemBase {
         setTargetPositions(target[0], target[1]);
     }
 
-    public void setTargetPositions(double x, double y) {
+    public void setTargetPositions(double x, double y) { // add a version that puts concavity as an argument
 
         if (x <= min_x) x = min_x; // don't let x be too close
         if (y <= min_y) y = min_y; // don't let y be too low
@@ -187,6 +191,10 @@ public class DoubleArm extends SubsystemBase {
         target_xy[1] = y;
 
         double angle = Math.atan(y / x) * 180.0 / Math.PI; // because x > 0 we don't have to worry about adding pi
+        if (x < 0) {
+            if (angle > 0) angle -= 180;
+            else angle += 180;
+        }
         
         // set target 1 and target 2
 

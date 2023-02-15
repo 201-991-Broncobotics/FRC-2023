@@ -32,7 +32,7 @@ public class TeleopDoubleArmNoEncoders extends CommandBase {
         double motorTwoVal = MathUtil.applyDeadband(motorTwoSup.getAsDouble(), joystick_deadzone);
 
         // Move Arm
-        doubleArm.brainDeadRawPowerArm(
+        doubleArm.rawPowerArm(
             motorOneVal * raw_arm_sensitivity, // power????? but it's weird
             motorTwoVal * raw_arm_sensitivity_two
         );

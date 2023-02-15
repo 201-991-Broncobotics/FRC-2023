@@ -235,30 +235,30 @@ public final class Constants {
         /* Variables */
         
         public static final double arm_sensitivity = 10, // inches per second
-                                   raw_arm_sensitivity = 0.5, // power ratio
-                                   raw_arm_sensitivity_two = 0.25,
+                                   raw_arm_sensitivity = 0.35, // power ratio
+                                   raw_arm_sensitivity_two = 0.15,
 
                                    min_x = -20, 
                                    min_y = -45, // inches
 
                                    clipping_one = 1.1, 
-                                   clipping_two = 0.9, // first should be > 1, second should be < 1
+                                   clipping_two = 0.99, // first should be > 1, second should be < 1
 
                                    first_arm_length = 32, 
                                    second_arm_length = 20, // inches
 
                                    switching_angle = 0, // if below horizontal --> concave up, if above horizontal --> concave down
 
-                                   first_motor_max_power = 0.2,
-                                   second_motor_max_power = 0.2,
+                                   first_motor_max_power = 0.4,
+                                   second_motor_max_power = 0.1,
 
-                                   first_motor_min_error = 0.5, 
-                                   second_motor_min_error = 0.5,
+                                   first_motor_min_error = 2, 
+                                   second_motor_min_error = 2,
 
-                                   first_motor_max_error = 5.0, 
-                                   second_motor_max_error = 5.0,
+                                   first_motor_max_error = 25.0, 
+                                   second_motor_max_error = 25.0,
 
-                                   k_exponent = 1.5,  // 1.0 for a normal PID
+                                   k_exponent = 3,  // 1.0 for a normal PID
 
                                    tolerance = 3; // number of inches until we bing chilling
         
@@ -267,7 +267,7 @@ public final class Constants {
                                lowPosition = {20, -20}, 
                                intakePosition = {20, -40}, 
                                idlePosition = {10, -10}, 
-                               startPosition = {-13.2, -13.2};
+                               startPosition = {-1, -11};
 
         public static boolean debug = true; // change this to true if we want to braindeadpower
     }
@@ -302,10 +302,10 @@ public final class Constants {
     }
 
     public static final class TuningConstants {
-        public static final double CANCoder0_zero = 306.82, 
-                                   CANCoder1_zero = 291.97, 
-                                   CANCoder2_zero = 316.10, 
-                                   CANCoder3_zero = 326.16, 
+        public static final double CANCoder0_zero = 291.09, 
+                                   CANCoder1_zero = 297.86, 
+                                   CANCoder2_zero = 320.18, 
+                                   CANCoder3_zero = 295.57, 
                                    encoder_one_zero = -95.92, 
                                    encoder_two_zero = 178.1;
 
