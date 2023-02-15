@@ -249,16 +249,16 @@ public final class Constants {
 
                                    switching_angle = 0, // if below horizontal --> concave up, if above horizontal --> concave down
 
-                                   first_motor_max_power = 0.4,
-                                   second_motor_max_power = 0.1,
+                                   first_motor_max_power = 0.5,
+                                   second_motor_max_power = 0.2,
 
-                                   first_motor_min_error = 2, 
-                                   second_motor_min_error = 2,
+                                   first_motor_min_error = 1, 
+                                   second_motor_min_error = 1,
 
                                    first_motor_max_error = 25.0, 
                                    second_motor_max_error = 25.0,
 
-                                   k_exponent = 3,  // 1.0 for a normal PID
+                                   k_exponent = 1.5,  // 1.0 for a normal PID
 
                                    tolerance = 3; // number of inches until we bing chilling
         
