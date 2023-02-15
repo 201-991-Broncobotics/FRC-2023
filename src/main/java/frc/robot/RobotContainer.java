@@ -52,22 +52,23 @@ public class RobotContainer {
             )
         );
 
-        doubleArm.setDefaultCommand(
-            new TeleopDoubleArmNoEncoders(
-                doubleArm, 
-                () -> -operator.getRawAxis(motorOneAxis),
-                () -> -operator.getRawAxis(motorTwoAxis)
-            )
-        );
-
-        /* not working yet
-        doubleArm.setDefaultCommand(
-            new TeleopDoubleArm(
-                doubleArm, 
-                () -> operator.getRawAxis(horizAxis),
-                () -> -operator.getRawAxis(vertAxis)
-            )
-        ); */
+        if (debug) {
+            doubleArm.setDefaultCommand(
+                new TeleopDoubleArmNoEncoders(
+                    doubleArm, 
+                    () -> -operator.getRawAxis(motorOneAxis),
+                    () -> -operator.getRawAxis(motorTwoAxis)
+                )
+            );
+        } else {
+            doubleArm.setDefaultCommand(
+                new TeleopDoubleArm(
+                    doubleArm, 
+                    () -> operator.getRawAxis(horizAxis),
+                    () -> -operator.getRawAxis(vertAxis)
+                )
+            );
+        }
 
         // Configure the button bindings
         configureButtonBindings();
@@ -88,7 +89,7 @@ public class RobotContainer {
         brake.toggleOnFalse(new Brake(s_Swerve));
         
         /* Operator Buttons */
-        // topGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(topPosition)));
+        topGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(topPosition)));
     }
 
     /**

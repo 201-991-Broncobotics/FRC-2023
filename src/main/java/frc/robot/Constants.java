@@ -264,7 +264,10 @@ public final class Constants {
         public static double[] topPosition = {44, 12}, 
                                midPosition = {40, 0}, 
                                lowPosition = {20, -20}, 
-                               intakePosition = {20, -40};
+                               intakePosition = {20, -40}, 
+                               idlePosition = {10, -10};
+
+        public static boolean debug = false; // change this to true if we want to braindeadpower
     }
 
     public static final class ClawConstants {
