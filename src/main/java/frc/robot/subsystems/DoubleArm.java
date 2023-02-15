@@ -168,6 +168,10 @@ public class DoubleArm extends SubsystemBase {
         if (x <= min_x) x = min_x; // don't let x be too close
         if (y <= min_y) y = min_y; // don't let y be too low
 
+        if (Math.abs(x) < 0.25) x = 0.25;
+
+        // there is no max_x or max_y because those will be determined by the radius
+
         double radius = Math.sqrt(x * x + y * y); // we don't have to worry about divide by zero errors because x > 0.25
         if (radius < clipping_one * (first_arm_length - second_arm_length)) {
             x *= clipping_one * (first_arm_length - second_arm_length) / radius;

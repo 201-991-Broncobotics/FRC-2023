@@ -97,7 +97,7 @@ public final class Constants {
             public static final int driveMotorID = 1;
             public static final int angleMotorID = 2;
             public static final int canCoderID = 11;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(306.82);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(TuningConstants.CANCoder0_zero);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -107,7 +107,7 @@ public final class Constants {
             public static final int driveMotorID = 7;
             public static final int angleMotorID = 8;
             public static final int canCoderID = 14;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(291.97);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(TuningConstants.CANCoder1_zero);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -117,7 +117,7 @@ public final class Constants {
             public static final int driveMotorID = 3;
             public static final int angleMotorID = 4;
             public static final int canCoderID = 12;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(316.10);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(TuningConstants.CANCoder2_zero);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -127,7 +127,7 @@ public final class Constants {
             public static final int driveMotorID = 5;
             public static final int angleMotorID = 6;
             public static final int canCoderID = 13;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(326.16);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(TuningConstants.CANCoder3_zero);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -228,8 +228,8 @@ public final class Constants {
                                    first_motor_voltage_compensation = 0, 
                                    second_motor_acceleration_time = 3, 
                                    second_motor_voltage_compensation = 0, 
-                                   first_encoder_zero = -90.69, 
-                                   second_encoder_zero = 177.29;
+                                   first_encoder_zero = TuningConstants.encoder_one_zero, 
+                                   second_encoder_zero = TuningConstants.encoder_two_zero;
 
         /* Variables */
         
@@ -237,7 +237,7 @@ public final class Constants {
                                    raw_arm_sensitivity = 0.5, // power ratio
                                    raw_arm_sensitivity_two = 0.25,
 
-                                   min_x = 10, 
+                                   min_x = -20, 
                                    min_y = -45, // inches
 
                                    clipping_one = 1.1, 
@@ -246,7 +246,7 @@ public final class Constants {
                                    first_arm_length = 32, 
                                    second_arm_length = 20, // inches
 
-                                   switching_angle = -90, // always concave down
+                                   switching_angle = 0, // if below horizontal --> concave up, if above horizontal --> concave down
 
                                    first_motor_max_power = 0.1,
                                    second_motor_max_power = 0.1,
@@ -294,5 +294,16 @@ public final class Constants {
                                    outtake_power = 0.1, 
                                    intake_time = 0.5, 
                                    outtake_time = 0.5; // seconds
+    }
+
+    public static final class TuningConstants {
+        public static final double CANCoder0_zero = 306.82, 
+                                   CANCoder1_zero = 291.97, 
+                                   CANCoder2_zero = 316.10, 
+                                   CANCoder3_zero = 326.16, 
+                                   encoder_one_zero = -90.69, 
+                                   encoder_two_zero = 177.29;
+
+        // TODO: Tune these before competition
     }
 }
