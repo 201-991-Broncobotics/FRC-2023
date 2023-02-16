@@ -20,6 +20,8 @@ public class DoubleArm extends SubsystemBase {
     private double[] target_positions = new double[2];
 
     private double time;
+    private double time_one_last;
+    private double time_two_last;
 
     public DoubleArm() { // Initialize the motors, encoders, and target positions
         first_motor = new CANSparkMax(first_motor_ID, MotorType.kBrushless); // NEO Motors are brushless
@@ -86,6 +88,8 @@ public class DoubleArm extends SubsystemBase {
         Timer.delay(1.0);
 
         time = System.currentTimeMillis() / 1000.0;
+        time_one_last = 0;
+        time_two_last = 0;
     }
 
     public void moveArm(double dx, double dy) {
@@ -127,7 +131,15 @@ public class DoubleArm extends SubsystemBase {
     public void rawPowerArm(double firstPower, double secondPower) {
         double[] current_angles = getCurrentArmAngles();
 
+        double delta_time = System.currentTimeMillis() / 1000.0 - time; // in seconds
+        time = System.currentTimeMillis() / 1000.0;
+
         if (firstPower != 0) {
+            target_positions[0] = current_angles[0];
+            target_xy[0] = getCurrentXY()[0];
+            target_xy[1] = getCurrentXY()[1];
+            time_one_last = time;
+    } else if (time - time_one_last < whiplash_time_one) {
             target_positions[0] = current_angles[0];
             target_xy[0] = getCurrentXY()[0];
             target_xy[1] = getCurrentXY()[1];
@@ -138,9 +150,16 @@ public class DoubleArm extends SubsystemBase {
                 first_motor_min_error, 
                 first_motor_max_error
             );
+            firstPower = Math.max(first_motor.get() - first_motor_max_power_per_second * delta_time, Math.min(first_motor.get() + first_motor_max_power_per_second * delta_time, firstPower));
         }
 
+
         if (secondPower != 0) {
+            target_positions[1] = current_angles[1];
+            target_xy[0] = getCurrentXY()[0];
+            target_xy[1] = getCurrentXY()[1];
+            time_two_last = time;
+        } else if (time - time_two_last < whiplash_time_two) {
             target_positions[1] = current_angles[1];
             target_xy[0] = getCurrentXY()[0];
             target_xy[1] = getCurrentXY()[1];
@@ -151,9 +170,13 @@ public class DoubleArm extends SubsystemBase {
                 second_motor_min_error, 
                 second_motor_max_error
             );
+            secondPower = Math.max(second_motor.get() - second_motor_max_power_per_second * delta_time, Math.min(second_motor.get() + second_motor_max_power_per_second * delta_time, secondPower));
         }
+        
+
         // Only change target positions if we want to manually change them
         // Otherwise do le PID
+        // Also limit acceleration
 
         first_motor.set(firstPower);
         second_motor.set(secondPower);
