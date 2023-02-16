@@ -151,13 +151,6 @@ public final class Constants {
 
     public static final class AprilTagAlignmentConstants {
 
-        /* Control Buttons */
-
-        public static final int tagAlignerButton = XboxController.Button.kA.value,
-                                tagAlignerExitButton = XboxController.Button.kA.value;
-
-        /* Variables */
-
         public static final int angle_trials = 25, 
                                 distance_trials = 10; // longer means slower but more accurate
 
@@ -170,38 +163,17 @@ public final class Constants {
     }
 
     public static final class SwerveConstants {
-
-        /* Control Buttons */
-
-        public static final int translationAxis = XboxController.Axis.kLeftY.value, 
-                          strafeAxis = XboxController.Axis.kLeftX.value,
-                          rotationAxis = XboxController.Axis.kRightX.value,
-                          slowAxis = XboxController.Axis.kRightTrigger.value, 
-                          zeroGyroButton = XboxController.Button.kY.value, 
-                          robotCentricButton = XboxController.Button.kLeftBumper.value,
-                          brakeButton = XboxController.Button.kX.value;
-
-        /* Variables */
         
         public static final double maximum_power = 0.6, 
-                             maximum_error = 50, // degrees
-                             exponent = 0.5, 
-                             calibration_time = 0.5, // seconds
-                             tolerance = 2, // degrees
-                             correction = 0; // If we're going at full speed, how much do we need to correct by as a % - must be experimentally determined
+                                   maximum_error = 50, // degrees
+                                   exponent = 0.5, 
+                                   calibration_time = 0.5, // seconds
+                                   tolerance = 2, // degrees
+                                   correction = 0; // If we're going at full speed, how much do we need to correct by as a % - must be experimentally determined
 
             // best tuned so far: 0.6 as maximum_power, 50 as max_error, 0.5 as exponent
     }
     public static final class DoubleArmConstants {
-
-        /* Control Buttons */
-
-        public static final int horizAxis = XboxController.Axis.kLeftX.value, 
-                                vertAxis = XboxController.Axis.kLeftY.value, 
-                                motorOneAxis = XboxController.Axis.kLeftY.value, 
-                                motorTwoAxis = XboxController.Axis.kRightY.value, 
-                                topGoalButton = XboxController.Button.kA.value, 
-                                startPosButton = XboxController.Button.kStart.value;
 
         /* CAN IDs and Input Channels */
 
@@ -222,8 +194,8 @@ public final class Constants {
                                     second_motor_brake = true;
         
         public static final int first_motor_max_current = 20, // amps
-                                   first_motor_follower_max_current = 20, 
-                                   second_motor_follower_max_current = 20;
+                                first_motor_follower_max_current = 20, 
+                                second_motor_follower_max_current = 20;
         
         public static final double first_motor_acceleration_time = 3, 
                                    first_motor_voltage_compensation = 0, 
@@ -258,27 +230,12 @@ public final class Constants {
                                    first_motor_max_error = 25.0, 
                                    second_motor_max_error = 25.0,
 
-                                   k_exponent = 1.5,  // 1.0 for a normal PID
+                                   k_exponent = 0.8,  // 1.0 for a normal PID
 
                                    tolerance = 3; // number of inches until we bing chilling
-        
-        public static double[] topPosition = {44, 12}, 
-                               midPosition = {40, 0}, 
-                               lowPosition = {20, -20}, 
-                               intakePosition = {20, -40}, 
-                               idlePosition = {10, -10}, 
-                               startPosition = {-1, -11};
-
-        public static boolean debug = true; // change this to true if we want to braindeadpower
     }
 
     public static final class ClawConstants {
-
-
-        /* Control Buttons */
-
-        public static final int intakeButton = XboxController.Button.kA.value, 
-                                outtakeButton = XboxController.Button.kA.value;
 
         /* CAN ID */
 
@@ -301,6 +258,35 @@ public final class Constants {
                                    outtake_time = 0.5; // seconds
     }
 
+    public static final class Buttons {
+
+        /* Driver Buttons */
+
+        public static final int translationAxis = XboxController.Axis.kLeftY.value, 
+                                strafeAxis = XboxController.Axis.kLeftX.value,
+                                rotationAxis = XboxController.Axis.kRightX.value,
+                                slowAxis = XboxController.Axis.kRightTrigger.value, 
+                                zeroGyroButton = XboxController.Button.kY.value, 
+                                robotCentricButton = XboxController.Button.kLeftBumper.value,
+                                brakeButton = XboxController.Button.kX.value,
+                                tagAlignerButton = XboxController.Button.kA.value,
+                                tagAlignerExitButton = XboxController.Button.kA.value;
+
+        /* Operator Buttons */
+
+        public static final int horizAxis = XboxController.Axis.kLeftX.value, 
+                                vertAxis = XboxController.Axis.kLeftY.value, 
+                                motorOneAxis = XboxController.Axis.kLeftY.value, 
+                                motorTwoAxis = XboxController.Axis.kRightY.value, 
+                                topGoalButton = XboxController.Button.kY.value, 
+                                midGoalButton = XboxController.Button.kB.value, 
+                                lowGoalButton = XboxController.Button.kX.value, 
+                                intakeButton = XboxController.Button.kA.value, 
+                                outtakeButton = XboxController.Button.kLeftBumper.value, 
+                                idleButton = XboxController.Button.kRightBumper.value, 
+                                startPosButton = XboxController.Button.kStart.value;
+    }
+
     public static final class TuningConstants {
         public static final double CANCoder0_zero = 291.09, 
                                    CANCoder1_zero = 297.86, 
@@ -309,6 +295,17 @@ public final class Constants {
                                    encoder_one_zero = -95.92, 
                                    encoder_two_zero = 178.1;
 
-        // TODO: Tune these before competition
+        // TODO: Tune these before EVERY SINGLE MATCH
+        
+        public static double[] topPosition = {44, 12}, 
+                               midPosition = {40, 0}, 
+                               lowPosition = {20, -20}, 
+                               intakePosition = {20, -40}, 
+                               idlePosition = {10, -10}, 
+                               startPosition = {-1, -11};
+
+        // TODO: still have to figure out these values lel
+
+        public static boolean manual_control = true; // change this to true if we want to braindeadpower
     }
 }

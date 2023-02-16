@@ -5,7 +5,7 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
 
 import static frc.robot.Constants.ClawConstants.*;
-import static frc.robot.Constants.DoubleArmConstants.*;
+import static frc.robot.Constants.TuningConstants.*;
 
 public class Outtake extends CommandBase {
     // Plan: we're already at outtake position, then outtake and reset target position for arm

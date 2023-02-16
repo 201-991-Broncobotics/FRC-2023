@@ -8,7 +8,7 @@ import static frc.robot.Constants.*;
 import frc.robot.subsystems.DoubleArm;
 import static frc.robot.Constants.DoubleArmConstants.*;
 
-public class TeleopDoubleArm extends CommandBase {
+public class TeleopDoubleArmCartesianControl extends CommandBase {
 
     private DoubleArm doubleArm;
 
@@ -17,7 +17,7 @@ public class TeleopDoubleArm extends CommandBase {
 
     private double time;
 
-    public TeleopDoubleArm(DoubleArm doubleArm, DoubleSupplier horizSup, DoubleSupplier vertSup) {
+    public TeleopDoubleArmCartesianControl(DoubleArm doubleArm, DoubleSupplier horizSup, DoubleSupplier vertSup) {
         this.doubleArm = doubleArm;
         addRequirements(doubleArm); // means that other functions are not allowed to access it
 

@@ -6,6 +6,7 @@ import frc.robot.subsystems.DoubleArm;
 
 import static frc.robot.Constants.ClawConstants.*;
 import static frc.robot.Constants.DoubleArmConstants.*;
+import static frc.robot.Constants.TuningConstants.*;
 
 public class Intake extends CommandBase {
     // Plan: move to intake position, then intake for some 

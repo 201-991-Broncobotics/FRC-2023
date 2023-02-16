@@ -10,9 +10,8 @@ import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
-import static frc.robot.Constants.AprilTagAlignmentConstants.*;
-import static frc.robot.Constants.SwerveConstants.*;
-import static frc.robot.Constants.DoubleArmConstants.*;
+import static frc.robot.Constants.Buttons.*;
+import static frc.robot.Constants.TuningConstants.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -33,11 +32,19 @@ public class RobotContainer {
 
     /* Operator Buttons */
     private final JoystickButton topGoal = new JoystickButton(operator, topGoalButton);
+    private final JoystickButton midGoal = new JoystickButton(operator, midGoalButton);
+    private final JoystickButton lowGoal = new JoystickButton(operator, lowGoalButton);
+
+    private final JoystickButton idle = new JoystickButton(operator, idleButton);
     private final JoystickButton startPos = new JoystickButton(operator, startPosButton);
+
+    private final JoystickButton intake = new JoystickButton(operator, intakeButton);
+    private final JoystickButton outtake = new JoystickButton(operator, outtakeButton);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final DoubleArm doubleArm = new DoubleArm();
+    // private final Claw claw = new Claw();
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -53,9 +60,9 @@ public class RobotContainer {
             )
         );
 
-        if (debug) {
+        if (manual_control) {
             doubleArm.setDefaultCommand(
-                new TeleopDoubleArmNoEncoders(
+                new TeleopDoubleArmManualControl(
                     doubleArm, 
                     () -> -operator.getRawAxis(motorOneAxis),
                     () -> -operator.getRawAxis(motorTwoAxis)
@@ -63,13 +70,15 @@ public class RobotContainer {
             );
         } else {
             doubleArm.setDefaultCommand(
-                new TeleopDoubleArm(
+                new TeleopDoubleArmCartesianControl(
                     doubleArm, 
                     () -> operator.getRawAxis(horizAxis),
                     () -> -operator.getRawAxis(vertAxis)
                 )
             );
         }
+
+        // No default command for Claw
 
         // Configure the button bindings
         configureButtonBindings();
@@ -91,7 +100,13 @@ public class RobotContainer {
         
         /* Operator Buttons */
         topGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(topPosition)));
+        midGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(midPosition)));
+        lowGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(lowPosition)));
+        idle.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(idlePosition)));
         startPos.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(startPosition)));
+
+        // intake.toggleOnTrue(new Intake(claw, doubleArm));
+        // outtake.toggleOnTrue(new Outtake(claw, doubleArm));
     }
 
     /**

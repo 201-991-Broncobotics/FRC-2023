@@ -10,14 +10,14 @@ import frc.robot.subsystems.DoubleArm;
 
 import static frc.robot.Constants.DoubleArmConstants.*;
 
-public class TeleopDoubleArmNoEncoders extends CommandBase {
+public class TeleopDoubleArmManualControl extends CommandBase {
 
     private DoubleArm doubleArm;
 
     private DoubleSupplier motorOneSup;
     private DoubleSupplier motorTwoSup;
 
-    public TeleopDoubleArmNoEncoders(DoubleArm doubleArm, DoubleSupplier motorOneSup, DoubleSupplier motorTwoSup) {
+    public TeleopDoubleArmManualControl(DoubleArm doubleArm, DoubleSupplier motorOneSup, DoubleSupplier motorTwoSup) {
         this.doubleArm = doubleArm;
         addRequirements(doubleArm); // means that other functions are not allowed to access it
 

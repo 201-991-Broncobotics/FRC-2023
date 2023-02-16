@@ -9,6 +9,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 
 import static frc.robot.Constants.AprilTagAlignmentConstants.*;
+import static frc.robot.Constants.Buttons.*;
 
 public class AlignWithApriltag extends CommandBase {
 
