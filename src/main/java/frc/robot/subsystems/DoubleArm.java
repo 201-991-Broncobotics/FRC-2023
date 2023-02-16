@@ -271,5 +271,9 @@ public class DoubleArm extends SubsystemBase {
         SmartDashboard.putNumber("Target y", target_xy[1]);
 
         SmartDashboard.putNumber("Error", getTotalError());
+
+        SmartDashboard.putNumber("Motor One Current", first_motor.getOutputCurrent());
+        SmartDashboard.putNumber("Motor One Follower Current", first_motor_follower.getOutputCurrent());
+        SmartDashboard.putNumber("Motor Two Current", second_motor.getOutputCurrent());
     }
 }

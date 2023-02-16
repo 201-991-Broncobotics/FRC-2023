@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.ClawConstants.*;
@@ -39,5 +40,10 @@ public class Claw extends SubsystemBase {
 
     public void stop() {
         claw_motor.set(0);
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Claw Motor Current", claw_motor.getOutputCurrent());
     }
 }
