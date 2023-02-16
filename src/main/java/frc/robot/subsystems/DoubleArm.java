@@ -19,6 +19,8 @@ public class DoubleArm extends SubsystemBase {
     private double[] target_xy = new double[2];
     private double[] target_positions = new double[2];
 
+    private double time;
+
     public DoubleArm() { // Initialize the motors, encoders, and target positions
         first_motor = new CANSparkMax(first_motor_ID, MotorType.kBrushless); // NEO Motors are brushless
         first_motor_follower = new CANSparkMax(first_motor_follower_ID, MotorType.kBrushless);
@@ -82,6 +84,8 @@ public class DoubleArm extends SubsystemBase {
         target_xy[1] = getCurrentXY()[1];
 
         Timer.delay(1.0);
+
+        time = System.currentTimeMillis() / 1000.0;
     }
 
     public void moveArm(double dx, double dy) {
@@ -93,19 +97,30 @@ public class DoubleArm extends SubsystemBase {
 
         double[] current_angles = getCurrentArmAngles();
 
-        first_motor.set(pidPower(
+        double delta_time = System.currentTimeMillis() / 1000.0 - time; // in seconds
+        time = System.currentTimeMillis() / 1000.0;
+
+        double f_m_p = pidPower(
             target_positions[0] - current_angles[0], 
             first_motor_max_power, 
             first_motor_min_error, 
             first_motor_max_error
-        ));
+        );
 
-        second_motor.set(pidPower(
+        double s_m_p = pidPower(
             target_positions[1] - current_angles[1], 
             second_motor_max_power, 
             second_motor_min_error, 
             second_motor_max_error
-        ));
+        );
+        
+        f_m_p = Math.max(first_motor.get() - first_motor_max_power_per_second * delta_time, Math.min(first_motor.get() + first_motor_max_power_per_second * delta_time, f_m_p));
+
+        s_m_p = Math.max(second_motor.get() - second_motor_max_power_per_second * delta_time, Math.min(second_motor.get() + second_motor_max_power_per_second * delta_time, s_m_p));
+
+        first_motor.set(f_m_p);
+
+        second_motor.set(s_m_p);
         // set power to arm modules
     }
 

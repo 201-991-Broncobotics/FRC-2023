@@ -224,6 +224,9 @@ public final class Constants {
                                    first_motor_max_power = 0.4,
                                    second_motor_max_power = 0.2,
 
+                                   first_motor_max_power_per_second = 0.6, // we can't change this as fast
+                                   second_motor_max_power_per_second = 1.0, // we can change this very fast
+
                                    first_motor_min_error = 0, 
                                    second_motor_min_error = 0,
 
@@ -232,7 +235,7 @@ public final class Constants {
 
                                    k_exponent = 0.8,  // 1.0 for a normal PID
                                    tolerance_power = 0.02, 
-                                   axeponent = 0.9, 
+                                   axeponent = 0.6, 
 
                                    tolerance = 3; // number of inches until we bing chilling
     }

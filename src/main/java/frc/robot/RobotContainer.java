@@ -44,7 +44,7 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final DoubleArm doubleArm = new DoubleArm();
-    // private final Claw claw = new Claw();
+    private final Claw claw = new Claw(); // testing purposes, if there's an error then comment this back out
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
