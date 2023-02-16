@@ -30,6 +30,7 @@ public class Outtake extends CommandBase {
         }
         
         claw.stop();
+        doubleArm.brake();
         doubleArm.setTargetPositions(idlePosition);
     }
     

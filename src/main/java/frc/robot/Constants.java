@@ -208,7 +208,7 @@ public final class Constants {
         
         public static final double arm_sensitivity = 10, // inches per second
                                    raw_arm_sensitivity = 0.35, // power ratio
-                                   raw_arm_sensitivity_two = 0.15,
+                                   raw_arm_sensitivity_two = 0.25,
 
                                    min_x = -20, 
                                    min_y = -45, // inches
@@ -222,7 +222,7 @@ public final class Constants {
                                    switching_angle = 0, // if below horizontal --> concave up, if above horizontal --> concave down
 
                                    first_motor_max_power = 0.4,
-                                   second_motor_max_power = 0.2,
+                                   second_motor_max_power = 0.3,
 
                                    first_motor_max_power_per_second = 0.8, // we can't change this as fast
                                    second_motor_max_power_per_second = 2, // we can change this very fast
@@ -260,8 +260,8 @@ public final class Constants {
         
         public static final double intake_power = 0.1, // one should be neg, one should be positive
                                    outtake_power = 0.1, 
-                                   intake_time = 0.5, 
-                                   outtake_time = 0.5; // seconds
+                                   intake_time = 1, 
+                                   outtake_time = 1; // seconds
     }
 
     public static final class Buttons {

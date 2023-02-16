@@ -105,8 +105,8 @@ public class RobotContainer {
         idle.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(idlePosition)));
         startPos.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(startPosition)));
 
-        // intake.toggleOnTrue(new Intake(claw, doubleArm));
-        // outtake.toggleOnTrue(new Outtake(claw, doubleArm));
+        intake.toggleOnTrue(new Intake(claw, doubleArm, intake));
+        outtake.toggleOnTrue(new Outtake(claw, doubleArm));
     }
 
     /**
