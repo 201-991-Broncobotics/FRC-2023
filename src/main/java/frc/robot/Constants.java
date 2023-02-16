@@ -231,7 +231,7 @@ public final class Constants {
                                    second_motor_max_error = 25.0,
 
                                    k_exponent = 0.8,  // 1.0 for a normal PID
-                                   tolerance_power = 0.1, 
+                                   tolerance_power = 0.02, 
                                    axeponent = 0.9, 
 
                                    tolerance = 3; // number of inches until we bing chilling
