@@ -238,7 +238,7 @@ public final class Constants {
 
                                    k_exponent = 0.8,  // 1.0 for a normal PID
 
-                                   tolerance = 3; // number of inches until we bing chilling
+                                   tolerance = 5; // number of inches until we bing chilling
     }
 
     public static final class ClawConstants {
@@ -260,8 +260,8 @@ public final class Constants {
         
         public static final double intake_power = 0.1, // one should be neg, one should be positive
                                    outtake_power = 0.1, 
-                                   intake_time = 1, 
-                                   outtake_time = 1; // seconds
+                                   intake_time = 0.5, 
+                                   outtake_time = 0.5; // seconds
     }
 
     public static final class Buttons {
