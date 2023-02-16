@@ -238,7 +238,7 @@ public final class Constants {
 
                                    k_exponent = 0.8,  // 1.0 for a normal PID
 
-                                   tolerance = 5; // number of inches until we bing chilling
+                                   tolerance = 0.5; // number of inches until we bing chilling
     }
 
     public static final class ClawConstants {

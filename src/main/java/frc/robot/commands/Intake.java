@@ -1,13 +1,15 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
 
 import static frc.robot.Constants.ClawConstants.*;
 import static frc.robot.Constants.DoubleArmConstants.*;
 import static frc.robot.Constants.TuningConstants.*;
+import static frc.robot.Constants.Buttons.*;
 
 public class Intake extends CommandBase {
     // Plan: move to intake position, then intake for some 
@@ -16,12 +18,12 @@ public class Intake extends CommandBase {
     private Claw claw;
     private DoubleArm doubleArm;
 
-    private JoystickButton button;
+    private XboxController operator;
 
-    public Intake(Claw claw, DoubleArm doubleArm, JoystickButton button) {
+    public Intake(Claw claw, DoubleArm doubleArm, XboxController operator) {
         this.doubleArm = doubleArm;
         this.claw = claw;
-        this.button = button;
+        this.operator = operator;
         addRequirements(doubleArm, claw); // means that other functions are not allowed to access it
     }
 
@@ -36,7 +38,7 @@ public class Intake extends CommandBase {
         double time = System.currentTimeMillis() / 1000.0;
         claw.intake();
 
-        while ((System.currentTimeMillis() / 1000.0 - time < intake_time) || button.getAsBoolean()) {
+        while ((System.currentTimeMillis() / 1000.0 - time < intake_time) || operator.getRawButton(intakeButton)) {
             doubleArm.moveArm(0, 0);
         }
         
