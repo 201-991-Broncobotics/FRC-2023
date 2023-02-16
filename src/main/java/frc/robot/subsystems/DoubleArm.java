@@ -48,18 +48,19 @@ public class DoubleArm extends SubsystemBase {
         }
         
         // we want it so powering the motors rotates the arms counterclockwise
+        
+        first_motor.setSmartCurrentLimit(first_motor_max_current); // current limit
+        first_motor_follower.setSmartCurrentLimit(first_motor_max_current);
+        second_motor.setSmartCurrentLimit(second_motor_max_current);
 
         /* Hopefully these are fine with the defaults :)
         first_motor.setOpenLoopRampRate(first_motor_acceleration_time); // maximum time for 0 to full throttle
-        first_motor.setSmartCurrentLimit(first_motor_max_current); // current limit
         first_motor.enableVoltageCompensation(first_motor_voltage_compensation);
         
         first_motor_follower.setOpenLoopRampRate(first_motor_acceleration_time);
-        first_motor_follower.setSmartCurrentLimit(first_motor_max_current); // current limit
         first_motor_follower.enableVoltageCompensation(first_motor_voltage_compensation);
         
         second_motor.setOpenLoopRampRate(second_motor_acceleration_time);
-        second_motor.setSmartCurrentLimit(second_motor_max_current); // current limit
         second_motor.enableVoltageCompensation(second_motor_voltage_compensation); */
 
         first_motor_follower.follow(first_motor, invert_first_motor_follower); // follows it in the same direction

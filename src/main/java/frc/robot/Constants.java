@@ -195,7 +195,7 @@ public final class Constants {
         
         public static final int first_motor_max_current = 20, // amps
                                 first_motor_follower_max_current = 20, 
-                                second_motor_follower_max_current = 20;
+                                second_motor_max_current = 20;
         
         public static final double first_motor_acceleration_time = 3, 
                                    first_motor_voltage_compensation = 0, 
@@ -306,6 +306,6 @@ public final class Constants {
 
         // TODO: still have to figure out these values lel
 
-        public static boolean manual_control = true; // change this to true if we want to braindeadpower
+        public static boolean manual_control = true;
     }
 }
