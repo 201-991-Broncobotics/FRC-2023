@@ -25,7 +25,7 @@ public class Outtake extends CommandBase {
         double time = System.currentTimeMillis() / 1000.0;
         claw.outtake();
 
-        while (System.currentTimeMillis() / 1000.0 - time < intake_time) {
+        while (System.currentTimeMillis() / 1000.0 - time < outtake_time) {
             doubleArm.rawPowerArm(0, 0);
         }
         
