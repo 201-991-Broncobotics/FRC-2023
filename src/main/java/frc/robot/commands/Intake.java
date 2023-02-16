@@ -9,6 +9,9 @@ import frc.robot.subsystems.DoubleArm;
 import static frc.robot.Constants.ClawConstants.*;
 import static frc.robot.Constants.DoubleArmConstants.*;
 import static frc.robot.Constants.TuningConstants.*;
+
+import java.util.function.BooleanSupplier;
+
 import static frc.robot.Constants.Buttons.*;
 
 public class Intake extends CommandBase {
@@ -18,12 +21,12 @@ public class Intake extends CommandBase {
     private Claw claw;
     private DoubleArm doubleArm;
 
-    private XboxController operator;
+    private BooleanSupplier intakeButton;
 
-    public Intake(Claw claw, DoubleArm doubleArm, XboxController operator) {
+    public Intake(Claw claw, DoubleArm doubleArm, BooleanSupplier intakeButton) {
         this.doubleArm = doubleArm;
         this.claw = claw;
-        this.operator = operator;
+        this.intakeButton = intakeButton;
         addRequirements(doubleArm, claw); // means that other functions are not allowed to access it
     }
 
@@ -38,8 +41,9 @@ public class Intake extends CommandBase {
         double time = System.currentTimeMillis() / 1000.0;
         claw.intake();
 
-        while ((System.currentTimeMillis() / 1000.0 - time < intake_time) || operator.getRawButton(intakeButton)) {
+        while ((System.currentTimeMillis() / 1000.0 - time < intake_time) || intakeButton.getAsBoolean()) {
             doubleArm.moveArm(0, 0);
+            SmartDashboard.putBoolean("yeah", intakeButton.getAsBoolean());
         }
         
         claw.stop();
