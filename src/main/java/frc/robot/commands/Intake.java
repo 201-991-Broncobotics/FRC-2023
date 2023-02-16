@@ -29,7 +29,7 @@ public class Intake extends CommandBase {
     public void execute() {
         doubleArm.setTargetPositions(intakePosition);
 
-        while (doubleArm.getTotalError() < tolerance) {
+        while (doubleArm.getTotalError() > tolerance) {
             doubleArm.rawPowerArm(0, 0); // it really doesn't matter
         }
 
