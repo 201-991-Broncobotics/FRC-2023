@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
 import frc.robot.commands.*;
+import frc.robot.commands.Intake.Intake;
 import frc.robot.subsystems.*;
 
 import static frc.robot.Constants.Buttons.*;
@@ -99,14 +100,11 @@ public class RobotContainer {
         brake.toggleOnFalse(new Brake(s_Swerve));
         
         /* Operator Buttons */
-        topGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(topPosition)));
-        midGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(midPosition)));
-        lowGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(lowPosition)));
-        idle.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(idlePosition)));
-        startPos.toggleOnTrue(new InstantCommand(() -> {
-            doubleArm.resetWhipControl(); // so it does work.....
-            doubleArm.setTargetPositions(startPosition);
-        }));
+        topGoal.toggleOnTrue(new SetArmPosition(doubleArm, topPosition));
+        midGoal.toggleOnTrue(new SetArmPosition(doubleArm, midPosition));
+        lowGoal.toggleOnTrue(new SetArmPosition(doubleArm, lowPosition));
+        idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePosition));
+        startPos.toggleOnTrue(new SetArmPosition(doubleArm, startPosition));
 
         intake.toggleOnTrue(new Intake(claw, doubleArm, () -> operator.getRawButton(intakeButton)));
         outtake.toggleOnTrue(new Outtake(claw, doubleArm));
