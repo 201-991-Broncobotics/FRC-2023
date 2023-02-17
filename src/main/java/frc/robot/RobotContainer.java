@@ -103,10 +103,17 @@ public class RobotContainer {
         midGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(midPosition)));
         lowGoal.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(lowPosition)));
         idle.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(idlePosition)));
-        startPos.toggleOnTrue(new InstantCommand(() -> doubleArm.setTargetPositions(startPosition)));
+        startPos.toggleOnTrue(new InstantCommand(() -> {
+            doubleArm.resetWhipControl(); // so it does work.....
+            doubleArm.setTargetPositions(startPosition);
+        }));
 
-        intake.toggleOnTrue(new Intake(claw, doubleArm));
+        intake.toggleOnTrue(new Intake(claw, doubleArm, () -> operator.getRawButton(intakeButton)));
         outtake.toggleOnTrue(new Outtake(claw, doubleArm));
+    }
+
+    public void teleopInit() {
+        doubleArm.resetPID();
     }
 
     /**

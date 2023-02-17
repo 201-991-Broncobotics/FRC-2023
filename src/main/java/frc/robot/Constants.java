@@ -207,7 +207,7 @@ public final class Constants {
         /* Variables */
         
         public static final double arm_sensitivity = 10, // inches per second
-                                   raw_arm_sensitivity = 0.35, // power ratio
+                                   raw_arm_sensitivity = 0.55, // power ratio
                                    raw_arm_sensitivity_two = 0.25,
 
                                    min_x = -20, 
@@ -221,7 +221,7 @@ public final class Constants {
 
                                    switching_angle = 0, // if below horizontal --> concave up, if above horizontal --> concave down
 
-                                   first_motor_max_power = 0.4,
+                                   first_motor_max_power = 0.6,
                                    second_motor_max_power = 0.3,
 
                                    first_motor_max_power_per_second = 0.8, // we can't change this as fast

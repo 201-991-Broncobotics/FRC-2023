@@ -197,6 +197,11 @@ public class DoubleArm extends SubsystemBase {
         brake();
     }
 
+    public void resetWhipControl() {
+        time_one_last = 0;
+        time_two_last = 0;
+    }
+
     public void brake() {
         first_motor.set(0);
         second_motor.set(0);
