@@ -208,7 +208,7 @@ public final class Constants {
         
         public static final double arm_sensitivity = 10, // inches per second
                                    raw_arm_sensitivity = 0.55, // power ratio
-                                   raw_arm_sensitivity_two = 0.25,
+                                   raw_arm_sensitivity_two = 0.45,
 
                                    min_x = -20, 
                                    min_y = -45, // inches
@@ -222,23 +222,23 @@ public final class Constants {
                                    switching_angle = 0, // if below horizontal --> concave up, if above horizontal --> concave down
 
                                    first_motor_max_power = 0.6,
-                                   second_motor_max_power = 0.3,
+                                   second_motor_max_power = 0.5,
 
-                                   first_motor_max_power_per_second = 0.8, // we can't change this as fast
+                                   first_motor_max_power_per_second = 1.4, // we can't change this as fast
                                    second_motor_max_power_per_second = 2, // we can change this very fast
 
-                                   first_motor_min_error = 0, 
-                                   second_motor_min_error = 0,
+                                   first_motor_min_error = 0.5, 
+                                   second_motor_min_error = 0.5,
 
                                    first_motor_max_error = 25.0, 
                                    second_motor_max_error = 25.0,
 
-                                   whiplash_time_one = 0.6, 
+                                   whiplash_time_one = 1, 
                                    whiplash_time_two = 0.3, 
 
-                                   k_exponent = 0.8,  // 1.0 for a normal PID
+                                   k_exponent = 1.4,  // 1.0 for a normal PID
 
-                                   tolerance = 0.5; // number of inches until we bing chilling
+                                   tolerance = 1.25; // number of inches until we bing chilling
     }
 
     public static final class ClawConstants {
@@ -308,7 +308,7 @@ public final class Constants {
                                lowPosition = {20, -20}, 
                                intakePosition = {20, -40}, 
                                idlePosition = {12.4, -21.3}, 
-                               startPosition = {-1, -11};
+                               startPosition = {0, -11};
 
         // TODO: still have to figure out these values lel
 
