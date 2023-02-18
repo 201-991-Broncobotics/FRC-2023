@@ -152,7 +152,10 @@ public final class Constants {
     public static final class AutoBalanceConstants {
         public static final double drive_speed = 0.16,
                                    pitch_tolerance = 8, 
-                                   max_linear_acceleration = 0.2;
+                                   max_linear_acceleration = 0.4,
+                                   ratio = 1.38, 
+                                   min_time = 1.5, 
+                                   min_deriv = 1.5;
     }
 
     public static final class AprilTagAlignmentConstants {

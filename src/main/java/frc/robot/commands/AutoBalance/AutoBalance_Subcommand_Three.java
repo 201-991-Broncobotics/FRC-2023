@@ -50,12 +50,12 @@ public class AutoBalance_Subcommand_Three extends CommandBase {
 
         double delta_pitch = (swerve.getPitch() - prev_pitch) / delta_time;
 
-        if ((prev_time - start_time > 1.5) && (Math.abs(delta_pitch) > 1) && (Math.abs(swerve.getPitch()) < 0.8 * pitch_tolerance) && (delta_pitch * target_power > 0) && (delta_pitch * swerve.getPitch() < 0)) changeDir = true;
+        if ((prev_time - start_time > min_time) && (Math.abs(delta_pitch) > min_deriv) && (Math.abs(swerve.getPitch()) < pitch_tolerance) && (delta_pitch * target_power > 0) && (delta_pitch * swerve.getPitch() < 0)) changeDir = true;
         SmartDashboard.putNumber("deriv", delta_pitch);
             // we change dir if delta pitch is decreasing and we have negative power
 
         if (changeDir) {
-            target_power /= -1.38;
+            target_power /= -ratio;
         }
 
         prev_pitch = swerve.getPitch();
