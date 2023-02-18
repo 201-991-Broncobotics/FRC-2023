@@ -32,6 +32,7 @@ public class TeleopSwerveAbsoluteDirecting extends CommandBase {
         this.directionXSup = directionXSup;
         this.directionYSup = directionYSup;
         this.targetSup = targetSup;
+        this.turnSup = turnSup;
         this.slowSup = slowSup;
     }
 
@@ -45,11 +46,16 @@ public class TeleopSwerveAbsoluteDirecting extends CommandBase {
         double slowVal = 1;
 
         if (slowSup.getAsBoolean()) slowVal = slow;
+        
+        double x_dir = directionXSup.getAsDouble();
+        double y_dir = directionYSup.getAsDouble();
 
-        double x_dir = MathUtil.applyDeadband(directionXSup.getAsDouble(), Constants.joystick_deadzone);
-        double y_dir = MathUtil.applyDeadband(directionYSup.getAsDouble(), Constants.joystick_deadzone);
+        if (x_dir * x_dir + y_dir * y_dir < Constants.joystick_deadzone * Constants.joystick_deadzone) {
+            x_dir = 0;
+            y_dir = 0;
+        }
 
-        if (turnVal != 0) {
+        if (turnVal == 0) {
             if (x_dir != 0 || y_dir != 0) {
                 if (x_dir == 0) {
                     if (y_dir > 0) {
@@ -70,7 +76,7 @@ public class TeleopSwerveAbsoluteDirecting extends CommandBase {
         /* Drive */
         s_Swerve.drive(
             new Translation2d(translationVal, strafeVal).times(Constants.BaseFalconSwerve.maxSpeed).times(slowVal), 
-            turnVal * Constants.BaseFalconSwerve.maxAngularVelocity * slowVal, 
+            turnVal * Constants.BaseFalconSwerve.maxAngularVelocity * turn_sensitivity, 
             true, 
             true
         );

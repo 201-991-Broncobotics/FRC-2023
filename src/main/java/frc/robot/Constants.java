@@ -165,12 +165,13 @@ public final class Constants {
     public static final class SwerveConstants {
         
         public static final double maximum_power = 0.6, 
-                                   maximum_error = 50, // degrees
-                                   exponent = 0.5, 
+                                   maximum_error = 60, // degrees
+                                   exponent = 0.75, 
                                    calibration_time = 0.5, // seconds
-                                   tolerance = 2, // degrees
+                                   tolerance = 0, // degrees
                                    correction = 0, // If we're going at full speed, how much do we need to correct by as a % - must be experimentally determined
-                                   slow = 0.5;
+                                   turn_sensitivity = 0.2, 
+                                   slow = 0.35;
 
             // best tuned so far: 0.6 as maximum_power, 50 as max_error, 0.5 as exponent
     }
@@ -225,19 +226,19 @@ public final class Constants {
                                    first_motor_max_power = 0.6,
                                    second_motor_max_power = 0.5,
 
-                                   first_motor_max_power_per_second = 1.4, // we can't change this as fast
+                                   first_motor_max_power_per_second = 1.2, // we can't change this as fast
                                    second_motor_max_power_per_second = 2, // we can change this very fast
 
                                    first_motor_min_error = 0.5, 
                                    second_motor_min_error = 0.5,
 
-                                   first_motor_max_error = 25.0, 
-                                   second_motor_max_error = 25.0,
+                                   first_motor_max_error = 32.0, 
+                                   second_motor_max_error = 32.0,
 
                                    whiplash_time_one = 1, 
                                    whiplash_time_two = 0.3, 
 
-                                   k_exponent = 1.4,  // 1.0 for a normal PID
+                                   k_exponent = 1.2,  // 1.0 for a normal PID
 
                                    tolerance = 1.25; // number of inches until we bing chilling
     }
@@ -322,6 +323,6 @@ public final class Constants {
         // TODO: still have to figure out these values lel
 
         public static boolean manual_control = true, 
-                              fancy_drive = false;
+                              fancy_drive = true;
     }
 }
