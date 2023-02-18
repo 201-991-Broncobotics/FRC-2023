@@ -169,7 +169,8 @@ public final class Constants {
                                    exponent = 0.5, 
                                    calibration_time = 0.5, // seconds
                                    tolerance = 2, // degrees
-                                   correction = 0; // If we're going at full speed, how much do we need to correct by as a % - must be experimentally determined
+                                   correction = 0, // If we're going at full speed, how much do we need to correct by as a % - must be experimentally determined
+                                   slow = 0.5;
 
             // best tuned so far: 0.6 as maximum_power, 50 as max_error, 0.5 as exponent
     }
@@ -272,6 +273,14 @@ public final class Constants {
                                 strafeAxis = XboxController.Axis.kLeftX.value,
                                 rotationAxis = XboxController.Axis.kRightX.value,
                                 slowAxis = XboxController.Axis.kRightTrigger.value, 
+
+                                directionXAxis = XboxController.Axis.kRightX.value, 
+                                directionYAxis = XboxController.Axis.kRightY.value, 
+                                turnRightAxis = XboxController.Axis.kRightTrigger.value, 
+                                turnLeftAxis = XboxController.Axis.kLeftTrigger.value, 
+                                slowButtonOne = XboxController.Button.kRightBumper.value, 
+                                slowButtonTwo = XboxController.Button.kLeftBumper.value, 
+
                                 zeroGyroButton = XboxController.Button.kY.value, 
                                 robotCentricButton = XboxController.Button.kLeftBumper.value,
                                 brakeButton = XboxController.Button.kX.value,
@@ -312,6 +321,7 @@ public final class Constants {
 
         // TODO: still have to figure out these values lel
 
-        public static boolean manual_control = true;
+        public static boolean manual_control = true, 
+                              fancy_drive = false;
     }
 }

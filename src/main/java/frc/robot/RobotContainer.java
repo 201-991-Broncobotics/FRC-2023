@@ -49,17 +49,32 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        s_Swerve.setDefaultCommand(
-            new TeleopSwerve(
-                s_Swerve, 
-                () -> -driver.getRawAxis(translationAxis), 
-                () -> -driver.getRawAxis(strafeAxis), 
-                () -> -driver.getRawAxis(rotationAxis), 
-                () -> robotCentric.getAsBoolean(), 
-                () -> -driver.getPOV(), 
-                () -> 1 - 0.75 * driver.getRawAxis(slowAxis) // what we multiply translation speed by; rotation speed is NOT affected
-            )
-        );
+
+        if (fancy_drive) {
+            s_Swerve.setDefaultCommand(
+                new TeleopSwerveAbsoluteDirecting(
+                    s_Swerve, 
+                    () -> -driver.getRawAxis(translationAxis), 
+                    () -> -driver.getRawAxis(strafeAxis), 
+                    () -> driver.getRawAxis(directionXAxis), 
+                    () -> -driver.getRawAxis(directionYAxis), 
+                    () -> -driver.getPOV(), 
+                    () -> driver.getRawAxis(turnLeftAxis) - driver.getRawAxis(turnRightAxis), 
+                    () -> (driver.getRawButton(slowButtonOne) || driver.getRawButton(slowButtonTwo)))
+            );
+        } else {
+            s_Swerve.setDefaultCommand(
+                new TeleopSwerve(
+                    s_Swerve, 
+                    () -> -driver.getRawAxis(translationAxis), 
+                    () -> -driver.getRawAxis(strafeAxis), 
+                    () -> -driver.getRawAxis(rotationAxis), 
+                    () -> robotCentric.getAsBoolean(), 
+                    () -> -driver.getPOV(), 
+                    () -> 1 - 0.75 * driver.getRawAxis(slowAxis) // what we multiply translation speed by; rotation speed is NOT affected
+                )
+            );
+        }
 
         if (manual_control) {
             doubleArm.setDefaultCommand(
