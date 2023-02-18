@@ -1,6 +1,7 @@
 package frc.robot.commands.AutoBalance;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
@@ -15,6 +16,15 @@ public class AutoBalance_Subcommand_Three extends CommandBase {
 
     private boolean isFirstAction = true;
 
+    private double power = -drive_speed;
+    private double target_power = -drive_speed;
+
+    private double prev_time = 0;
+
+    private double prev_pitch = 0;
+
+    private double start_time = 0;
+
     public AutoBalance_Subcommand_Three(Swerve swerve) {
         this.swerve = swerve;
         addRequirements(swerve); // means that other functions are not allowed to access it
@@ -25,17 +35,38 @@ public class AutoBalance_Subcommand_Three extends CommandBase {
     @Override
     public void execute() {
         if (isFirstAction) {
-            // we don't need to do anything on our first action
+            prev_time = System.currentTimeMillis() / 1000.0;
+            start_time = prev_time;
+            prev_pitch = swerve.getPitch();
             isFirstAction = false;
         }
+
+        double delta_time = System.currentTimeMillis() / 1000.0 - prev_time;
+        prev_time = System.currentTimeMillis() / 1000.0;
         
         // Positive Pitch means angled down --> must drive backward
 
-        if (swerve.getPitch() > 0) {
-            swerve.drive(new Translation2d(-drive_speed, 0).times(Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
-        } else if (swerve.getPitch() < 0) {
-            swerve.drive(new Translation2d(drive_speed, 0).times(Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
+        boolean changeDir = false;
+
+        double delta_pitch = (swerve.getPitch() - prev_pitch) / delta_time;
+
+        if ((prev_time - start_time > 1.5) && (Math.abs(delta_pitch) > 1) && (Math.abs(swerve.getPitch()) < 0.8 * pitch_tolerance) && (delta_pitch * target_power > 0) && (delta_pitch * swerve.getPitch() < 0)) changeDir = true;
+        SmartDashboard.putNumber("deriv", delta_pitch);
+            // we change dir if delta pitch is decreasing and we have negative power
+
+        if (changeDir) {
+            target_power /= -1.38;
         }
+
+        prev_pitch = swerve.getPitch();
+
+        if (power > target_power) {
+            power = Math.max(power - delta_time * max_linear_acceleration, target_power);
+        } else if (power < target_power) {
+            power = Math.min(power + delta_time * max_linear_acceleration, target_power);
+        }
+            
+        swerve.drive(new Translation2d(power, 0).times(Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
     }
     
     @Override

@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -33,6 +32,7 @@ public class RobotContainer {
     private final JoystickButton tagAligner = new JoystickButton(driver, tagAlignerButton);
     private final JoystickButton brake = new JoystickButton(driver, brakeButton);
     private final JoystickButton autoBalance = new JoystickButton(driver, autoBalanceButton);
+    private final JoystickButton terminateCommandsDriver = new JoystickButton(driver, terminateCommandsDriverButton);
 
     /* Operator Buttons */
     private final JoystickButton topGoal = new JoystickButton(operator, topGoalButton);
@@ -44,6 +44,8 @@ public class RobotContainer {
 
     private final JoystickButton intake = new JoystickButton(operator, intakeButton);
     private final JoystickButton outtake = new JoystickButton(operator, outtakeButton);
+    
+    private final JoystickButton terminateCommandsOperator = new JoystickButton(operator, terminateCommandsOperatorButton);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -118,6 +120,8 @@ public class RobotContainer {
         brake.toggleOnFalse(new Brake(s_Swerve));
 
         autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm));
+
+        terminateCommandsDriver.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
         
         /* Operator Buttons */
         topGoal.toggleOnTrue(new SetArmPosition(doubleArm, topPosition));
@@ -128,6 +132,8 @@ public class RobotContainer {
 
         intake.toggleOnTrue(new Intake(claw, doubleArm, () -> operator.getRawButton(intakeButton)));
         outtake.toggleOnTrue(new Outtake(claw, doubleArm));
+        
+        terminateCommandsOperator.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
     }
 
     public void teleopInit() {

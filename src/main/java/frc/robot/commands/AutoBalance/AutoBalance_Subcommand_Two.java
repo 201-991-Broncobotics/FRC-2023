@@ -35,6 +35,6 @@ public class AutoBalance_Subcommand_Two extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return Math.abs(swerve.getPitch()) > pitch_tolerance;
+        return Math.abs(swerve.getPitch()) > (pitch_tolerance * 1.2);
     }
 }

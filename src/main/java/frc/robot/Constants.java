@@ -150,8 +150,9 @@ public final class Constants {
     }
 
     public static final class AutoBalanceConstants {
-        public static final double drive_speed = 0.15,
-                                   pitch_tolerance = 2;
+        public static final double drive_speed = 0.16,
+                                   pitch_tolerance = 8, 
+                                   max_linear_acceleration = 0.2;
     }
 
     public static final class AprilTagAlignmentConstants {
@@ -295,7 +296,8 @@ public final class Constants {
                                 brakeButton = XboxController.Button.kX.value,
                                 tagAlignerButton = XboxController.Button.kA.value,
                                 tagAlignerExitButton = XboxController.Button.kA.value, 
-                                autoBalanceButton = XboxController.Button.kB.value;
+                                autoBalanceButton = XboxController.Button.kB.value,
+                                terminateCommandsDriverButton = XboxController.Button.kBack.value;
 
         /* Operator Buttons */
 
@@ -309,7 +311,8 @@ public final class Constants {
                                 intakeButton = XboxController.Button.kA.value, 
                                 outtakeButton = XboxController.Button.kLeftBumper.value, 
                                 idleButton = XboxController.Button.kRightBumper.value, 
-                                startPosButton = XboxController.Button.kStart.value;
+                                startPosButton = XboxController.Button.kStart.value,
+                                terminateCommandsOperatorButton = XboxController.Button.kBack.value;
     }
 
     public static final class TuningConstants {
