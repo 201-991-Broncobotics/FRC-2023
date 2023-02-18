@@ -13,7 +13,7 @@ public class Intake extends SequentialCommandGroup {
         addRequirements(doubleArm, claw); // means that other functions are not allowed to access it
         addCommands(
             new SetArmPosition(doubleArm, intakePosition), 
-            new Intake_Subcommand_Two(claw, doubleArm, intakeSup)
+            new Intake_Subcommand(claw, doubleArm, intakeSup)
         );
     }
 }

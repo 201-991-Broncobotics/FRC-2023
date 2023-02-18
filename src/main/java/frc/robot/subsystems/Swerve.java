@@ -146,6 +146,14 @@ public class Swerve extends SubsystemBase {
     public Rotation2d getYaw() {
         return (Constants.BaseFalconSwerve.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
     }
+
+    public double getError() {
+        return normalizeAngle(target_heading - getYaw().getDegrees());
+    }
+
+    public double getPitch() {
+        return gyro.getPitch();
+    }
     
     public void resetModulesToAbsolute(){
         for(SwerveModule mod : mSwerveMods){
@@ -159,6 +167,7 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.update(getYaw(), getModulePositions());  
 
         SmartDashboard.putNumber("Gyro ", getYaw().getDegrees());
+        SmartDashboard.putNumber("Pitch ", getPitch());
 
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());

@@ -2,12 +2,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
 import frc.robot.commands.*;
+import frc.robot.commands.AutoBalance.AutoBalance;
 import frc.robot.commands.Intake.Intake;
 import frc.robot.subsystems.*;
 
@@ -30,6 +32,7 @@ public class RobotContainer {
     private final JoystickButton robotCentric = new JoystickButton(driver, robotCentricButton);
     private final JoystickButton tagAligner = new JoystickButton(driver, tagAlignerButton);
     private final JoystickButton brake = new JoystickButton(driver, brakeButton);
+    private final JoystickButton autoBalance = new JoystickButton(driver, autoBalanceButton);
 
     /* Operator Buttons */
     private final JoystickButton topGoal = new JoystickButton(operator, topGoalButton);
@@ -113,6 +116,8 @@ public class RobotContainer {
                     // toggle on false because otherwise it throws an error :(
         
         brake.toggleOnFalse(new Brake(s_Swerve));
+
+        autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm));
         
         /* Operator Buttons */
         topGoal.toggleOnTrue(new SetArmPosition(doubleArm, topPosition));

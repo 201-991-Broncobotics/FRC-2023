@@ -28,6 +28,10 @@ public class SetArmPosition extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return doubleArm.getTotalError() < tolerance;
+        if (doubleArm.getTotalError() < tolerance) {
+            doubleArm.brake();
+            return true;
+        }
+        return false;
     }
 }

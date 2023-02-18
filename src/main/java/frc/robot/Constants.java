@@ -149,6 +149,11 @@ public final class Constants {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
 
+    public static final class AutoBalanceConstants {
+        public static final double drive_speed = 0.15,
+                                   pitch_tolerance = 2;
+    }
+
     public static final class AprilTagAlignmentConstants {
 
         public static final int angle_trials = 25, 
@@ -162,6 +167,11 @@ public final class Constants {
                                    angular_tolerance = 4;
     }
 
+    public static final class IntakeConstants {
+        public static final double intake_time = 1.5, 
+                                   outtake_time = 0.5;
+    }
+
     public static final class SwerveConstants {
         
         public static final double maximum_power = 0.6, 
@@ -171,7 +181,7 @@ public final class Constants {
                                    tolerance = 0, // degrees
                                    correction = 0, // If we're going at full speed, how much do we need to correct by as a % - must be experimentally determined
                                    turn_sensitivity = 0.2, 
-                                   slow = 0.35;
+                                   slow = 0.15;
 
             // best tuned so far: 0.6 as maximum_power, 50 as max_error, 0.5 as exponent
     }
@@ -210,7 +220,7 @@ public final class Constants {
         
         public static final double arm_sensitivity = 10, // inches per second
                                    raw_arm_sensitivity = 0.55, // power ratio
-                                   raw_arm_sensitivity_two = 0.45,
+                                   raw_arm_sensitivity_two = 0.35,
 
                                    min_x = -20, 
                                    min_y = -45, // inches
@@ -224,9 +234,9 @@ public final class Constants {
                                    switching_angle = 0, // if below horizontal --> concave up, if above horizontal --> concave down
 
                                    first_motor_max_power = 0.6,
-                                   second_motor_max_power = 0.5,
+                                   second_motor_max_power = 0.4,
 
-                                   first_motor_max_power_per_second = 1.2, // we can't change this as fast
+                                   first_motor_max_power_per_second = 1, // we can't change this as fast
                                    second_motor_max_power_per_second = 2, // we can change this very fast
 
                                    first_motor_min_error = 0.5, 
@@ -235,12 +245,12 @@ public final class Constants {
                                    first_motor_max_error = 32.0, 
                                    second_motor_max_error = 32.0,
 
-                                   whiplash_time_one = 1, 
-                                   whiplash_time_two = 0.3, 
+                                   whiplash_time_one = 1.2, 
+                                   whiplash_time_two = 0.4, 
 
-                                   k_exponent = 1.2,  // 1.0 for a normal PID
+                                   k_exponent = 1.15,  // 1.0 for a normal PID
 
-                                   tolerance = 1.25; // number of inches until we bing chilling
+                                   tolerance = 1; // number of inches until we bing chilling
     }
 
     public static final class ClawConstants {
@@ -261,9 +271,7 @@ public final class Constants {
         /* Variables */
         
         public static final double intake_power = 0.1, // one should be neg, one should be positive
-                                   outtake_power = 0.1, 
-                                   intake_time = 0.5, 
-                                   outtake_time = 0.5; // seconds
+                                   outtake_power = 0.1;
     }
 
     public static final class Buttons {
@@ -286,7 +294,8 @@ public final class Constants {
                                 robotCentricButton = XboxController.Button.kLeftBumper.value,
                                 brakeButton = XboxController.Button.kX.value,
                                 tagAlignerButton = XboxController.Button.kA.value,
-                                tagAlignerExitButton = XboxController.Button.kA.value;
+                                tagAlignerExitButton = XboxController.Button.kA.value, 
+                                autoBalanceButton = XboxController.Button.kB.value;
 
         /* Operator Buttons */
 
