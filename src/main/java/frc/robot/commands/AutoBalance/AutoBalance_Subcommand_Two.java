@@ -7,6 +7,8 @@ import frc.robot.subsystems.Swerve;
 
 import static frc.robot.Constants.AutoBalanceConstants.*;
 
+import java.util.function.BooleanSupplier;
+
 public class AutoBalance_Subcommand_Two extends CommandBase {
     // Plan: move to intake position, then intake for some 
                 // amount of time, then finish
@@ -15,11 +17,14 @@ public class AutoBalance_Subcommand_Two extends CommandBase {
 
     private boolean isFirstAction = true;
 
-    public AutoBalance_Subcommand_Two(Swerve swerve) {
+    private BooleanSupplier exitSup;
+
+    public AutoBalance_Subcommand_Two(Swerve swerve, BooleanSupplier exitSup) {
         this.swerve = swerve;
         addRequirements(swerve); // means that other functions are not allowed to access it
         
         isFirstAction = true;
+        this.exitSup = exitSup;
     }
 
     @Override
@@ -35,6 +40,6 @@ public class AutoBalance_Subcommand_Two extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return Math.abs(swerve.getPitch()) > (pitch_tolerance * 1.2);
+        return (Math.abs(swerve.getPitch()) > (pitch_tolerance * 1.2)) || (exitSup.getAsBoolean());
     }
 }

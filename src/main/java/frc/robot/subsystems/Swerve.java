@@ -84,6 +84,9 @@ public class Swerve extends SubsystemBase {
             last_time = System.currentTimeMillis();
         }
 
+        translation = translation.times(frc.robot.Variables.speed_factor);
+        rotation *= frc.robot.Variables.speed_factor;
+
         SwerveModuleState[] swerveModuleStates =
             Constants.BaseFalconSwerve.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
 import frc.robot.commands.*;
+import frc.robot.commands.AlignWithApriltag.AlignWithApriltagOld;
 import frc.robot.commands.AutoBalance.AutoBalance;
 import frc.robot.commands.Intake.Intake;
 import frc.robot.subsystems.*;
@@ -114,12 +115,12 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-        tagAligner.toggleOnFalse(new AlignWithApriltag(s_Swerve, driver));
-                    // toggle on false because otherwise it throws an error :(
+        tagAligner.toggleOnFalse(new AlignWithApriltagOld(s_Swerve, () -> driver.getRawButton(tagAlignerExitButton)));
+                    // toggle on false because otherwise it automatically stops it
         
         brake.toggleOnFalse(new Brake(s_Swerve));
 
-        autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm));
+        autoBalance.toggleOnFalse(new AutoBalance(s_Swerve, doubleArm, () -> driver.getRawButton(autoBalanceExitButton)));
 
         terminateCommandsDriver.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
         

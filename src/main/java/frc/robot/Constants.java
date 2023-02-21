@@ -152,7 +152,10 @@ public final class Constants {
     public static final class AutoBalanceConstants {
         public static final double drive_speed = 0.16,
                                    pitch_tolerance = 8, 
-                                   max_linear_acceleration = 0.2;
+                                   max_linear_acceleration = 0.4,
+                                   ratio = 1.38, 
+                                   min_time = 1.5, 
+                                   min_deriv = 1.5;
     }
 
     public static final class AprilTagAlignmentConstants {
@@ -251,7 +254,11 @@ public final class Constants {
 
                                    k_exponent = 1.15,  // 1.0 for a normal PID
 
-                                   tolerance = 1; // number of inches until we bing chilling
+                                   tolerance = 1, // number of inches until we bing chilling
+
+                                   middle_x = 14, 
+                                   middle_y = -4, 
+                                   speed_when_arm_extended = 0.1;
     }
 
     public static final class ClawConstants {
@@ -297,6 +304,7 @@ public final class Constants {
                                 tagAlignerButton = XboxController.Button.kA.value,
                                 tagAlignerExitButton = XboxController.Button.kA.value, 
                                 autoBalanceButton = XboxController.Button.kB.value,
+                                autoBalanceExitButton = XboxController.Button.kB.value, 
                                 terminateCommandsDriverButton = XboxController.Button.kBack.value;
 
         /* Operator Buttons */

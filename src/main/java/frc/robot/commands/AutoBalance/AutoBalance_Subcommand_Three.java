@@ -8,6 +8,8 @@ import frc.robot.subsystems.Swerve;
 
 import static frc.robot.Constants.AutoBalanceConstants.*;
 
+import java.util.function.BooleanSupplier;
+
 public class AutoBalance_Subcommand_Three extends CommandBase {
     // Plan: move to intake position, then intake for some 
                 // amount of time, then finish
@@ -20,16 +22,17 @@ public class AutoBalance_Subcommand_Three extends CommandBase {
     private double target_power = -drive_speed;
 
     private double prev_time = 0;
-
     private double prev_pitch = 0;
-
     private double start_time = 0;
+    
+    private BooleanSupplier exitSup;
 
-    public AutoBalance_Subcommand_Three(Swerve swerve) {
+    public AutoBalance_Subcommand_Three(Swerve swerve, BooleanSupplier exitSup) {
         this.swerve = swerve;
         addRequirements(swerve); // means that other functions are not allowed to access it
         
         isFirstAction = true;
+        this.exitSup = exitSup;
     }
 
     @Override
@@ -50,12 +53,12 @@ public class AutoBalance_Subcommand_Three extends CommandBase {
 
         double delta_pitch = (swerve.getPitch() - prev_pitch) / delta_time;
 
-        if ((prev_time - start_time > 1.5) && (Math.abs(delta_pitch) > 1) && (Math.abs(swerve.getPitch()) < 0.8 * pitch_tolerance) && (delta_pitch * target_power > 0) && (delta_pitch * swerve.getPitch() < 0)) changeDir = true;
+        if ((prev_time - start_time > min_time) && (Math.abs(delta_pitch) > min_deriv) && (Math.abs(swerve.getPitch()) < pitch_tolerance) && (delta_pitch * target_power > 0) && (delta_pitch * swerve.getPitch() < 0)) changeDir = true;
         SmartDashboard.putNumber("deriv", delta_pitch);
             // we change dir if delta pitch is decreasing and we have negative power
 
         if (changeDir) {
-            target_power /= -1.38;
+            target_power /= -ratio;
         }
 
         prev_pitch = swerve.getPitch();
@@ -71,13 +74,6 @@ public class AutoBalance_Subcommand_Three extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return false; /*
-        if (Math.abs(swerve.getPitch()) > pitch_tolerance) {
-            return false;
-        } else {
-            swerve.changeHeading(0);
-            swerve.drive(new Translation2d(), 0, true, false); // brake
-            return true;
-        } */ //lol
+        return exitSup.getAsBoolean();
     }
 }

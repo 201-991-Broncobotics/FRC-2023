@@ -1,27 +1,27 @@
-package frc.robot.commands;
+package frc.robot.commands.AlignWithApriltag;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 
 import static frc.robot.Constants.AprilTagAlignmentConstants.*;
-import static frc.robot.Constants.Buttons.*;
 
-public class AlignWithApriltag extends CommandBase {
+import java.util.function.BooleanSupplier;
+
+public class AlignWithApriltagOld extends CommandBase {
 
     private Swerve swerve;
 
-    private XboxController driver;
+    private BooleanSupplier exitSup;
     
-    public AlignWithApriltag(Swerve swerve, XboxController driver) { // faster but less accurate
+    public AlignWithApriltagOld(Swerve swerve, BooleanSupplier exitSup) { // faster but less accurate
         this.swerve = swerve;
         addRequirements(swerve);
 
-        this.driver = driver;
+        this.exitSup = exitSup;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class AlignWithApriltag extends CommandBase {
         swerve.drive(new Translation2d(), 0, true, false); // brake
 
         double angular_offset = 0;
-        for (int i = 0; (i < angle_trials) && (!driver.getRawButton(tagAlignerExitButton)); i++) {
+        for (int i = 0; (i < angle_trials) && (!exitSup.getAsBoolean()); i++) {
             if (Limelight.getData()[1] == -12) return;
             if ((Math.abs(swerve.getYaw().getDegrees() + Limelight.getData()[1]) + max_angular_tolerance) % 90 > 2 * max_angular_tolerance) { // this is the target angle
                 i--;
@@ -44,7 +44,7 @@ public class AlignWithApriltag extends CommandBase {
             Timer.delay(0.01); // Limelight updates every 100hz
         }
 
-        if (driver.getRawButton(tagAlignerExitButton)) return;
+        if (exitSup.getAsBoolean()) return;
 
         System.out.println(swerve.getYaw().getDegrees());
         System.out.println(angular_offset);
@@ -52,7 +52,7 @@ public class AlignWithApriltag extends CommandBase {
 
         double target_heading = Swerve.normalizeAngle(swerve.getYaw().getDegrees() + angular_offset); // target pose = where we want to 
 
-        while ((Math.abs(Swerve.normalizeAngle(target_heading - swerve.getYaw().getDegrees())) > angular_tolerance) && (!driver.getRawButton(tagAlignerExitButton))) {
+        while ((Math.abs(Swerve.normalizeAngle(target_heading - swerve.getYaw().getDegrees())) > angular_tolerance) && (!exitSup.getAsBoolean())) {
             if (Swerve.normalizeAngle(target_heading - swerve.getYaw().getDegrees()) < 0) {
                 swerve.drive(new Translation2d(), -rotation_speed * Constants.BaseFalconSwerve.maxAngularVelocity, false, true);
             } else {
@@ -60,11 +60,11 @@ public class AlignWithApriltag extends CommandBase {
             }
         } // wait until we are good
 
-        if (driver.getRawButton(tagAlignerExitButton)) return;
+        if (exitSup.getAsBoolean()) return;
 
         swerve.setTargetHeading(target_heading);
 
-        while ((Limelight.getData()[2] == -12) && (!driver.getRawButton(tagAlignerExitButton))) { // while we can't see the apriltag
+        while ((Limelight.getData()[2] == -12) && (!exitSup.getAsBoolean())) { // while we can't see the apriltag
             if (angular_offset < 0) {
                 swerve.drive(new Translation2d(0, strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
             } else {
@@ -72,7 +72,7 @@ public class AlignWithApriltag extends CommandBase {
             }
         }
 
-        if (driver.getRawButton(tagAlignerExitButton)) return;
+        if (exitSup.getAsBoolean()) return;
 
         if (angular_offset < 0) {
             swerve.drive(new Translation2d(0, strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, false);
@@ -91,7 +91,7 @@ public class AlignWithApriltag extends CommandBase {
         double prev_x_average = 0;
         int current_index = 0; // instead of reshuffling array each time
 
-        for (int i = 0; (i < distance_trials) && (!driver.getRawButton(tagAlignerExitButton)); i++) {
+        for (int i = 0; (i < distance_trials) && (!exitSup.getAsBoolean()); i++) {
             if (Math.abs(Limelight.getData()[1]) > max_angular_tolerance) {
                 i--;
             } else {
@@ -101,11 +101,11 @@ public class AlignWithApriltag extends CommandBase {
             Timer.delay(0.01);
         }
 
-        if (driver.getRawButton(tagAlignerExitButton)) return;
+        if (exitSup.getAsBoolean()) return;
 
         swerve.setTargetHeading(target_heading);
 
-        while ((Math.abs(offset * 0.0254 - prev_x_average) > sideways_tolerance * 0.0254) && (!driver.getRawButton(tagAlignerExitButton)) && (Limelight.getData()[2] != -12)) {
+        while ((Math.abs(offset * 0.0254 - prev_x_average) > sideways_tolerance * 0.0254) && (!exitSup.getAsBoolean()) && (Limelight.getData()[2] != -12)) {
 
             if (offset * 0.0254 < prev_x_average) {
                 swerve.drive(new Translation2d(0, strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
