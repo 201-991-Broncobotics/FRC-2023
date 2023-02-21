@@ -304,6 +304,7 @@ public final class Constants {
                                 tagAlignerButton = XboxController.Button.kA.value,
                                 tagAlignerExitButton = XboxController.Button.kA.value, 
                                 autoBalanceButton = XboxController.Button.kB.value,
+                                autoBalanceExitButton = XboxController.Button.kB.value, 
                                 terminateCommandsDriverButton = XboxController.Button.kBack.value;
 
         /* Operator Buttons */

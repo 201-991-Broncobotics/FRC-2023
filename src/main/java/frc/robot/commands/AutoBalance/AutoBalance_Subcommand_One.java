@@ -1,5 +1,7 @@
 package frc.robot.commands.AutoBalance;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Swerve;
@@ -12,11 +14,14 @@ public class AutoBalance_Subcommand_One extends CommandBase {
 
     private boolean isFirstAction = true;
 
-    public AutoBalance_Subcommand_One(Swerve swerve) {
+    BooleanSupplier exitSup;
+
+    public AutoBalance_Subcommand_One(Swerve swerve, BooleanSupplier exitSup) {
         this.swerve = swerve;
         addRequirements(swerve); // means that other functions are not allowed to access it
         
         isFirstAction = true;
+        this.exitSup = exitSup;
     }
 
     @Override
@@ -31,7 +36,7 @@ public class AutoBalance_Subcommand_One extends CommandBase {
     @Override
     public boolean isFinished() {
         swerve.setTargetHeading(180);
-        if (Math.abs(swerve.getError()) > 2) {
+        if ((Math.abs(swerve.getError()) > 2) && !(exitSup.getAsBoolean())) {
             return false;
         } else {
             swerve.changeHeading(0);
