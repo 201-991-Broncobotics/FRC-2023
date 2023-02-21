@@ -318,5 +318,11 @@ public class DoubleArm extends SubsystemBase {
         SmartDashboard.putNumber("Motor One Current", first_motor.getOutputCurrent());
         SmartDashboard.putNumber("Motor One Follower Current", first_motor_follower.getOutputCurrent());
         SmartDashboard.putNumber("Motor Two Current", second_motor.getOutputCurrent());
+
+        if ((getCurrentXY()[0] < middle_x) && (getCurrentXY()[1] < middle_y)) {
+            frc.robot.Variables.speed_factor = 1;
+        } else {
+            frc.robot.Variables.speed_factor = speed_when_arm_extended;
+        }
     }
 }

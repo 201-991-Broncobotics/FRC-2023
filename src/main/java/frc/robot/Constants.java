@@ -254,7 +254,11 @@ public final class Constants {
 
                                    k_exponent = 1.15,  // 1.0 for a normal PID
 
-                                   tolerance = 1; // number of inches until we bing chilling
+                                   tolerance = 1, // number of inches until we bing chilling
+
+                                   middle_x = 14, 
+                                   middle_y = -4, 
+                                   speed_when_arm_extended = 0.1;
     }
 
     public static final class ClawConstants {
