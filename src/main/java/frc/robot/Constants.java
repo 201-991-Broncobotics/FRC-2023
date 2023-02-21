@@ -271,8 +271,8 @@ public final class Constants {
 
         /* Variables */
         
-        public static final double intake_power = 0.1, // one should be neg, one should be positive
-                                   outtake_power = 0.1;
+        public static final double intake_power = -1, // intake with negative power
+                                   outtake_power = 1;
     }
 
     public static final class Buttons {
