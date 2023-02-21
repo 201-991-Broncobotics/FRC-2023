@@ -49,7 +49,7 @@ public class RobotContainer {
     private final JoystickButton terminateCommandsOperator = new JoystickButton(operator, terminateCommandsOperatorButton);
 
     /* Subsystems */
-    private final Swerve s_Swerve = new Swerve();
+    private final Swerve s_Swerve = new Swerve(Constants.startingPose);
     private final DoubleArm doubleArm = new DoubleArm();
     private final Claw claw = new Claw(); // testing purposes, if there's an error then comment this back out
 

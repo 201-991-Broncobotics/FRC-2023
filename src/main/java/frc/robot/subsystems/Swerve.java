@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -20,14 +21,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.SwerveConstants.*;
 
 public class Swerve extends SubsystemBase {
-    public SwerveDriveOdometry swerveOdometry;
+    public static SwerveDrivePoseEstimator poseEstimator; 
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
 
     private double last_time;
     private double target_heading;
 
-    public Swerve() {
+    public Swerve(Pose2d startingPose) {
         gyro = new Pigeon2(Constants.BaseFalconSwerve.pigeonID);
         gyro.configFactoryDefault();
         zeroGyro();
@@ -45,7 +46,7 @@ public class Swerve extends SubsystemBase {
         Timer.delay(1.0);
         resetModulesToAbsolute();
 
-        swerveOdometry = new SwerveDriveOdometry(Constants.BaseFalconSwerve.swerveKinematics, getYaw(), getModulePositions());
+        poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, getYaw(), getModulePositions(), startingPose); 
     }
 
     public static double normalizeAngle(double degrees) {
@@ -117,11 +118,11 @@ public class Swerve extends SubsystemBase {
     }    
 
     public Pose2d getPose() {
-        return swerveOdometry.getPoseMeters();
+        return poseEstimator.getEstimatedPosition(); 
     }
 
     public void resetOdometry(Pose2d pose) {
-        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+        poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
     public SwerveModuleState[] getModuleStates(){
@@ -167,7 +168,12 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
-        swerveOdometry.update(getYaw(), getModulePositions());  
+        poseEstimator.update(getYaw(), getModulePositions());
+
+        var botpose = SmartDashboard.getNumberArray("botpose", new double[7]); 
+        Pose2d estimatedPose = new Pose2d(botpose[0], botpose[1], new Rotation2d(botpose[5] * Math.PI / 180)); 
+        addVisionEstimate(estimatedPose,  Timer.getFPGATimestamp() - (botpose[6]/1000.0));
+        
 
         SmartDashboard.putNumber("Gyro ", getYaw().getDegrees());
         SmartDashboard.putNumber("Pitch ", getPitch());
@@ -177,5 +183,9 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
+    }
+
+    public static void addVisionEstimate(Pose2d estimate, double time ) {
+        poseEstimator.addVisionMeasurement(estimate, time);
     }
 }

@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -260,6 +261,8 @@ public final class Constants {
                                    middle_y = -4, 
                                    speed_when_arm_extended = 0.1;
     }
+
+    public static final Pose2d startingPose = new Pose2d(); 
 
     public static final class ClawConstants {
 
