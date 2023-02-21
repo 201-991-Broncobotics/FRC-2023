@@ -10,12 +10,22 @@ public class AlignWithApriltag_Subcommand_Six extends CommandBase {
 
     private DoubleArm doubleArm;
     private BooleanSupplier exitSup;
+    
+    private boolean isFirstAction = true;
 
     public AlignWithApriltag_Subcommand_Six(DoubleArm doubleArm, BooleanSupplier exitSup) {
         this.doubleArm = doubleArm;
         addRequirements(doubleArm);
 
         this.exitSup = exitSup;
+        isFirstAction = true;
+    }
+
+    @Override
+    public void execute() {
+        if (isFirstAction) {
+            isFirstAction = false;
+        }
     }
 
     @Override
