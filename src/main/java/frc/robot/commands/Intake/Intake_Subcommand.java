@@ -54,6 +54,7 @@ public class Intake_Subcommand extends CommandBase {
             claw.stop();
             doubleArm.brake();
             doubleArm.setTargetPositions(idlePosition);
+            isFirstAction = true;
             return true;
         }
     }

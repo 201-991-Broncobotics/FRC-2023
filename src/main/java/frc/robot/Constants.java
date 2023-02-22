@@ -257,8 +257,8 @@ public final class Constants {
 
                                    tolerance = 5, // number of inches until we bing chilling
 
-                                   middle_x = 14, 
-                                   middle_y = -4, 
+                                   middle_x = 35, 
+                                   middle_y = 0, 
                                    speed_when_arm_extended = 0.1;
     }
 
