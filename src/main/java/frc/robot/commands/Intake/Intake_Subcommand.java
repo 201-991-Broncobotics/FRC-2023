@@ -1,5 +1,6 @@
 package frc.robot.commands.Intake;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
@@ -38,6 +39,7 @@ public class Intake_Subcommand extends CommandBase {
             start_time = System.currentTimeMillis() / 1000.0;
             claw.intake();
             isFirstAction = false;
+            SmartDashboard.putNumber("it should be here", SmartDashboard.getNumber("it should be here", 0) + 1);
         }
         doubleArm.resetWhipControl();
         doubleArm.setTargetPositions(intakePosition);

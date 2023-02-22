@@ -247,15 +247,15 @@ public final class Constants {
                                    first_motor_min_error = 0.5, 
                                    second_motor_min_error = 0.5,
 
-                                   first_motor_max_error = 32.0, 
-                                   second_motor_max_error = 32.0,
+                                   first_motor_max_error = 55.0, 
+                                   second_motor_max_error = 55.0,
 
-                                   whiplash_time_one = 1.2, 
+                                   whiplash_time_one = 1.25, 
                                    whiplash_time_two = 0.4, 
 
                                    k_exponent = 1.15,  // 1.0 for a normal PID
 
-                                   tolerance = 1, // number of inches until we bing chilling
+                                   tolerance = 5, // number of inches until we bing chilling
 
                                    middle_x = 14, 
                                    middle_y = -4, 
@@ -339,7 +339,7 @@ public final class Constants {
         public static double[] topPosition = {44, 12}, 
                                midPosition = {40, 0}, 
                                lowPosition = {20, -20}, 
-                               intakePosition = {20, -40}, 
+                               intakePosition = {20, -35}, 
                                idlePosition = {12.4, -21.3}, 
                                startPosition = {0, -11};
 
