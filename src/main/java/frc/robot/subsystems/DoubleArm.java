@@ -207,6 +207,49 @@ public class DoubleArm extends SubsystemBase {
         second_motor.set(0);
     }
 
+    public double[] getAnglesFromTarget(double x, double y, boolean concaveUp) {
+        if (x <= min_x) x = min_x; // don't let x be too close
+        if (y <= min_y) y = min_y; // don't let y be too low
+
+        if (Math.abs(x) < 0.25) x = 0.25;
+
+        // there is no max_x or max_y because those will be determined by the radius
+
+        double radius = Math.sqrt(x * x + y * y); // we don't have to worry about divide by zero errors because x > 0.25
+        if (radius < clipping_one * (first_arm_length - second_arm_length)) {
+            x *= clipping_one * (first_arm_length - second_arm_length) / radius;
+            y *= clipping_one * (first_arm_length - second_arm_length) / radius;
+            radius = clipping_one * (first_arm_length - second_arm_length);
+        } else if (radius > clipping_two * (first_arm_length + second_arm_length)) {
+            x *= clipping_two * (first_arm_length + second_arm_length) / radius;
+            y *= clipping_two * (first_arm_length + second_arm_length) / radius;
+            radius = clipping_two * (first_arm_length + second_arm_length);
+        } // clip radius to range
+
+        double angle = Math.atan(y / x) * 180.0 / Math.PI; // because x > 0 we don't have to worry about adding pi
+        if (x < 0) {
+            if (angle > 0) angle -= 180;
+            else angle += 180;
+        }
+        
+        // set target 1 and target 2
+
+        double first_angle = Math.acos((radius * radius + first_arm_length * first_arm_length - second_arm_length * second_arm_length) / (2.0 * first_arm_length * radius)) * 180.0 / Math.PI;
+        double second_angle = Math.acos((radius * radius + second_arm_length * second_arm_length - first_arm_length * first_arm_length) / (2.0 * second_arm_length * radius)) * 180.0 / Math.PI;
+                // not the target angles, just something that's useful
+                // angles of triangle between both arms and the radial vector
+                // Law of Cosines: a^2 + b^2 - 2ab cos(C) = c^2 --> cos(C) = (a^2 + b^2 - c^2) / (2ab)
+
+                // angle between first arm and radial vector and between second arm and radial vector
+                // this means that our target angles are the radial vector plus or minus these angles
+                // note, these are the target absolute angles, not the target relative angles
+
+        return new double[] {
+            angle + (angle < switching_angle ? 0 - first_angle : first_angle),
+            angle + (angle < switching_angle ? second_angle : 0 - second_angle)
+        };
+    }
+
     public void setTargetPositions(double[] target) {
         setTargetPositions(target[0], target[1]);
     }

@@ -1,7 +1,7 @@
 package frc.robot.commands.AlignWithApriltag;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.SetArmPosition;
+import frc.robot.commands.SetArmPosition.SetArmPosition;
 import frc.robot.subsystems.DoubleArm;
 import frc.robot.subsystems.Swerve;
 
