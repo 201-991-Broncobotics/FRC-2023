@@ -26,7 +26,7 @@ public class Intake_Subcommand extends CommandBase {
     public Intake_Subcommand(Claw claw, DoubleArm doubleArm, BooleanSupplier intakeSup) {
         this.doubleArm = doubleArm;
         this.claw = claw;
-        addRequirements(doubleArm, claw); // means that other functions are not allowed to access it
+        // addRequirements(doubleArm, claw); // means that other functions are not allowed to access it
 
         this.intakeSup = intakeSup;
         
