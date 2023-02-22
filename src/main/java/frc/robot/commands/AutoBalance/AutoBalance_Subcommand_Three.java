@@ -76,6 +76,7 @@ public class AutoBalance_Subcommand_Three extends CommandBase {
     public boolean isFinished() {
         if (exitSup.getAsBoolean()) {
             isFirstAction = true;
+            frc.robot.Variables.in_autoalignment = false;
             return true;
         }
         return false;
