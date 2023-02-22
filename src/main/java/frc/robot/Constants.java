@@ -234,7 +234,7 @@ public final class Constants {
                                    clipping_two = 0.99, // first should be > 1, second should be < 1
 
                                    first_arm_length = 32, 
-                                   second_arm_length = 30, // inches
+                                   second_arm_length = 29.368, // inches
 
                                    switching_angle = 0, // if below horizontal --> concave up, if above horizontal --> concave down
 
@@ -336,12 +336,12 @@ public final class Constants {
 
         // TODO: Tune these before EVERY SINGLE MATCH
         
-        public static double[] topPosition = {44, 12}, 
-                               midPosition = {40, 0}, 
-                               lowPosition = {20, -20}, 
-                               intakePosition = {40, -35}, 
-                               idlePosition = {40, -21.3}, 
-                               startPosition = {15, -15}; // we have to re-figure them out
+        public static double[] topPosition = {60.1, 8.9}, 
+                               midPosition = {60.1, -9.2}, 
+                               lowPosition = {42.3, -29.2}, 
+                               intakePosition = {33.6, -39.6}, 
+                               idlePosition = {30.8, -18.4}, 
+                               startPosition = {4.8, -9}; // we have to re-figure them out
 
         // TODO: still have to figure out these values lel
 
