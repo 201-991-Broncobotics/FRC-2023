@@ -35,12 +35,12 @@ public class AutoBalance_Subcommand_One extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        swerve.setTargetHeading(180);
         if ((Math.abs(swerve.getError()) > 2) && !(exitSup.getAsBoolean())) {
             return false;
         } else {
             swerve.changeHeading(0);
             swerve.drive(new Translation2d(), 0, true, false); // brake
+            isFirstAction = true;
             return true;
         }
     }

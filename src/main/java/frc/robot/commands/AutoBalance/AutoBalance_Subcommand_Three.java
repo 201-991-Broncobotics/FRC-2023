@@ -74,6 +74,10 @@ public class AutoBalance_Subcommand_Three extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return exitSup.getAsBoolean();
+        if (exitSup.getAsBoolean()) {
+            isFirstAction = true;
+            return true;
+        }
+        return false;
     }
 }

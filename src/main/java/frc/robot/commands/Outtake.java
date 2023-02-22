@@ -13,29 +13,36 @@ public class Outtake extends CommandBase {
     private Claw claw;
     private DoubleArm doubleArm;
 
+    private double starting_time;
+
+    private boolean isFirstLoop = true;
+
     public Outtake(Claw claw, DoubleArm doubleArm) {
         this.doubleArm = doubleArm;
         this.claw = claw;
         addRequirements(doubleArm, claw); // means that other functions are not allowed to access it
+
+        isFirstLoop = true;
+        starting_time = System.currentTimeMillis() / 1000.0;
     }
 
     @Override
     public void execute() {
-
-        double time = System.currentTimeMillis() / 1000.0;
-        claw.outtake();
-
-        while (System.currentTimeMillis() / 1000.0 - time < outtake_time) {
-            doubleArm.rawPowerArm(0, 0);
+        if (isFirstLoop) {
+            claw.outtake();
+            starting_time = System.currentTimeMillis() / 1000.0;
         }
-        
-        claw.stop();
-        doubleArm.brake();
-        doubleArm.setTargetPositions(idlePosition);
     }
     
     @Override
     public boolean isFinished() {
-        return true;
+        if (System.currentTimeMillis() / 1000.0 - starting_time > outtake_time) {
+            claw.stop();
+            doubleArm.brake();
+            doubleArm.setTargetPositions(idlePosition);
+            isFirstLoop = true;
+            return true;
+        }
+        return false;
     }
 }

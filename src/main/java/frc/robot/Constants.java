@@ -173,7 +173,7 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final double intake_time = 1.5, 
+        public static final double claw_current_limit = 5, 
                                    outtake_time = 0.5;
     }
 

@@ -42,6 +42,10 @@ public class Claw extends SubsystemBase {
         claw_motor.set(0);
     }
 
+    public double getCurrent() {
+        return claw_motor.getOutputCurrent();
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Claw Motor Current", claw_motor.getOutputCurrent());

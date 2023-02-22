@@ -40,6 +40,10 @@ public class AutoBalance_Subcommand_Two extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return (Math.abs(swerve.getPitch()) > (pitch_tolerance * 1.2)) || (exitSup.getAsBoolean());
+        if ((Math.abs(swerve.getPitch()) > (pitch_tolerance * 1.2)) || (exitSup.getAsBoolean())) {
+            isFirstAction = true;
+            return true;
+        }
+        return false;
     }
 }
