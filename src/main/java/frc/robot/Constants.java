@@ -173,7 +173,7 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final double claw_current_limit = 18, 
+        public static final double claw_current_limit = 25, 
                                    outtake_time = 0.5;
     }
 
@@ -274,7 +274,7 @@ public final class Constants {
     
         public static final boolean claw_motor_brake = true;
         
-        public static final int claw_motor_max_current = 20;
+        public static final int claw_motor_max_current = 30;
         
         public static final double claw_motor_acceleration_time = 3, 
                                    claw_motor_voltage_compensation = 0;
