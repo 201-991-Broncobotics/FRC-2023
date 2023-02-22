@@ -173,7 +173,7 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final double claw_current_limit = 5, 
+        public static final double claw_current_limit = 18, 
                                    outtake_time = 0.5;
     }
 
@@ -255,11 +255,11 @@ public final class Constants {
 
                                    k_exponent = 1.15,  // 1.0 for a normal PID
 
-                                   tolerance = 5, // number of inches until we bing chilling
+                                   tolerance = 5.5, // number of inches until we bing chilling
 
-                                   middle_x = 35, 
+                                   middle_x = 60, 
                                    middle_y = 0, 
-                                   speed_when_arm_extended = 0.1;
+                                   speed_when_arm_extended = 0.2;
     }
 
     public static final Pose2d startingPose = new Pose2d(); 
@@ -339,13 +339,13 @@ public final class Constants {
         public static double[] topPosition = {44, 12}, 
                                midPosition = {40, 0}, 
                                lowPosition = {20, -20}, 
-                               intakePosition = {20, -35}, 
-                               idlePosition = {12.4, -21.3}, 
+                               intakePosition = {40, -35}, 
+                               idlePosition = {40, -21.3}, 
                                startPosition = {15, -15}; // we have to re-figure them out
 
         // TODO: still have to figure out these values lel
 
         public static boolean manual_control = true, 
-                              fancy_drive = true;
+                              fancy_drive = false;
     }
 }

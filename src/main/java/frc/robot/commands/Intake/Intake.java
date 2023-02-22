@@ -7,13 +7,15 @@ import frc.robot.subsystems.DoubleArm;
 
 import static frc.robot.Constants.TuningConstants.*;
 
+import java.util.function.BooleanSupplier;
+
 public class Intake extends SequentialCommandGroup {
-    public Intake(Claw claw, DoubleArm doubleArm) {
-        if (claw.getCurrent() == 0) { // THis might not work but I don't know until I test it
+    public Intake(Claw claw, DoubleArm doubleArm, BooleanSupplier stopSup) {
+        if (claw.getCurrent() == 0) { // This might not work
             addRequirements(claw); // means that other functions are not allowed to access it
-            addCommands( // Let's see if this works lmao+
+            addCommands( // Let's see if this works lmao
                 new SetArmPosition(doubleArm, intakePosition), 
-                new Intake_Subcommand(claw, doubleArm)
+                new Intake_Subcommand(claw, doubleArm, stopSup)
             );
         }
     }
