@@ -132,8 +132,8 @@ public class RobotContainer {
         idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePosition));
         startPos.toggleOnTrue(new SetArmPosition(doubleArm, startPosition));
 
-        intake.toggleOnTrue(new Intake(claw, doubleArm));
-        outtake.toggleOnTrue(new Outtake(claw, doubleArm));
+        intake.toggleOnFalse(new Intake(claw, doubleArm, () -> operator.getRawButton(intakeButton)));
+        outtake.toggleOnFalse(new Outtake(claw, doubleArm));
         
         terminateCommandsOperator.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
     }

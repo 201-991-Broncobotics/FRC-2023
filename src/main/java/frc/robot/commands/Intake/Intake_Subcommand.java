@@ -1,10 +1,14 @@
 package frc.robot.commands.Intake;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
 
 import static frc.robot.Constants.TuningConstants.*;
+
+import java.util.function.BooleanSupplier;
+
 import static frc.robot.Constants.IntakeConstants.*;
 
 public class Intake_Subcommand extends CommandBase {
@@ -16,12 +20,19 @@ public class Intake_Subcommand extends CommandBase {
 
     private boolean isFirstAction = true;
 
-    public Intake_Subcommand(Claw claw, DoubleArm doubleArm) {
+    private BooleanSupplier stopSup;
+
+    private double starting_time;
+
+    public Intake_Subcommand(Claw claw, DoubleArm doubleArm, BooleanSupplier stopSup) {
         this.doubleArm = doubleArm;
         this.claw = claw;
         addRequirements(claw);
+
+        this.stopSup = stopSup;
         
         isFirstAction = true;
+        starting_time = System.currentTimeMillis() / 1000.0;
     }
 
     @Override
@@ -31,19 +42,21 @@ public class Intake_Subcommand extends CommandBase {
             isFirstAction = false;
             doubleArm.resetWhipControl();
             doubleArm.setTargetPositions(intakePosition);
+            starting_time = System.currentTimeMillis() / 1000.0;
         }
     }
     
     @Override
     public boolean isFinished() {
-        if (claw.getCurrent() < claw_current_limit) {
-            return false;
-        } else {
+        if ((stopSup.getAsBoolean()) || ((claw.getCurrent() > claw_current_limit) && (System.currentTimeMillis() / 1000.0 - starting_time > 0.8))) {
             claw.stop();
             doubleArm.brake();
             doubleArm.setTargetPositions(idlePosition);
             isFirstAction = true;
+            SmartDashboard.putBoolean("claw reset", claw.getCurrent() > claw_current_limit);
+            SmartDashboard.putBoolean("stop manual", stopSup.getAsBoolean());
             return true;
         }
+        return false;
     }
 }

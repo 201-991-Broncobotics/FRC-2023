@@ -31,6 +31,7 @@ public class Outtake extends CommandBase {
         if (isFirstLoop) {
             claw.outtake();
             starting_time = System.currentTimeMillis() / 1000.0;
+            isFirstLoop = false;
         }
     }
     
@@ -39,7 +40,7 @@ public class Outtake extends CommandBase {
         if (System.currentTimeMillis() / 1000.0 - starting_time > outtake_time) {
             claw.stop();
             doubleArm.brake();
-            doubleArm.setTargetPositions(idlePosition);
+            // doubleArm.setTargetPositions(idlePosition);
             isFirstLoop = true;
             return true;
         }
