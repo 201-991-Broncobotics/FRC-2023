@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.SwerveConstants.*;
+import static frc.robot.Constants.TuningConstants.*;
 
 public class Swerve extends SubsystemBase {
     public static SwerveDrivePoseEstimator poseEstimator; 
@@ -64,6 +65,17 @@ public class Swerve extends SubsystemBase {
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+
+        if (show_drive_data) {
+            fieldRelative = false;
+            System.out.print("{" + 
+                                (Math.round(translation.getX() * 1000.0) / 1000.0) + ", " + 
+                                (Math.round(translation.getY() * 1000.0) / 1000.0) + ", " + 
+                                (Math.round(rotation * 1000.0) / 1000.0) + ", " + 
+                                (Math.round(System.currentTimeMillis()) / 1000.0) + 
+                             "}, "); // not println on purpose
+                             // truncates to 3 decimals because more precision is not necessary
+        }
 
         double current_heading = getYaw().getDegrees();
         if (rotation == 0) {

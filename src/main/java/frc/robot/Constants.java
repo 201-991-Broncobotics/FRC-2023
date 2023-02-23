@@ -346,6 +346,7 @@ public final class Constants {
         // TODO: still have to figure out these values lel
 
         public static boolean manual_control = true, 
-                              fancy_drive = false;
+                              fancy_drive = false, 
+                              show_drive_data = true;
     }
 }

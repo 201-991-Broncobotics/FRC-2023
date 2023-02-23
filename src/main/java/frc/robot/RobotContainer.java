@@ -16,6 +16,7 @@ import frc.robot.subsystems.*;
 
 import static frc.robot.Constants.Buttons.*;
 import static frc.robot.Constants.TuningConstants.*;
+import static frc.robot.autos.autoTrajectories.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -149,6 +150,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return new exampleAuto(s_Swerve);
+        // return new exampleAuto(s_Swerve);
+        return new emulatorAuto(s_Swerve, testTrajectory);
     }
 }
