@@ -208,7 +208,7 @@ public final class Constants {
                                     invert_first_motor_follower = false, 
                                     invert_second_motor = true, 
                                     invert_first_encoder = true, 
-                                    invert_second_encoder = false, 
+                                    invert_second_encoder = true, 
                                     first_motor_brake = true, 
                                     second_motor_brake = true;
         
