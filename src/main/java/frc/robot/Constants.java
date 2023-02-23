@@ -340,7 +340,7 @@ public final class Constants {
                                midPosition = {60.1, -9.2}, 
                                lowPosition = {42.3, -29.2}, 
                                intakePosition = {33.6, -39.6}, 
-                               idlePosition = {30.8, -18.4}, 
+                               idlePosition = {6.1, -10.8}, 
                                startPosition = {4.8, -9}; // we have to re-figure them out
 
         // TODO: still have to figure out these values lel
