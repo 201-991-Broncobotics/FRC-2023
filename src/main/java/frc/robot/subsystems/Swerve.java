@@ -116,7 +116,7 @@ public class Swerve extends SubsystemBase {
                                 );
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.BaseFalconSwerve.maxSpeed);
 
-        for(SwerveModule mod : mSwerveMods){
+        for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
     }    
@@ -138,7 +138,7 @@ public class Swerve extends SubsystemBase {
         poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
-    public SwerveModuleState[] getModuleStates(){
+    public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : mSwerveMods) {
             states[mod.moduleNumber] = mod.getState();
@@ -146,7 +146,7 @@ public class Swerve extends SubsystemBase {
         return states;
     }
 
-    public SwerveModulePosition[] getModulePositions(){
+    public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for (SwerveModule mod : mSwerveMods) {
             positions[mod.moduleNumber] = mod.getPosition();
@@ -154,7 +154,7 @@ public class Swerve extends SubsystemBase {
         return positions;
     }
 
-    public void zeroGyro(){
+    public void zeroGyro() {
         gyro.setYaw(0);
         target_heading = 0;
         last_time = System.currentTimeMillis();
@@ -172,14 +172,14 @@ public class Swerve extends SubsystemBase {
         return gyro.getPitch();
     }
     
-    public void resetModulesToAbsolute(){
-        for(SwerveModule mod : mSwerveMods){
+    public void resetModulesToAbsolute() {
+        for (SwerveModule mod : mSwerveMods) {
             mod.resetToAbsolute();
         }
     }
 
     @Override
-    public void periodic(){
+    public void periodic() {
         poseEstimator.update(getYaw(), getModulePositions());
 
         double[] vision_estimate = Limelight.getRobotPosition();
