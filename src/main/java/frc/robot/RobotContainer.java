@@ -11,6 +11,7 @@ import frc.robot.commands.*;
 import frc.robot.commands.AlignWithApriltag.AlignWithApriltagOld;
 import frc.robot.commands.AutoBalance.AutoBalance;
 import frc.robot.commands.Intake.Intake;
+import frc.robot.commands.Outtake.Outtake;
 import frc.robot.commands.SetArmPosition.SetArmPosition;
 import frc.robot.subsystems.*;
 

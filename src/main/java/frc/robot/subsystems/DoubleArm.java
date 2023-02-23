@@ -207,7 +207,7 @@ public class DoubleArm extends SubsystemBase {
         second_motor.set(0);
     }
 
-    public double[] getAnglesFromTarget(double x, double y, boolean concaveUp) {
+    public static double[] getAnglesFromTarget(double x, double y) {
         if (x <= min_x) x = min_x; // don't let x be too close
         if (y <= min_y) y = min_y; // don't let y be too low
 
@@ -231,8 +231,6 @@ public class DoubleArm extends SubsystemBase {
             if (angle > 0) angle -= 180;
             else angle += 180;
         }
-        
-        // set target 1 and target 2
 
         double first_angle = Math.acos((radius * radius + first_arm_length * first_arm_length - second_arm_length * second_arm_length) / (2.0 * first_arm_length * radius)) * 180.0 / Math.PI;
         double second_angle = Math.acos((radius * radius + second_arm_length * second_arm_length - first_arm_length * first_arm_length) / (2.0 * second_arm_length * radius)) * 180.0 / Math.PI;
@@ -247,6 +245,15 @@ public class DoubleArm extends SubsystemBase {
         return new double[] {
             angle + (angle < switching_angle ? 0 - first_angle : first_angle),
             angle + (angle < switching_angle ? second_angle : 0 - second_angle)
+        };
+    }
+
+    public static double[] getPositionFromAngles(double first_angle, double second_angle) {
+        return new double[] {
+            first_arm_length * Math.cos(first_angle * Math.PI / 180.0) + 
+            second_arm_length * Math.cos(second_angle * Math.PI / 180.0), 
+            first_arm_length * Math.sin(first_angle * Math.PI / 180.0) + 
+            second_arm_length * Math.sin(second_angle * Math.PI / 180.0)
         };
     }
 
@@ -313,6 +320,13 @@ public class DoubleArm extends SubsystemBase {
         return new double[] {
             first_encoder.getDistance() - first_encoder_zero, 
             first_encoder.getDistance() - first_encoder_zero + second_encoder.getDistance() - second_encoder_zero
+        };
+    }
+
+    public double[] getTargetArmAngles() {
+        return new double[] {
+            target_positions[0], 
+            target_positions[1]
         };
     }
 

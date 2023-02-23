@@ -1,11 +1,7 @@
 package frc.robot.commands.Intake;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.DoubleArm;
-
-import static frc.robot.Constants.TuningConstants.*;
 
 import java.util.function.BooleanSupplier;
 
@@ -16,7 +12,6 @@ public class Intake_Subcommand extends CommandBase {
                 // amount of time, then finish
     
     private Claw claw;
-    private DoubleArm doubleArm;
 
     private boolean isFirstAction = true;
 
@@ -24,8 +19,7 @@ public class Intake_Subcommand extends CommandBase {
 
     private double starting_time;
 
-    public Intake_Subcommand(Claw claw, DoubleArm doubleArm, BooleanSupplier stopSup) {
-        this.doubleArm = doubleArm;
+    public Intake_Subcommand(Claw claw, BooleanSupplier stopSup) {
         this.claw = claw;
         addRequirements(claw);
 
@@ -40,8 +34,6 @@ public class Intake_Subcommand extends CommandBase {
         if (isFirstAction) {
             claw.intake();
             isFirstAction = false;
-            doubleArm.resetWhipControl();
-            doubleArm.setTargetPositions(intakePosition);
             starting_time = System.currentTimeMillis() / 1000.0;
         }
     }
@@ -50,11 +42,7 @@ public class Intake_Subcommand extends CommandBase {
     public boolean isFinished() {
         if ((stopSup.getAsBoolean()) || ((claw.getCurrent() > claw_current_limit) && (System.currentTimeMillis() / 1000.0 - starting_time > 0.8))) {
             claw.stop();
-            doubleArm.brake();
-            doubleArm.setTargetPositions(idlePosition);
             isFirstAction = true;
-            SmartDashboard.putBoolean("claw reset", claw.getCurrent() > claw_current_limit);
-            SmartDashboard.putBoolean("stop manual", stopSup.getAsBoolean());
             return true;
         }
         return false;

@@ -238,7 +238,7 @@ public final class Constants {
                                    first_arm_length = 32, 
                                    second_arm_length = 29.368, // inches
 
-                                   switching_angle = 0, // if below horizontal --> concave up, if above horizontal --> concave down
+                                   switching_angle = 90, // if below horizontal --> concave up, if above horizontal --> concave down
 
                                    first_motor_max_power = 0.6,
                                    second_motor_max_power = 0.4,

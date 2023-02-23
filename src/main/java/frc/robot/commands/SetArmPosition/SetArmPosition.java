@@ -1,44 +1,32 @@
 package frc.robot.commands.SetArmPosition;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import frc.robot.subsystems.DoubleArm;
-
 import static frc.robot.Constants.DoubleArmConstants.*;
 
-public class SetArmPosition extends CommandBase {
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-    private DoubleArm doubleArm;
-    private double[] position;
-
-    private boolean isFirstLoop = true;
-
-    public SetArmPosition(DoubleArm doubleArm, double[] position) {
-        this.doubleArm = doubleArm;
-        addRequirements(doubleArm); // means that other functions are not allowed to access it
-
-        this.position = position;
-        isFirstLoop = true;
-    }
-
-    @Override
-    public void execute() {
-        if (isFirstLoop) {
-            doubleArm.resetWhipControl();
-            doubleArm.setTargetPositions(position);
-            isFirstLoop = false;
-        }
-
-        doubleArm.rawPowerArm(0, 0);
-    }
+public class SetArmPosition extends SequentialCommandGroup {
     
-    @Override
-    public boolean isFinished() {
-        if (doubleArm.getTotalError() < tolerance) {
-            doubleArm.brake();
-            isFirstLoop = true;
-            return true;
+    public SetArmPosition(DoubleArm doubleArm, double[] position) {
+        if (doubleArm.getTotalError() < tolerance) { // This might not work
+            addRequirements(doubleArm); // means that other functions are not allowed to access it
+            double[] target_angles = DoubleArm.getAnglesFromTarget(position[0], position[1]);
+            if (doubleArm.getCurrentArmAngles()[1] < target_angles[1]) { // if our distal is below our target, set that first
+                addCommands(
+                    new SetDistalPosition(doubleArm, target_angles[1]), 
+                    new SetProximalPosition(doubleArm, target_angles[0])
+                );
+            } else { // set proximal then distal
+                addCommands(
+                    new SetProximalPosition(doubleArm, target_angles[0]), 
+                    new SetDistalPosition(doubleArm, target_angles[1])
+                );
+            }
+        } else {
+            addCommands(
+                new InstantCommand()
+            );
         }
-        return false;
     }
 }
