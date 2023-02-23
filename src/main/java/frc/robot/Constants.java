@@ -178,6 +178,8 @@ public final class Constants {
     }
 
     public static final class SwerveConstants {
+
+        public static final Pose2d startingPose = new Pose2d(); 
         
         public static final double maximum_power = 0.6, 
                                    maximum_error = 60, // degrees
@@ -261,8 +263,6 @@ public final class Constants {
                                    middle_y = 0, 
                                    speed_when_arm_extended = 0.2;
     }
-
-    public static final Pose2d startingPose = new Pose2d(); 
 
     public static final class ClawConstants {
 

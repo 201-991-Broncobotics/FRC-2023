@@ -12,6 +12,8 @@ public class Limelight { // NOT a subsystem
     // private static DoubleSupplier tx = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(-100);
     // private static DoubleSupplier ty = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(-100);
     // private static DoubleSupplier ta = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(-1);
+    
+    private static DoubleSupplier tl = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(-1);
 
     private static DoubleSupplier tid = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDouble(-2);
     
@@ -54,6 +56,15 @@ public class Limelight { // NOT a subsystem
         SmartDashboard.putNumber("Robot Heading", vals[1]);
         SmartDashboard.putNumber("Robot x", vals[2]);
         SmartDashboard.putNumber("Robot z", vals[3]);
+    }
+
+    public static double[] getRobotPosition() {
+        double x = 0;
+        double y = 0;
+        double angle = 0;
+        // maybe we augment it with yaw but idk
+        double latency = tl.getAsDouble();
+        return new double[] {x, y, angle, latency};
     }
 
     public static void setPipeline(int number) {

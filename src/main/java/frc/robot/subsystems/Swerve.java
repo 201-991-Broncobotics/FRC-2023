@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.SwerveConstants.*;
 import static frc.robot.Constants.TuningConstants.*;
+import static frc.robot.Constants.AprilTagAlignmentConstants.*; // for max angular tolerance
 
 public class Swerve extends SubsystemBase {
     public static SwerveDrivePoseEstimator poseEstimator; 
@@ -29,7 +30,7 @@ public class Swerve extends SubsystemBase {
     private double last_time;
     private double target_heading;
 
-    public Swerve(Pose2d startingPose) {
+    public Swerve() {
         gyro = new Pigeon2(Constants.BaseFalconSwerve.pigeonID);
         gyro.configFactoryDefault();
         zeroGyro();
@@ -47,7 +48,7 @@ public class Swerve extends SubsystemBase {
         Timer.delay(1.0);
         resetModulesToAbsolute();
 
-        poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, getYaw(), getModulePositions(), startingPose); 
+        poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, Rotation2d.fromDegrees(0), getModulePositions(), startingPose); 
     }
 
     public static double normalizeAngle(double degrees) {
@@ -124,7 +125,7 @@ public class Swerve extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.BaseFalconSwerve.maxSpeed);
         
-        for(SwerveModule mod : mSwerveMods){
+        for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(desiredStates[mod.moduleNumber], false);
         }
     }    
@@ -139,7 +140,7 @@ public class Swerve extends SubsystemBase {
 
     public SwerveModuleState[] getModuleStates(){
         SwerveModuleState[] states = new SwerveModuleState[4];
-        for(SwerveModule mod : mSwerveMods){
+        for (SwerveModule mod : mSwerveMods) {
             states[mod.moduleNumber] = mod.getState();
         }
         return states;
@@ -147,7 +148,7 @@ public class Swerve extends SubsystemBase {
 
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
-        for(SwerveModule mod : mSwerveMods){
+        for (SwerveModule mod : mSwerveMods) {
             positions[mod.moduleNumber] = mod.getPosition();
         }
         return positions;
@@ -175,29 +176,31 @@ public class Swerve extends SubsystemBase {
         for(SwerveModule mod : mSwerveMods){
             mod.resetToAbsolute();
         }
-
     }
 
     @Override
     public void periodic(){
         poseEstimator.update(getYaw(), getModulePositions());
 
-        var botpose = SmartDashboard.getNumberArray("botpose", new double[7]); 
-        Pose2d estimatedPose = new Pose2d(botpose[0], botpose[1], new Rotation2d(botpose[5] * Math.PI / 180)); 
-        addVisionEstimate(estimatedPose,  Timer.getFPGATimestamp() - (botpose[6]/1000.0));
-        
+        double[] vision_estimate = Limelight.getRobotPosition();
+        if (vision_estimate[1] != 0 && ((Math.abs(getYaw().getDegrees() - vision_estimate[2]) + max_angular_tolerance) % 90 < 2 * max_angular_tolerance)) {
+                // y cannot be zero if we actually get a measurement
+            Pose2d estimatedPose = new Pose2d(vision_estimate[0], vision_estimate[1], new Rotation2d(vision_estimate[2] * Math.PI / 180)); 
+                                                // don't put yaw as the angle because yaw might be off by a few degrees
+            addVisionEstimate(estimatedPose, Timer.getFPGATimestamp() - vision_estimate[3] * 1000.0);
+        }
 
         SmartDashboard.putNumber("Gyro ", getYaw().getDegrees());
         SmartDashboard.putNumber("Pitch ", getPitch());
 
-        for(SwerveModule mod : mSwerveMods){
+        for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
     }
 
-    public static void addVisionEstimate(Pose2d estimate, double time ) {
+    public static void addVisionEstimate(Pose2d estimate, double time) {
         poseEstimator.addVisionMeasurement(estimate, time);
     }
 }

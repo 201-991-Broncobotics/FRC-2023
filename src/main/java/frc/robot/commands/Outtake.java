@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
 
-import static frc.robot.Constants.TuningConstants.*;
 import static frc.robot.Constants.IntakeConstants.*;
 
 public class Outtake extends CommandBase {
@@ -40,7 +39,6 @@ public class Outtake extends CommandBase {
         if (System.currentTimeMillis() / 1000.0 - starting_time > outtake_time) {
             claw.stop();
             doubleArm.brake();
-            // doubleArm.setTargetPositions(idlePosition);
             isFirstLoop = true;
             return true;
         }
