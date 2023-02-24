@@ -75,7 +75,7 @@ public class Swerve extends SubsystemBase {
                                 (Math.round(translation.getY() * 1000.0) / 1000.0) + ", " + 
                                 (Math.round(rotation * 1000.0) / 1000.0) + ", " + 
                                 (Math.round(System.currentTimeMillis()) / 1000.0) + 
-                             "}, "; // not println on purpose
+                              "}, "; // not println on purpose
                              // truncates to 3 decimals because more precision is not necessary
         }
 

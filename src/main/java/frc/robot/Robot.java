@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Limelight;
@@ -99,8 +100,10 @@ public class Robot extends TimedRobot {
             myWriter.write(Variables.data);
             myWriter.close();
             System.out.print(Variables.data); // just in case it doesn't work
+            SmartDashboard.putString("TeleOp Exit", "Successful");
         } catch (IOException e) {
             System.out.print(Variables.data);
+            SmartDashboard.putString("TeleOp Exit", "Not Successful");
         }
     }
 
