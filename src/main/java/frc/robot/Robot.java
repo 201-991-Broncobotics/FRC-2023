@@ -92,7 +92,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopExit() {
+        System.out.print("Started Print"); // just in case it doesn't work
         System.out.print(Variables.data); // just in case it doesn't work
+        System.out.print("Finished Print"); // just in case it doesn't work
         SmartDashboard.putString("TeleOp Exit", "Successful");
         SmartDashboard.putString("Data", Variables.data);
     }
