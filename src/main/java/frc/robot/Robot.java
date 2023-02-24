@@ -95,9 +95,10 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopExit() {
         try {
-            FileWriter myWriter = new FileWriter("data.txt");
+            FileWriter myWriter = new FileWriter("drive_data.txt"); // moves to FRC-2023/data.txt I think, it might not work though
             myWriter.write(Variables.data);
             myWriter.close();
+            System.out.print(Variables.data); // just in case it doesn't work
         } catch (IOException e) {
             System.out.print(Variables.data);
         }
