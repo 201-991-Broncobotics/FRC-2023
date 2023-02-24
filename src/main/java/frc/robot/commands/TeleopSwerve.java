@@ -11,6 +11,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+import static frc.robot.Constants.Buttons.*;
+
 public class TeleopSwerve extends CommandBase {    
     private Swerve s_Swerve;    
     private DoubleSupplier translationSup;
@@ -35,9 +37,9 @@ public class TeleopSwerve extends CommandBase {
     @Override
     public void execute() {
         /* Get Values, Deadband*/
-        double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.joystick_deadzone);
-        double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.joystick_deadzone);
-        double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.joystick_deadzone);
+        double translationVal = Math.pow(MathUtil.applyDeadband(translationSup.getAsDouble(), joystick_deadzone), axis_exponent);
+        double strafeVal = Math.pow(MathUtil.applyDeadband(strafeSup.getAsDouble(), joystick_deadzone), axis_exponent);
+        double rotationVal = Math.pow(MathUtil.applyDeadband(rotationSup.getAsDouble(), joystick_deadzone), axis_exponent);
 
         if ((rotationVal) == 0 && (targetSup.getAsInt() % 90 == 0)) s_Swerve.setTargetHeading(targetSup.getAsInt());
 

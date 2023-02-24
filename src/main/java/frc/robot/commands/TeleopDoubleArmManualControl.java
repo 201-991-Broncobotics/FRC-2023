@@ -4,11 +4,11 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import static frc.robot.Constants.*;
 
 import frc.robot.subsystems.DoubleArm;
 
 import static frc.robot.Constants.DoubleArmConstants.*;
+import static frc.robot.Constants.Buttons.*;
 
 public class TeleopDoubleArmManualControl extends CommandBase {
 
@@ -28,8 +28,8 @@ public class TeleopDoubleArmManualControl extends CommandBase {
     @Override
     public void execute() {
         // Account for Stick Drift
-        double motorOneVal = MathUtil.applyDeadband(motorOneSup.getAsDouble(), joystick_deadzone);
-        double motorTwoVal = MathUtil.applyDeadband(motorTwoSup.getAsDouble(), joystick_deadzone);
+        double motorOneVal = Math.pow(MathUtil.applyDeadband(motorOneSup.getAsDouble(), joystick_deadzone), axis_exponent);
+        double motorTwoVal = Math.pow(MathUtil.applyDeadband(motorTwoSup.getAsDouble(), joystick_deadzone), axis_exponent);
 
         // Move Arm
         doubleArm.rawPowerArm(

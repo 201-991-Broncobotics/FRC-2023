@@ -8,6 +8,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 
 import static frc.robot.Constants.SwerveConstants.*;
+import static frc.robot.Constants.Buttons.*;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -39,9 +40,9 @@ public class TeleopSwerveAbsoluteDirecting extends CommandBase {
     @Override
     public void execute() {
         /* Get Values, Deadband*/
-        double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.joystick_deadzone);
-        double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.joystick_deadzone);
-        double turnVal = MathUtil.applyDeadband(turnSup.getAsDouble(), Constants.joystick_deadzone);
+        double translationVal = Math.pow(MathUtil.applyDeadband(translationSup.getAsDouble(), joystick_deadzone), axis_exponent);
+        double strafeVal = Math.pow(MathUtil.applyDeadband(strafeSup.getAsDouble(), joystick_deadzone), axis_exponent);
+        double turnVal = Math.pow(MathUtil.applyDeadband(turnSup.getAsDouble(), joystick_deadzone), axis_exponent);
 
         double slowVal = 1;
 
@@ -50,7 +51,7 @@ public class TeleopSwerveAbsoluteDirecting extends CommandBase {
         double x_dir = directionXSup.getAsDouble();
         double y_dir = directionYSup.getAsDouble();
 
-        if (x_dir * x_dir + y_dir * y_dir < Constants.joystick_deadzone * Constants.joystick_deadzone) {
+        if (x_dir * x_dir + y_dir * y_dir < joystick_deadzone * joystick_deadzone) {
             x_dir = 0;
             y_dir = 0;
         }

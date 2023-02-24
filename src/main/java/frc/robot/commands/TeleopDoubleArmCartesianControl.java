@@ -4,9 +4,10 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import static frc.robot.Constants.*;
 import frc.robot.subsystems.DoubleArm;
 import static frc.robot.Constants.DoubleArmConstants.*;
+
+import static frc.robot.Constants.Buttons.*;
 
 public class TeleopDoubleArmCartesianControl extends CommandBase {
 
@@ -29,8 +30,8 @@ public class TeleopDoubleArmCartesianControl extends CommandBase {
     @Override
     public void execute() {
         // Account for Stick Drift
-        double horizVal = MathUtil.applyDeadband(horizSup.getAsDouble(), joystick_deadzone);
-        double vertVal = MathUtil.applyDeadband(vertSup.getAsDouble(), joystick_deadzone);
+        double horizVal = Math.pow(MathUtil.applyDeadband(horizSup.getAsDouble(), joystick_deadzone), axis_exponent);
+        double vertVal = Math.pow(MathUtil.applyDeadband(vertSup.getAsDouble(), joystick_deadzone), axis_exponent);
 
         double delta_time = System.currentTimeMillis() / 1000.0 - time;
         time = System.currentTimeMillis() / 1000.0;

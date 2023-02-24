@@ -14,9 +14,6 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
-    /* General Constants */
-    public static final double joystick_deadzone = 0.2;
-
     public static final class BaseFalconSwerve {
         public static final int pigeonID = 0;
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
@@ -324,6 +321,11 @@ public final class Constants {
                                 idleButton = XboxController.Button.kRightBumper.value, 
                                 startPosButton = XboxController.Button.kStart.value,
                                 terminateCommandsOperatorButton = XboxController.Button.kBack.value;
+            
+        /* General Constants */
+
+        public static final double joystick_deadzone = 0.2,
+                                   axis_exponent = 2;
     }
 
     public static final class TuningConstants {
