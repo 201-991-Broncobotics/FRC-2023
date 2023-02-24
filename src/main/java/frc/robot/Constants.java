@@ -208,7 +208,7 @@ public final class Constants {
                                     invert_first_motor_follower = false, 
                                     invert_second_motor = true, 
                                     invert_first_encoder = true, 
-                                    invert_second_encoder = false, 
+                                    invert_second_encoder = true, 
                                     first_motor_brake = true, 
                                     second_motor_brake = true;
         
@@ -331,8 +331,8 @@ public final class Constants {
                                    CANCoder1_zero = 297.86, 
                                    CANCoder2_zero = 320.18, 
                                    CANCoder3_zero = 295.57, 
-                                   encoder_one_zero = -95.92, 
-                                   encoder_two_zero = 178.1;
+                                   encoder_one_zero = -95.5, 
+                                   encoder_two_zero = -125.68;
 
         // TODO: Tune these before EVERY SINGLE MATCH
         
