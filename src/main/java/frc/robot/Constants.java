@@ -337,10 +337,10 @@ public final class Constants {
     }
 
     public static final class TuningConstants {
-        public static final double CANCoder0_zero = 291.09, 
-                                   CANCoder1_zero = 297.86, 
-                                   CANCoder2_zero = 320.18, 
-                                   CANCoder3_zero = 295.57, 
+        public static final double CANCoder0_zero = 277.38, 
+                                   CANCoder1_zero = 292.5, 
+                                   CANCoder2_zero = 318.78, 
+                                   CANCoder3_zero = 271.14, 
                                    encoder_one_zero = -95.5, 
                                    encoder_two_zero = -125.68;
 
@@ -357,6 +357,6 @@ public final class Constants {
 
         public static boolean manual_control = true, 
                               fancy_drive = false, 
-                              show_drive_data = true;
+                              show_drive_data = false;
     }
 }
