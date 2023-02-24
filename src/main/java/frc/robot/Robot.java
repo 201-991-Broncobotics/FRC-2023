@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Limelight;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -87,6 +90,17 @@ public class Robot extends TimedRobot {
 
         m_robotContainer.teleopInit();
 
+    }
+
+    @Override
+    public void teleopExit() {
+        try {
+            FileWriter myWriter = new FileWriter("data.txt");
+            myWriter.write(Variables.data);
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.print(Variables.data);
+        }
     }
 
     @Override

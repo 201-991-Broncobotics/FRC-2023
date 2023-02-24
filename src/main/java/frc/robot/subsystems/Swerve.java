@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
+import frc.robot.Variables;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -69,12 +70,12 @@ public class Swerve extends SubsystemBase {
 
         if (show_drive_data) {
             fieldRelative = false;
-            System.out.print("{" + 
+            Variables.data += "{" + 
                                 (Math.round(translation.getX() * 1000.0) / 1000.0) + ", " + 
                                 (Math.round(translation.getY() * 1000.0) / 1000.0) + ", " + 
                                 (Math.round(rotation * 1000.0) / 1000.0) + ", " + 
                                 (Math.round(System.currentTimeMillis()) / 1000.0) + 
-                             "}, "); // not println on purpose
+                             "}, "; // not println on purpose
                              // truncates to 3 decimals because more precision is not necessary
         }
 
@@ -119,7 +120,7 @@ public class Swerve extends SubsystemBase {
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
-    }    
+    }
 
     /* Used by SwerveControllerCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
@@ -128,7 +129,7 @@ public class Swerve extends SubsystemBase {
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(desiredStates[mod.moduleNumber], false);
         }
-    }    
+    }
 
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition(); 
