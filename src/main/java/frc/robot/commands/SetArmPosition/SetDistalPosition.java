@@ -14,7 +14,7 @@ public class SetDistalPosition extends CommandBase { // small arm
 
     public SetDistalPosition(DoubleArm doubleArm, double distalPosition) {
         this.doubleArm = doubleArm;
-        addRequirements(doubleArm); // means that other functions are not allowed to access it
+        // addRequirements(doubleArm);
 
         this.targetPosition = DoubleArm.getPositionFromAngles(doubleArm.getTargetArmAngles()[0], distalPosition);
         isFirstLoop = true;

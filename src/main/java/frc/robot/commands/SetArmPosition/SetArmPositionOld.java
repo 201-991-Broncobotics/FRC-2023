@@ -15,8 +15,8 @@ public class SetArmPositionOld extends CommandBase {
 
     public SetArmPositionOld(DoubleArm doubleArm, double[] position) {
         this.doubleArm = doubleArm;
-        addRequirements(doubleArm); // means that other functions are not allowed to access it
-
+        // addRequirements(doubleArm);
+        
         this.position = position;
         isFirstLoop = true;
     }

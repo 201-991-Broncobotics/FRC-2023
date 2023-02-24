@@ -14,7 +14,7 @@ public class SetProximalPosition extends CommandBase { // big arm
 
     public SetProximalPosition(DoubleArm doubleArm, double proximalPosition) {
         this.doubleArm = doubleArm;
-        addRequirements(doubleArm); // means that other functions are not allowed to access it
+        // addRequirements(doubleArm);
 
         this.targetPosition = DoubleArm.getPositionFromAngles(proximalPosition, doubleArm.getTargetArmAngles()[1]);
         isFirstLoop = true;
