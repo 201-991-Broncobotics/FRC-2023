@@ -10,7 +10,6 @@ import java.util.function.IntSupplier;
 import static frc.robot.Constants.SwerveConstants.*;
 import static frc.robot.Constants.Buttons.*;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -40,9 +39,9 @@ public class TeleopSwerveAbsoluteDirecting extends CommandBase {
     @Override
     public void execute() {
         /* Get Values, Deadband*/
-        double translationVal = Math.pow(MathUtil.applyDeadband(translationSup.getAsDouble(), joystick_deadzone), axis_exponent);
-        double strafeVal = Math.pow(MathUtil.applyDeadband(strafeSup.getAsDouble(), joystick_deadzone), axis_exponent);
-        double turnVal = Math.pow(MathUtil.applyDeadband(turnSup.getAsDouble(), joystick_deadzone), axis_exponent);
+        double translationVal = signedPower(translationSup.getAsDouble());
+        double strafeVal = signedPower(strafeSup.getAsDouble());
+        double turnVal = signedPower(turnSup.getAsDouble());
 
         double slowVal = 1;
 

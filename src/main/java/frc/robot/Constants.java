@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -326,6 +327,13 @@ public final class Constants {
 
         public static final double joystick_deadzone = 0.2,
                                    axis_exponent = 2;
+
+        public static final double signedPower(double axis_value) {
+            axis_value = MathUtil.applyDeadband(axis_value, joystick_deadzone);
+            if (axis_value == 0) return 0;
+            if (axis_value < 0) return 0 - Math.pow(0 - axis_value, axis_exponent);
+            return Math.pow(axis_value, axis_exponent);
+        }
     }
 
     public static final class TuningConstants {
