@@ -90,7 +90,8 @@ public class RobotContainer {
                 new TeleopDoubleArmManualControl(
                     doubleArm, 
                     () -> -operator.getRawAxis(motorOneAxis),
-                    () -> -operator.getRawAxis(motorTwoAxis)
+                    () -> -operator.getRawAxis(motorTwoAxis), 
+                    () -> ((operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone))
                 )
             );
         } else {
@@ -98,7 +99,8 @@ public class RobotContainer {
                 new TeleopDoubleArmCartesianControl(
                     doubleArm, 
                     () -> operator.getRawAxis(horizAxis),
-                    () -> -operator.getRawAxis(vertAxis)
+                    () -> -operator.getRawAxis(vertAxis), 
+                    () -> ((operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone))
                 )
             );
         }

@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -16,12 +17,15 @@ public class TeleopDoubleArmManualControl extends CommandBase {
     private DoubleSupplier motorOneSup;
     private DoubleSupplier motorTwoSup;
 
-    public TeleopDoubleArmManualControl(DoubleArm doubleArm, DoubleSupplier motorOneSup, DoubleSupplier motorTwoSup) {
+    private BooleanSupplier stopSup;
+
+    public TeleopDoubleArmManualControl(DoubleArm doubleArm, DoubleSupplier motorOneSup, DoubleSupplier motorTwoSup, BooleanSupplier stopSup) {
         this.doubleArm = doubleArm;
         addRequirements(doubleArm); // means that other functions are not allowed to access it
 
         this.motorOneSup = motorOneSup;
-        this.motorTwoSup = motorTwoSup; // sets up the double suppliers
+        this.motorTwoSup = motorTwoSup;
+        this.stopSup = stopSup;
     }
 
     @Override
@@ -29,6 +33,8 @@ public class TeleopDoubleArmManualControl extends CommandBase {
         // Account for Stick Drift
         double motorOneVal = signedPower(motorOneSup.getAsDouble());
         double motorTwoVal = signedPower(motorTwoSup.getAsDouble());
+
+        if (stopSup.getAsBoolean()) doubleArm.resetPID();
 
         // Move Arm
         doubleArm.rawPowerArm(

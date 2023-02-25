@@ -321,6 +321,8 @@ public final class Constants {
                                 outtakeButton = XboxController.Button.kLeftBumper.value, 
                                 idleButton = XboxController.Button.kX.value, 
                                 startPosButton = XboxController.Button.kStart.value,
+                                stopArmFromMovingButtonOne = XboxController.Axis.kRightTrigger.value,
+                                stopArmFromMovingButtonTwo = XboxController.Axis.kLeftTrigger.value,
                                 terminateCommandsOperatorButton = XboxController.Button.kBack.value;
             
         /* General Constants */
