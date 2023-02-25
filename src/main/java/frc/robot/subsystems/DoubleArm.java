@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import java.lang.IllegalArgumentException;
+
 import static frc.robot.Constants.DoubleArmConstants.*;
 
 public class DoubleArm extends SubsystemBase {
@@ -381,5 +383,14 @@ public class DoubleArm extends SubsystemBase {
         } else {
             frc.robot.Variables.speed_factor = speed_when_arm_extended;
         }
+
+        if (target_positions[0] > 20) {
+            System.out.println("Bad x and y" + target_xy[0] + " " + target_xy[1]);
+            System.out.println("Bad angles" + target_positions[0] + " " + target_positions[1]);
+            throw new IllegalArgumentException();
+        }
+        // target_positions[0] = Math.max(-120, Math.min(20, target_positions[0]));
+        // target_positions[1] = Math.max(-80, Math.min(80, target_positions[1]));
+        // target_xy = getPositionFromAngles(target_positions[0], target_positions[1]);
     }
 }

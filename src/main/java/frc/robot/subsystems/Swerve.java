@@ -70,6 +70,8 @@ public class Swerve extends SubsystemBase {
 
         if (show_drive_data) {
             fieldRelative = false;
+            translation = translation.times(0.33);
+            rotation *= 0.33;
             Variables.data += "{" + 
                                 (Math.round(translation.getX() * 1000.0) / 1000.0) + ", " + 
                                 (Math.round(translation.getY() * 1000.0) / 1000.0) + ", " + 

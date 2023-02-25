@@ -82,13 +82,13 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 4.5; //TODO: This must be tuned to specific robot
+        public static final double maxSpeed = 4; //TODO: This must be tuned to specific robot
         /** Radians per Second */
         public static final double maxAngularVelocity = 10.0; //TODO: This must be tuned to specific robot
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-        public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
+        public static final NeutralMode driveNeutralMode = NeutralMode.Coast;
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
@@ -133,10 +133,10 @@ public final class Constants {
     }
 
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+        public static final double kMaxSpeedMetersPerSecond = 2;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1;
+        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 0.5;
+        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI * 0.25;
     
         public static final double kPXController = 1;
         public static final double kPYController = 1;
@@ -327,8 +327,8 @@ public final class Constants {
             
         /* General Constants */
 
-        public static final double joystick_deadzone = 0.2,
-                                   axis_exponent = 2;
+        public static final double joystick_deadzone = 0.1,
+                                   axis_exponent = 1.3;
 
         public static final double signedPower(double axis_value) {
             axis_value = MathUtil.applyDeadband(axis_value, joystick_deadzone);
@@ -343,8 +343,8 @@ public final class Constants {
                                    CANCoder1_zero = 292.5, 
                                    CANCoder2_zero = 318.78, 
                                    CANCoder3_zero = 271.14, 
-                                   encoder_one_zero = -95.5, 
-                                   encoder_two_zero = -125.68;
+                                   encoder_one_zero = -93.76, 
+                                   encoder_two_zero = -123.94;
 
         // TODO: Tune these before EVERY SINGLE MATCH
         
@@ -360,6 +360,6 @@ public final class Constants {
 
         public static boolean manual_control = true, 
                               fancy_drive = false, 
-                              show_drive_data = false;
+                              show_drive_data = true;
     }
 }

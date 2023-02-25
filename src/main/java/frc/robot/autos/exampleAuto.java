@@ -17,6 +17,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+
 public class exampleAuto extends SequentialCommandGroup {
     public exampleAuto(Swerve s_Swerve) {
         TrajectoryConfig config =
@@ -39,6 +46,16 @@ public class exampleAuto extends SequentialCommandGroup {
                     new Pose2d(3, 0, new Rotation2d(180)),
                 config);
 
+        String trajectoryJSON = "paths/test.wpilib.json";
+        Trajectory trajectory = new Trajectory();
+
+        try {
+            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+         } catch (IOException ex) {
+            System.out.println("Sad because Unable to open trajectory: " + trajectoryJSON + " " + ex.getStackTrace());
+         }
+
         var thetaController =
             new ProfiledPIDController(
                 Constants.AutoConstants.kPThetaController, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
@@ -46,7 +63,7 @@ public class exampleAuto extends SequentialCommandGroup {
 
         SwerveControllerCommand swerveControllerCommand =
             new SwerveControllerCommand(
-                exampleTrajectory,
+                trajectory,
                 s_Swerve::getPose,
                 Constants.BaseFalconSwerve.swerveKinematics,
                 new PIDController(Constants.AutoConstants.kPXController, 0, 0),
@@ -57,7 +74,7 @@ public class exampleAuto extends SequentialCommandGroup {
 
 
         addCommands(
-            new InstantCommand(() -> s_Swerve.resetOdometry(exampleTrajectory.getInitialPose())),
+            new InstantCommand(() -> s_Swerve.resetOdometry(trajectory.getInitialPose())),
             swerveControllerCommand
         );
     }
