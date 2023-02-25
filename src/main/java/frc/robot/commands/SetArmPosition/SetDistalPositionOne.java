@@ -5,22 +5,22 @@ import frc.robot.subsystems.DoubleArm;
 
 import static frc.robot.Constants.DoubleArmConstants.*;
 
-public class SetProximalPositionOne extends CommandBase { // big arm
+public class SetDistalPositionOne extends CommandBase { // big arm
 
     private DoubleArm doubleArm;
-    private double proximalPosition;
+    private double distalPosition;
 
-    public SetProximalPositionOne(DoubleArm doubleArm, double proximalPosition) {
+    public SetDistalPositionOne(DoubleArm doubleArm, double distalPosition) {
         this.doubleArm = doubleArm;
 
-        this.proximalPosition = proximalPosition;
+        this.distalPosition = distalPosition;
     }
 
     @Override
     public void initialize() { // we only want to run if our target proximal is above the current
-        if (proximalPosition > doubleArm.getCurrentArmAngles()[0]) {
+        if (distalPosition > doubleArm.getCurrentArmAngles()[1]) {
             doubleArm.resetWhipControl();
-            doubleArm.setTargetPositions(DoubleArm.getPositionFromAngles(proximalPosition, doubleArm.getTargetArmAngles()[1]));
+            doubleArm.setTargetPositions(DoubleArm.getPositionFromAngles(doubleArm.getTargetArmAngles()[0], distalPosition));
         } else {
             doubleArm.setTargetPositions(doubleArm.getCurrentXY());
         }
