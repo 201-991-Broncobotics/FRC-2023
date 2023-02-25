@@ -385,8 +385,10 @@ public class DoubleArm extends SubsystemBase {
         }
 
         if (target_positions[0] > 20) {
+            brake();
             System.out.println("Bad x and y" + target_xy[0] + " " + target_xy[1]);
             System.out.println("Bad angles" + target_positions[0] + " " + target_positions[1]);
+            Timer.delay(0.5);
             throw new IllegalArgumentException();
         }
         // target_positions[0] = Math.max(-120, Math.min(20, target_positions[0]));

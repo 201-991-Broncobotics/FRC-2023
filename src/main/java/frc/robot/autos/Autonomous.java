@@ -13,7 +13,8 @@ public class Autonomous extends SequentialCommandGroup {
     public Autonomous(Claw claw, DoubleArm doubleArm, Swerve swerve) {
         addRequirements(doubleArm, claw, swerve);
         addCommands(
-            new emulatorAuto(swerve, testTrajectory)
+            // new emulatorAuto(swerve, testTrajectory)
+            new exampleAuto(swerve)
         );
     }
 }

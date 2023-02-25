@@ -12,14 +12,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
-
 import java.io.IOException;
 import java.nio.file.Path;
 
 public class exampleAuto extends SequentialCommandGroup {
     public exampleAuto(Swerve s_Swerve) {
 
-        String trajectoryJSON = "paths/test.wpilib.json";
+        String trajectoryJSON = "paths/output/StraightPath.wpilib.json";
+
         final Trajectory trajectory;
 
         Trajectory temp = new Trajectory();
@@ -36,7 +36,7 @@ public class exampleAuto extends SequentialCommandGroup {
         var thetaController =
             new ProfiledPIDController(
                 Constants.AutoConstants.kPThetaController, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+                thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         SwerveControllerCommand swerveControllerCommand =
             new SwerveControllerCommand(
