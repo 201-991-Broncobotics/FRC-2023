@@ -139,7 +139,7 @@ public class DoubleArm extends SubsystemBase {
             target_xy[0] = getCurrentXY()[0];
             target_xy[1] = getCurrentXY()[1];
             time_one_last = time;
-    } else if (time - time_one_last < whiplash_time_one) {
+        } else if (time - time_one_last < whiplash_time_one) {
             target_positions[0] = current_angles[0];
             target_xy[0] = getCurrentXY()[0];
             target_xy[1] = getCurrentXY()[1];
