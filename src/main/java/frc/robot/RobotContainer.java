@@ -118,12 +118,12 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-        tagAligner.toggleOnFalse(new AlignWithApriltagOld(s_Swerve, () -> driver.getRawButton(tagAlignerExitButton)));
+        tagAligner.toggleOnTrue(new AlignWithApriltagOld(s_Swerve, () -> driver.getRawButton(tagAlignerExitButton)));
                     // toggle on false because otherwise it automatically stops it
         
-        brake.toggleOnFalse(new Brake(s_Swerve));
+        brake.toggleOnTrue(new Brake(s_Swerve));
 
-        autoBalance.toggleOnFalse(new AutoBalance(s_Swerve, doubleArm, () -> driver.getRawButton(autoBalanceExitButton)));
+        autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm, () -> false));//driver.getRawButton(autoBalanceExitButton)));
 
         terminateCommandsDriver.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
         
@@ -134,8 +134,8 @@ public class RobotContainer {
         idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePosition));
         startPos.toggleOnTrue(new SetArmPosition(doubleArm, startPosition));
 
-        intake.toggleOnFalse(new Intake(claw, doubleArm, () -> operator.getRawButton(intakeButton)));
-        outtake.toggleOnFalse(new Outtake(claw, doubleArm));
+        intake.toggleOnTrue(new Intake(claw, doubleArm, () -> false));//operator.getRawButton(intakeButton)));
+        outtake.toggleOnTrue(new Outtake(claw, doubleArm));
         
         terminateCommandsOperator.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
     }

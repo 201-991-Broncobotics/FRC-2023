@@ -9,35 +9,31 @@ public class Outtake_Subcommand extends CommandBase {
     // Plan: we're already at outtake position, then outtake and reset target position for arm
     
     private Claw claw;
-
     private double starting_time;
-
-    private boolean isFirstLoop = true;
 
     public Outtake_Subcommand(Claw claw) {
         this.claw = claw;
-        addRequirements(claw); // means that other functions are not allowed to access it
+        addRequirements(claw);
+    }
 
-        isFirstLoop = true;
+    @Override
+    public void initialize() {
+        claw.outtake();
         starting_time = System.currentTimeMillis() / 1000.0;
     }
 
     @Override
     public void execute() {
-        if (isFirstLoop) {
-            claw.outtake();
-            starting_time = System.currentTimeMillis() / 1000.0;
-            isFirstLoop = false;
-        }
+        // don't do anything
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        claw.stop();
     }
     
     @Override
     public boolean isFinished() {
-        if (System.currentTimeMillis() / 1000.0 - starting_time > outtake_time) {
-            claw.stop();
-            isFirstLoop = true;
-            return true;
-        }
-        return false;
+        return System.currentTimeMillis() / 1000.0 - starting_time > outtake_time;
     }
 }

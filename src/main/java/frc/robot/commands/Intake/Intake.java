@@ -11,16 +11,10 @@ import static frc.robot.Constants.TuningConstants.*;
 
 public class Intake extends SequentialCommandGroup {
     public Intake(Claw claw, DoubleArm doubleArm, BooleanSupplier stopSup) {
-        if (claw.getCurrent() == 0) { // This might not work
-            addRequirements(claw); // means that other functions are not allowed to access it
-            addCommands(
-                new Intake_Subcommand(claw, stopSup), 
-                new SetArmPosition(doubleArm, idlePosition)
-            );
-        } else {
-            addCommands(
-                new InstantCommand()
-            );
-        }
+        addRequirements(claw); // means that other functions are not allowed to access it
+        addCommands(
+            new Intake_Subcommand(claw, stopSup), 
+            new SetArmPosition(doubleArm, idlePosition)
+        );
     }
 }

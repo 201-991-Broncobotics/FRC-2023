@@ -11,34 +11,34 @@ public class SetArmPositionOld extends CommandBase {
     private DoubleArm doubleArm;
     private double[] position;
 
-    private boolean isFirstLoop = true;
-
     public SetArmPositionOld(DoubleArm doubleArm, double[] position) {
         this.doubleArm = doubleArm;
-        // addRequirements(doubleArm);
-        
+
         this.position = position;
-        isFirstLoop = true;
+    }
+
+    @Override
+    public void initialize() {
+        doubleArm.resetWhipControl();
+        doubleArm.setTargetPositions(position);
     }
 
     @Override
     public void execute() {
-        if (isFirstLoop) {
-            doubleArm.resetWhipControl();
-            doubleArm.setTargetPositions(position);
-            isFirstLoop = false;
-        }
-
         doubleArm.rawPowerArm(0, 0);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+
+        } else {
+            doubleArm.brake();
+        }
     }
     
     @Override
     public boolean isFinished() {
-        if (doubleArm.getTotalError() < tolerance) {
-            doubleArm.brake();
-            isFirstLoop = true;
-            return true;
-        }
-        return false;
+        return doubleArm.getTotalError() < tolerance;
     }
 }

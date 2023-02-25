@@ -9,23 +9,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class SetArmPosition extends SequentialCommandGroup {
     
     public SetArmPosition(DoubleArm doubleArm, double[] position) {
-        if (doubleArm.getTotalError() < tolerance) {
-            double[] target_angles = DoubleArm.getAnglesFromTarget(position[0], position[1]);
-            if (doubleArm.getCurrentArmAngles()[1] < target_angles[1]) { // if our distal is below our target, set that first
-                addCommands(
-                    new SetDistalPosition(doubleArm, target_angles[1]), 
-                    new SetProximalPosition(doubleArm, target_angles[0])
-                );
-            } else { // set proximal then distal
-                addCommands(
-                    new SetProximalPosition(doubleArm, target_angles[0]), 
-                    new SetDistalPosition(doubleArm, target_angles[1])
-                );
-            }
-        } else {
-            addCommands(
-                new InstantCommand()
-            );
-        }
+        double[] target_angles = DoubleArm.getAnglesFromTarget(position[0], position[1]);
+        addCommands(
+            new SetProximalPositionOne(doubleArm, target_angles[0]), 
+            new SetDistalPosition(doubleArm, target_angles[1]), 
+            new SetProximalPosition(doubleArm, target_angles[0])
+        );
     }
 }

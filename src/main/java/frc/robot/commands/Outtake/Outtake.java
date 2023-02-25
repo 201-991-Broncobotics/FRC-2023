@@ -10,7 +10,7 @@ import static frc.robot.Constants.TuningConstants.*;
 public class Outtake extends SequentialCommandGroup {
 
     public Outtake(Claw claw, DoubleArm doubleArm) {
-        addRequirements(claw, doubleArm); // means that other functions are not allowed to access it
+        addRequirements(claw, doubleArm);
         addCommands(
             new Outtake_Subcommand(claw), 
             new SetArmPosition(doubleArm, idlePosition)

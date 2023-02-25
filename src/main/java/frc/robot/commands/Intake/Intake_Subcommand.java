@@ -8,13 +8,8 @@ import java.util.function.BooleanSupplier;
 import static frc.robot.Constants.IntakeConstants.*;
 
 public class Intake_Subcommand extends CommandBase {
-    // Plan: move to intake position, then intake for some 
-                // amount of time, then finish
     
     private Claw claw;
-
-    private boolean isFirstAction = true;
-
     private BooleanSupplier stopSup;
 
     private double starting_time;
@@ -24,27 +19,26 @@ public class Intake_Subcommand extends CommandBase {
         addRequirements(claw);
 
         this.stopSup = stopSup;
-        
-        isFirstAction = true;
+    }
+
+    @Override
+    public void initialize() {
+        claw.intake();
         starting_time = System.currentTimeMillis() / 1000.0;
     }
 
     @Override
     public void execute() {
-        if (isFirstAction) {
-            claw.intake();
-            isFirstAction = false;
-            starting_time = System.currentTimeMillis() / 1000.0;
-        }
+        // nothing
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        claw.stop();
     }
     
     @Override
     public boolean isFinished() {
-        if ((stopSup.getAsBoolean()) || ((claw.getCurrent() > claw_current_limit) && (System.currentTimeMillis() / 1000.0 - starting_time > 0.8))) {
-            claw.stop();
-            isFirstAction = true;
-            return true;
-        }
-        return false;
+        return ((stopSup.getAsBoolean()) || ((claw.getCurrent() > claw_current_limit) && (System.currentTimeMillis() / 1000.0 - starting_time > 0.8)));
     }
 }

@@ -8,37 +8,39 @@ import static frc.robot.Constants.DoubleArmConstants.*;
 public class SetDistalPosition extends CommandBase { // small arm
 
     private DoubleArm doubleArm;
-    private double[] targetPosition;
-
-    private boolean isFirstLoop = true;
+    private double distalPosition;
 
     public SetDistalPosition(DoubleArm doubleArm, double distalPosition) {
         this.doubleArm = doubleArm;
-        // addRequirements(doubleArm);
+        // don't add reqs
+        this.distalPosition = distalPosition;
+    }
 
-        this.targetPosition = DoubleArm.getPositionFromAngles(doubleArm.getTargetArmAngles()[0], distalPosition);
-        isFirstLoop = true;
+    @Override
+    public void initialize() {
+        doubleArm.resetWhipControl();
+        doubleArm.setTargetPositions(DoubleArm.getPositionFromAngles(doubleArm.getTargetArmAngles()[0], distalPosition));
     }
 
     @Override
     public void execute() {
-        if (isFirstLoop) {
-            doubleArm.resetWhipControl();
-            doubleArm.setTargetPositions(targetPosition);
-            isFirstLoop = false;
-        }
-
         doubleArm.rawPowerArm(0, 0);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+            // code for if it ended by interruption
+        } else {
+            // code for if it ended by reaching the target position
+            // if we manually move it it will say it's finished
+            doubleArm.brake();
+        }
     }
     
     @Override
     public boolean isFinished() {
-        if (doubleArm.getTotalError() < tolerance) {
-            doubleArm.brake();
-            isFirstLoop = true;
-            return true;
-        }
-        return false;
+        return doubleArm.getTotalError() < tolerance;
     }
 
 }
