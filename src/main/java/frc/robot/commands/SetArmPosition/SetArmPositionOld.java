@@ -30,11 +30,8 @@ public class SetArmPositionOld extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        if (interrupted) {
-
-        } else {
-            doubleArm.brake();
-        }
+        doubleArm.brake();
+        doubleArm.resetPID();
     }
     
     @Override

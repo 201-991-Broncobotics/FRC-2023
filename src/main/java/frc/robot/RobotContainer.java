@@ -12,7 +12,7 @@ import frc.robot.commands.AlignWithApriltag.AlignWithApriltagOld;
 import frc.robot.commands.AutoBalance.AutoBalance;
 import frc.robot.commands.Intake.Intake;
 import frc.robot.commands.Outtake.Outtake;
-import frc.robot.commands.SetArmPosition.SetArmPosition;
+import frc.robot.commands.SetArmPosition.*;
 import frc.robot.subsystems.*;
 
 import static frc.robot.Constants.Buttons.*;
@@ -123,7 +123,7 @@ public class RobotContainer {
         
         brake.toggleOnTrue(new Brake(s_Swerve));
 
-        autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm, () -> false));//driver.getRawButton(autoBalanceExitButton)));
+        autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm, () -> false)); //driver.getRawButton(autoBalanceExitButton)));
 
         terminateCommandsDriver.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
         
@@ -132,9 +132,9 @@ public class RobotContainer {
         midGoal.toggleOnTrue(new SetArmPosition(doubleArm, midPosition));
         lowGoal.toggleOnTrue(new SetArmPosition(doubleArm, lowPosition));
         idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePosition));
-        startPos.toggleOnTrue(new SetArmPosition(doubleArm, startPosition));
+        startPos.toggleOnTrue(new SetArmPosition_Subcommand(doubleArm, startPosition));
 
-        intake.toggleOnTrue(new Intake(claw, doubleArm, () -> false));//operator.getRawButton(intakeButton)));
+        intake.toggleOnTrue(new Intake(claw, doubleArm, () -> false)); //operator.getRawButton(intakeButton)));
         outtake.toggleOnTrue(new Outtake(claw, doubleArm));
         
         terminateCommandsOperator.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));

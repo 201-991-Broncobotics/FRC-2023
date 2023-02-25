@@ -230,7 +230,7 @@ public final class Constants {
                                    min_x = -20, 
                                    min_y = -45, // inches
 
-                                   clipping_one = 1.1, 
+                                   clipping_one = 1.3, 
                                    clipping_two = 0.99, // first should be > 1, second should be < 1
 
                                    first_arm_length = 32, 
@@ -317,9 +317,9 @@ public final class Constants {
                                 topGoalButton = XboxController.Button.kY.value, 
                                 midGoalButton = XboxController.Button.kB.value, 
                                 lowGoalButton = XboxController.Button.kA.value, 
-                                intakeButton = XboxController.Button.kX.value, 
+                                intakeButton = XboxController.Button.kRightBumper.value, 
                                 outtakeButton = XboxController.Button.kLeftBumper.value, 
-                                idleButton = XboxController.Button.kRightBumper.value, 
+                                idleButton = XboxController.Button.kX.value, 
                                 startPosButton = XboxController.Button.kStart.value,
                                 terminateCommandsOperatorButton = XboxController.Button.kBack.value;
             
