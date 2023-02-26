@@ -167,7 +167,8 @@ public final class Constants {
                                    strafe_speed = 0.15, 
                                    rotation_speed = 0.15, // percentage of maxima
                                    max_angular_tolerance = 999, // degrees
-                                   angular_tolerance = 4;
+                                   angular_tolerance = 4,
+                                   max_calculation_time = 1;
     }
 
     public static final class IntakeConstants {
@@ -183,10 +184,9 @@ public final class Constants {
                                    maximum_error = 60, // degrees
                                    exponent = 0.75, 
                                    calibration_time = 0.5, // seconds
-                                   tolerance = 0, // degrees
-                                   correction = 0, // If we're going at full speed, how much do we need to correct by as a % - must be experimentally determined
                                    turn_sensitivity = 0.2, 
-                                   slow = 0.15;
+                                   slow = 0.15,
+                                   yaw_tolerance = 2;
 
             // best tuned so far: 0.6 as maximum_power, 50 as max_error, 0.5 as exponent
     }
@@ -311,7 +311,6 @@ public final class Constants {
                                 tagAlignerButton = XboxController.Button.kA.value,
                                 tagAlignerExitButton = XboxController.Button.kA.value, 
                                 autoBalanceButton = XboxController.Button.kB.value,
-                                autoBalanceExitButton = XboxController.Button.kB.value, 
                                 terminateCommandsDriverButton = XboxController.Button.kBack.value;
 
         /* Operator Buttons */

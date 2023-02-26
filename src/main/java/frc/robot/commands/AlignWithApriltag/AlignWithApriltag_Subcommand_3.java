@@ -3,13 +3,13 @@ package frc.robot.commands.alignWithApriltag;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Swerve;
 
-public class AlignWithApriltag_Subcommand_Five extends CommandBase {
+public class AlignWithApriltag_Subcommand_3 extends CommandBase {
     
-    // Strafe until we are in line with april tag, then finally brake 
+    // Strafe left or right until we can see the april tag
 
     private Swerve swerve;
 
-    public AlignWithApriltag_Subcommand_Five(Swerve swerve) {
+    public AlignWithApriltag_Subcommand_3(Swerve swerve) {
         this.swerve = swerve;
         addRequirements(swerve);
     }
@@ -27,5 +27,4 @@ public class AlignWithApriltag_Subcommand_Five extends CommandBase {
     public boolean isFinished() {
         return true;
     }
-
 }

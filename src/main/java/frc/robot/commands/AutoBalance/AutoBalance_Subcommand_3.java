@@ -8,7 +8,7 @@ import frc.robot.subsystems.Swerve;
 
 import static frc.robot.Constants.AutoBalanceConstants.*;
 
-public class AutoBalance_Subcommand_Three extends CommandBase {
+public class AutoBalance_Subcommand_3 extends CommandBase {
     
     private Swerve swerve;
 
@@ -22,7 +22,7 @@ public class AutoBalance_Subcommand_Three extends CommandBase {
 
     private double triple_ratio = ratio * ratio * ratio;
     
-    public AutoBalance_Subcommand_Three(Swerve swerve) {
+    public AutoBalance_Subcommand_3(Swerve swerve) {
         this.swerve = swerve;
         addRequirements(swerve); // means that other functions are not allowed to access it
     }

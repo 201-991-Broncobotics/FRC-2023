@@ -1,20 +1,22 @@
-package frc.robot.autonomous;
+package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Swerve;
+
+import static frc.robot.Constants.SwerveConstants.*;
 
 public class Turn extends CommandBase {
         
     private Swerve swerve;
     private double amount;
 
-    public Turn(Swerve swerve, double amount) {
+    /*public Turn(Swerve swerve, double amount) {
         this.swerve = swerve;
         addRequirements(swerve); // means that other functions are not allowed to access it
 
         this.amount = amount;
-    }
+    }*/
 
     @Override
     public void initialize() {
@@ -33,7 +35,7 @@ public class Turn extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return Math.abs(swerve.getError()) < 2;
+        return Math.abs(swerve.getError()) < yaw_tolerance;
     }
     
 }

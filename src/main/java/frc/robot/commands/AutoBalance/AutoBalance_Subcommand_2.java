@@ -2,25 +2,28 @@ package frc.robot.commands.autoBalance;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 
-public class AutoBalance_Subcommand_One extends CommandBase {
+import static frc.robot.Constants.AutoBalanceConstants.*;
+
+public class AutoBalance_Subcommand_2 extends CommandBase {
     
     private Swerve swerve;
 
-    public AutoBalance_Subcommand_One(Swerve swerve) {
+    public AutoBalance_Subcommand_2(Swerve swerve) {
         this.swerve = swerve;
         addRequirements(swerve); // means that other functions are not allowed to access it
     }
 
     @Override
     public void initialize() {
-        swerve.setTargetHeading(((Math.abs(swerve.getYaw().getDegrees()) + 90) % 360 < 180) ? 0 : 180);
+        // we don't need to do anything
     }
 
     @Override
     public void execute() {
-        swerve.drive(new Translation2d(), 0, false, true);
+        swerve.drive(new Translation2d(-drive_speed, 0).times(Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
     }
 
     @Override
@@ -30,6 +33,6 @@ public class AutoBalance_Subcommand_One extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return Math.abs(swerve.getError()) < 2;
+        return Math.abs(swerve.getPitch()) > (pitch_tolerance * 1.2);
     }
 }

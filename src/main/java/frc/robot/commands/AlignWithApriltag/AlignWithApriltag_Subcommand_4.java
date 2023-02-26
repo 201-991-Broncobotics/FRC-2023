@@ -3,13 +3,13 @@ package frc.robot.commands.alignWithApriltag;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Swerve;
 
-public class AlignWithApriltag_Subcommand_Four extends CommandBase {
+public class AlignWithApriltag_Subcommand_4 extends CommandBase {
     
     // Calculate the x of the robot in reference to the april tag
 
     private Swerve swerve;
 
-    public AlignWithApriltag_Subcommand_Four(Swerve swerve) {
+    public AlignWithApriltag_Subcommand_4(Swerve swerve) {
         this.swerve = swerve;
         addRequirements(swerve);
     }

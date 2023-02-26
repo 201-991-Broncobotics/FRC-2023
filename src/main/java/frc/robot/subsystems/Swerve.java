@@ -52,6 +52,7 @@ public class Swerve extends SubsystemBase {
         poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, Rotation2d.fromDegrees(0), getModulePositions(), startingPose); 
     }
 
+    /** Normalizes angle to between -180 and 180 */
     public static double normalizeAngle(double degrees) {
         if (degrees < 0) return ((degrees - 180) % 360 + 180);
         return ((degrees + 180) % 360 - 180);
@@ -91,7 +92,10 @@ public class Swerve extends SubsystemBase {
         if (rotation == 0) {
             if (System.currentTimeMillis() - last_time < calibration_time * 1000) {
                 target_heading = current_heading;
-            } else if (Math.abs(target_heading - current_heading) > tolerance) {
+            } else {
+                if (Math.abs(target_heading - current_heading) > 180) {
+                    target_heading = current_heading + normalizeAngle(target_heading - current_heading);
+                }
                 double error_in_percent = Math.max(Math.min((target_heading - current_heading) / maximum_error, 1), -1);
                 int multiplier = 1;
                 if (error_in_percent < 0) {
@@ -99,8 +103,6 @@ public class Swerve extends SubsystemBase {
                     multiplier = -1;
                 }
                 rotation = Math.pow(error_in_percent, exponent) * maximum_power * multiplier * Constants.BaseFalconSwerve.maxAngularVelocity;
-            } else {
-                rotation = translation.getNorm() / Constants.BaseFalconSwerve.maxSpeed * Constants.BaseFalconSwerve.maxAngularVelocity * correction;
             }
         } else {
             target_heading = current_heading;
