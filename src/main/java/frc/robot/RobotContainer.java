@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.*;
 import frc.robot.commands.*;
+import frc.robot.commands.alignWithApriltag.AlignWithApriltag;
 import frc.robot.commands.alignWithApriltag.AlignWithApriltagOld;
 import frc.robot.commands.autoBalance.AutoBalance;
 import frc.robot.commands.intake.Intake;
@@ -32,6 +33,7 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = new JoystickButton(driver, zeroGyroButton);
     private final JoystickButton robotCentric = new JoystickButton(driver, robotCentricButton);
     private final JoystickButton tagAligner = new JoystickButton(driver, tagAlignerButton);
+    private final JoystickButton tagAlignerNew = new JoystickButton(driver, tagAlignerNewButton);
     private final JoystickButton autoBalance = new JoystickButton(driver, autoBalanceButton);
     private final JoystickButton terminateCommandsDriver = new JoystickButton(driver, terminateCommandsDriverButton);
 
@@ -108,6 +110,8 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         tagAligner.toggleOnTrue(new AlignWithApriltagOld(s_Swerve, () -> driver.getRawButton(tagAlignerExitButton)));
+
+        tagAlignerNew.toggleOnTrue(new AlignWithApriltag(s_Swerve, doubleArm));
 
         autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm));
 

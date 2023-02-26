@@ -19,7 +19,11 @@ public class AlignWithApriltag_Subcommand_2 extends CommandBase {
 
     @Override
     public void initialize() {
-        if (frc.robot.Variables.continueWithAWA) swerve.changeHeading(frc.robot.Variables.angular_offset);
+        if (frc.robot.Variables.continueWithAWA) {
+            swerve.brake();
+            swerve.changeHeading(frc.robot.Variables.angular_offset);
+            frc.robot.Variables.target_swerve_heading = swerve.getYaw().getDegrees() + frc.robot.Variables.angular_offset;
+        }
     }
 
     @Override
@@ -29,7 +33,10 @@ public class AlignWithApriltag_Subcommand_2 extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        if (frc.robot.Variables.continueWithAWA) swerve.brake();
+        if (frc.robot.Variables.continueWithAWA) {
+            swerve.brake();
+            swerve.setTargetHeading(frc.robot.Variables.target_swerve_heading);
+        }
     }
 
     @Override

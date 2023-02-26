@@ -49,11 +49,12 @@ public class AlignWithApriltag_Subcommand_1 extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         frc.robot.Variables.continueWithAWA = (count == angle_trials);
+        swerve.brake();
     }
 
     @Override
     public boolean isFinished() {
-        return count >= angle_trials || System.currentTimeMillis() / 1000.0 - starting_time > max_calculation_time;
+        return (count >= angle_trials || System.currentTimeMillis() / 1000.0 - starting_time > max_calculation_time);
     }
     
 }

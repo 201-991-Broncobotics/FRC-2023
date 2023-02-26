@@ -16,8 +16,7 @@ public class AlignWithApriltag extends SequentialCommandGroup {
             new AlignWithApriltag_Subcommand_2(swerve), 
             new AlignWithApriltag_Subcommand_3(swerve), 
             new AlignWithApriltag_Subcommand_4(swerve), 
-            new AlignWithApriltag_Subcommand_5(swerve), 
-            new AlignWithApriltag_Subcommand_6(doubleArm)
+            new AlignWithApriltag_Subcommand_5(swerve)
         );
     }
 }

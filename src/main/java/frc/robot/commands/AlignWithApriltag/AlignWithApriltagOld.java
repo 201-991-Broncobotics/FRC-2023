@@ -66,18 +66,18 @@ public class AlignWithApriltagOld extends CommandBase {
 
         while ((Limelight.getData()[2] == -12) && (!exitSup.getAsBoolean())) { // while we can't see the apriltag
             if (angular_offset < 0) {
-                swerve.drive(new Translation2d(0, strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
+                swerve.drive(new Translation2d(0, sideways_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
             } else {
-                swerve.drive(new Translation2d(0, -strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
+                swerve.drive(new Translation2d(0, -sideways_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
             }
         }
 
         if (exitSup.getAsBoolean()) return;
 
         if (angular_offset < 0) {
-            swerve.drive(new Translation2d(0, strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, false);
+            swerve.drive(new Translation2d(0, sideways_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, false);
         } else {
-            swerve.drive(new Translation2d(0, -strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, false);
+            swerve.drive(new Translation2d(0, -sideways_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, false);
         }
         
         Timer.delay(0.3);
@@ -108,9 +108,9 @@ public class AlignWithApriltagOld extends CommandBase {
         while ((Math.abs(offset * 0.0254 - prev_x_average) > sideways_tolerance * 0.0254) && (!exitSup.getAsBoolean()) && (Limelight.getData()[2] != -12)) {
 
             if (offset * 0.0254 < prev_x_average) {
-                swerve.drive(new Translation2d(0, strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
+                swerve.drive(new Translation2d(0, sideways_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
             } else {
-                swerve.drive(new Translation2d(0, -strafe_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
+                swerve.drive(new Translation2d(0, -sideways_speed * Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
             }
 
             prev_x_average -= prev_x[current_index];

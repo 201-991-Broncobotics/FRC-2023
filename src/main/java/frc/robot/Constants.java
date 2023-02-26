@@ -162,13 +162,16 @@ public final class Constants {
         public static final int angle_trials = 25, 
                                 distance_trials = 10; // longer means slower but more accurate
 
-        public static final double offset = 0.1, // in inches
+        public static final double offset = 0.1, // in inches; from center of robot
                                    sideways_tolerance = 0.5, // in inches
-                                   strafe_speed = 0.15, 
+                                   sideways_speed = 0.15, 
                                    rotation_speed = 0.15, // percentage of maxima
                                    max_angular_tolerance = 999, // degrees
-                                   angular_tolerance = 4,
-                                   max_calculation_time = 1;
+                                   angular_tolerance = 15,
+                                   extra_time_to_be_in_frame = 0.25, 
+                                   max_calculation_time = 1, 
+                                   max_time_to_get_in_frame = 3,
+                                   max_alignment_time = 5;
     }
 
     public static final class IntakeConstants {
@@ -310,6 +313,7 @@ public final class Constants {
                                 robotCentricButton = XboxController.Button.kLeftBumper.value,
                                 tagAlignerButton = XboxController.Button.kA.value,
                                 tagAlignerExitButton = XboxController.Button.kA.value, 
+                                tagAlignerNewButton = XboxController.Button.kX.value, 
                                 autoBalanceButton = XboxController.Button.kB.value,
                                 terminateCommandsDriverButton = XboxController.Button.kBack.value;
 
