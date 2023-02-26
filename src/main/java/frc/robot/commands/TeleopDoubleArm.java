@@ -10,7 +10,7 @@ import frc.robot.subsystems.DoubleArm;
 import static frc.robot.Constants.DoubleArmConstants.*;
 import static frc.robot.Constants.Buttons.*;
 
-public class TeleopDoubleArmManualControl extends CommandBase {
+public class TeleopDoubleArm extends CommandBase {
 
     private DoubleArm doubleArm;
 
@@ -19,9 +19,9 @@ public class TeleopDoubleArmManualControl extends CommandBase {
 
     private BooleanSupplier stopSup;
 
-    public TeleopDoubleArmManualControl(DoubleArm doubleArm, DoubleSupplier motorOneSup, DoubleSupplier motorTwoSup, BooleanSupplier stopSup) {
+    public TeleopDoubleArm(DoubleArm doubleArm, DoubleSupplier motorOneSup, DoubleSupplier motorTwoSup, BooleanSupplier stopSup) {
         this.doubleArm = doubleArm;
-        addRequirements(doubleArm); // means that other functions are not allowed to access it
+        addRequirements(doubleArm);
 
         this.motorOneSup = motorOneSup;
         this.motorTwoSup = motorTwoSup;
@@ -37,9 +37,9 @@ public class TeleopDoubleArmManualControl extends CommandBase {
         if (stopSup.getAsBoolean()) doubleArm.resetPID();
 
         // Move Arm
-        doubleArm.rawPowerArm(
-            motorOneVal * raw_arm_sensitivity, // power????? but it's weird
-            motorTwoVal * raw_arm_sensitivity_two
+        doubleArm.powerArm(
+            motorOneVal * first_motor_sensitivity, 
+            motorTwoVal * second_motor_sensitivity
         );
     }
 }

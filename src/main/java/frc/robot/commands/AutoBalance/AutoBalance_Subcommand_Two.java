@@ -7,43 +7,34 @@ import frc.robot.subsystems.Swerve;
 
 import static frc.robot.Constants.AutoBalanceConstants.*;
 
-import java.util.function.BooleanSupplier;
-
 public class AutoBalance_Subcommand_Two extends CommandBase {
     // Plan: move to intake position, then intake for some 
                 // amount of time, then finish
     
     private Swerve swerve;
 
-    private boolean isFirstAction = true;
-
-    private BooleanSupplier exitSup;
-
-    public AutoBalance_Subcommand_Two(Swerve swerve, BooleanSupplier exitSup) {
+    public AutoBalance_Subcommand_Two(Swerve swerve) {
         this.swerve = swerve;
         addRequirements(swerve); // means that other functions are not allowed to access it
-        
-        isFirstAction = true;
-        this.exitSup = exitSup;
+    }
+
+    @Override
+    public void initialize() {
+        // we don't need to do anything
     }
 
     @Override
     public void execute() {
-        if (isFirstAction) {
-            // we don't need to do anything on our first action
-            isFirstAction = false;
-        }
-
         swerve.drive(new Translation2d(-drive_speed, 0).times(Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
+    }
 
+    @Override
+    public void end(boolean interrupted) {
+        swerve.brake();
     }
     
     @Override
     public boolean isFinished() {
-        if ((Math.abs(swerve.getPitch()) > (pitch_tolerance * 1.2)) || (exitSup.getAsBoolean())) {
-            isFirstAction = true;
-            return true;
-        }
-        return false;
+        return Math.abs(swerve.getPitch()) > (pitch_tolerance * 1.2);
     }
 }

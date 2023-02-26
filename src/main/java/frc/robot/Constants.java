@@ -223,26 +223,17 @@ public final class Constants {
 
         /* Variables */
         
-        public static final double arm_sensitivity = 10, // inches per second
-                                   raw_arm_sensitivity = 0.55, // power ratio
-                                   raw_arm_sensitivity_two = 0.35,
-
-                                   min_x = -20, 
-                                   min_y = -45, // inches
-
-                                   clipping_one = 1.3, 
-                                   clipping_two = 0.99, // first should be > 1, second should be < 1
-
-                                   first_arm_length = 32, 
-                                   second_arm_length = 29.368, // inches
-
-                                   switching_angle = 90, // if below horizontal --> concave up, if above horizontal --> concave down
-
+        public static final double first_motor_sensitivity = 0.55,
                                    first_motor_max_power = 0.6,
+
+                                   second_motor_sensitivity = 0.35,
                                    second_motor_max_power = 0.4,
 
-                                   first_motor_max_power_per_second = 0.6, // we can't change this as fast
-                                   second_motor_max_power_per_second = 1.2, // we can change this very fast
+                                   first_motor_max_acceleration = 0.6, // we can't change this as fast
+                                   second_motor_max_acceleration = 1.2, // we can change this very fast
+
+                                   first_motor_max_angular_speed = 40, 
+                                   second_motor_max_angular_speed = 105, // experimentally determined
 
                                    first_motor_min_error = 0.5, 
                                    second_motor_min_error = 0.5,
@@ -255,11 +246,30 @@ public final class Constants {
 
                                    k_exponent = 1.15,  // 1.0 for a normal PID
 
-                                   tolerance = 5.5, // number of inches until we bing chilling
+                                   tolerance = 3, // number of inches until we bing chilling
 
-                                   middle_x = 60, 
+                                   first_arm_length = 32, 
+                                   second_arm_length = 29.368,
+
+                                   min_x = 4, 
+                                   min_y = -42,
+                                   max_x = 61.368, 
+                                   max_y = 20, 
+
+                                   min_first_angle = -108, 
+                                   max_first_angle = 20, 
+                                   min_second_angle = -80, 
+                                   max_second_angle = 80, 
+                                   min_difference = 20, 
+
+                                   clipping_one = 1.2, 
+                                   clipping_two = 0.99,
+
+                                   switching_angle = 90, // if below this --> concave up, if above this --> concave down
+
+                                   middle_x = 45, // above this, we go at a slower rate
                                    middle_y = 0, 
-                                   speed_when_arm_extended = 0.2;
+                                   speed_when_arm_extended = 0.35;
     }
 
     public static final class ClawConstants {
@@ -301,7 +311,6 @@ public final class Constants {
 
                                 zeroGyroButton = XboxController.Button.kY.value, 
                                 robotCentricButton = XboxController.Button.kLeftBumper.value,
-                                brakeButton = XboxController.Button.kX.value,
                                 tagAlignerButton = XboxController.Button.kA.value,
                                 tagAlignerExitButton = XboxController.Button.kA.value, 
                                 autoBalanceButton = XboxController.Button.kB.value,
@@ -310,17 +319,19 @@ public final class Constants {
 
         /* Operator Buttons */
 
-        public static final int horizAxis = XboxController.Axis.kLeftX.value, 
-                                vertAxis = XboxController.Axis.kLeftY.value, 
-                                motorOneAxis = XboxController.Axis.kLeftY.value, 
+        public static final int motorOneAxis = XboxController.Axis.kLeftY.value, 
                                 motorTwoAxis = XboxController.Axis.kRightY.value, 
+
                                 topGoalButton = XboxController.Button.kY.value, 
                                 midGoalButton = XboxController.Button.kB.value, 
                                 lowGoalButton = XboxController.Button.kA.value, 
+
                                 intakeButton = XboxController.Button.kRightBumper.value, 
                                 outtakeButton = XboxController.Button.kLeftBumper.value, 
+
                                 idleButton = XboxController.Button.kX.value, 
                                 startPosButton = XboxController.Button.kStart.value,
+
                                 stopArmFromMovingButtonOne = XboxController.Axis.kRightTrigger.value,
                                 stopArmFromMovingButtonTwo = XboxController.Axis.kLeftTrigger.value,
                                 terminateCommandsOperatorButton = XboxController.Button.kBack.value;
@@ -345,8 +356,6 @@ public final class Constants {
                                    CANCoder3_zero = 271.14, 
                                    encoder_one_zero = -93.76, 
                                    encoder_two_zero = -123.94;
-
-        // TODO: Tune these before EVERY SINGLE MATCH
         
         public static double[] topPosition = {60.1, 8.9}, 
                                midPosition = {60.1, -9.2}, 
@@ -354,12 +363,10 @@ public final class Constants {
                                intakePosition = {33.6, -39.6}, 
                                idlePosition = {6.1, -10.8}, 
                                startPosition = {4.8, -9}, 
+
                                intermediatePosition = {15.93, -4.5};
 
-        // TODO: still have to figure out these values lel
-
-        public static boolean manual_control = true, 
-                              fancy_drive = false, 
+        public static boolean fancy_drive = false, 
                               show_drive_data = true;
     }
 }

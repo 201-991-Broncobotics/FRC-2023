@@ -1,30 +1,40 @@
 package frc.robot.commands.AlignWithApriltag;
 
-import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Swerve;
+
+import static frc.robot.Constants.AprilTagAlignmentConstants.*;
 
 public class AlignWithApriltag_Subcommand_One extends CommandBase {
 
     // Calculate heading of april tag, using current heading
+    // also reset variables
 
     private Swerve swerve;
-    private BooleanSupplier exitSup;
+    private double count;
 
-    private boolean isFirstAction = true;
-
-    public AlignWithApriltag_Subcommand_One(Swerve swerve, BooleanSupplier exitSup) {
+    public AlignWithApriltag_Subcommand_One(Swerve swerve) {
         this.swerve = swerve;
         addRequirements(swerve);
+    }
 
-        this.exitSup = exitSup;
-        isFirstAction = true;
+    @Override
+    public void initialize() {
+        swerve.brake();
+        frc.robot.Variables.previous_angles = new double[angle_trials];
+        frc.robot.Variables.previous_x = new double[distance_trials];
+        count = 0;
     }
 
     @Override
     public void execute() {
-        if (isFirstAction) {
-            isFirstAction = false;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        frc.robot.Variables.continueWithAWA = true;
+        if (interrupted || count < angle_trials) {
+            frc.robot.Variables.continueWithAWA = false;
         }
     }
 

@@ -19,12 +19,12 @@ public class SetDistalPosition extends CommandBase { // small arm
     @Override
     public void initialize() {
         doubleArm.resetWhipControl();
-        doubleArm.setTargetPositions(DoubleArm.getPositionFromAngles(doubleArm.getTargetArmAngles()[0], distalPosition));
+        doubleArm.setTargetAngles(new double[] {doubleArm.getTargetArmAngles()[0], distalPosition});
     }
 
     @Override
     public void execute() {
-        doubleArm.rawPowerArm(0, 0);
+        doubleArm.powerArm(0, 0);
     }
 
     @Override

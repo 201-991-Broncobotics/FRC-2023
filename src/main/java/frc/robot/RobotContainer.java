@@ -17,7 +17,6 @@ import frc.robot.subsystems.*;
 
 import static frc.robot.Constants.Buttons.*;
 import static frc.robot.Constants.TuningConstants.*;
-import static frc.robot.autos.autoTrajectories.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,7 +33,6 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = new JoystickButton(driver, zeroGyroButton);
     private final JoystickButton robotCentric = new JoystickButton(driver, robotCentricButton);
     private final JoystickButton tagAligner = new JoystickButton(driver, tagAlignerButton);
-    private final JoystickButton brake = new JoystickButton(driver, brakeButton);
     private final JoystickButton autoBalance = new JoystickButton(driver, autoBalanceButton);
     private final JoystickButton terminateCommandsDriver = new JoystickButton(driver, terminateCommandsDriverButton);
 
@@ -85,25 +83,14 @@ public class RobotContainer {
             );
         }
 
-        if (manual_control) {
-            doubleArm.setDefaultCommand(
-                new TeleopDoubleArmManualControl(
-                    doubleArm, 
-                    () -> -operator.getRawAxis(motorOneAxis),
-                    () -> -operator.getRawAxis(motorTwoAxis), 
-                    () -> ((operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone))
-                )
-            );
-        } else {
-            doubleArm.setDefaultCommand(
-                new TeleopDoubleArmCartesianControl(
-                    doubleArm, 
-                    () -> operator.getRawAxis(horizAxis),
-                    () -> -operator.getRawAxis(vertAxis), 
-                    () -> ((operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone))
-                )
-            );
-        }
+        doubleArm.setDefaultCommand(
+            new TeleopDoubleArm(
+                doubleArm, 
+                () -> -operator.getRawAxis(motorOneAxis),
+                () -> -operator.getRawAxis(motorTwoAxis), 
+                () -> ((operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone))
+            )
+        );
 
         // No default command for Claw
 
@@ -118,14 +105,12 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         tagAligner.toggleOnTrue(new AlignWithApriltagOld(s_Swerve, () -> driver.getRawButton(tagAlignerExitButton)));
-                    // toggle on false because otherwise it automatically stops it
-        
-        brake.toggleOnTrue(new Brake(s_Swerve));
 
-        autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm, () -> false)); //driver.getRawButton(autoBalanceExitButton)));
+        autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm));
 
         terminateCommandsDriver.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
         
@@ -136,7 +121,7 @@ public class RobotContainer {
         idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePosition));
         startPos.toggleOnTrue(new SetArmPosition_Subcommand(doubleArm, startPosition));
 
-        intake.toggleOnTrue(new Intake(claw, doubleArm, () -> false)); //operator.getRawButton(intakeButton)));
+        intake.toggleOnTrue(new Intake(claw, doubleArm));
         outtake.toggleOnTrue(new Outtake(claw, doubleArm));
         
         terminateCommandsOperator.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
@@ -152,8 +137,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // An ExampleCommand will run in autonomous
-        // return new exampleAuto(s_Swerve);
         return new Autonomous(claw, doubleArm, s_Swerve);
     }
 }

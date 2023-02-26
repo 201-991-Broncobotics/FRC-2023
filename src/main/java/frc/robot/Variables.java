@@ -7,7 +7,7 @@ public class Variables {
     public static double[] previous_angles = new double[Constants.AprilTagAlignmentConstants.angle_trials];
     public static double[] previous_x = new double[Constants.AprilTagAlignmentConstants.distance_trials];
 
-    public static boolean in_autoalignment = false;
+    public static boolean continueWithAWA = true;
 
     public static String data = "";
 }

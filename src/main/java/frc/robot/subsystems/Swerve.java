@@ -66,6 +66,11 @@ public class Swerve extends SubsystemBase {
         last_time = System.currentTimeMillis() - (calibration_time + 1) * 1000;
     }
 
+    public void brake() {
+        changeHeading(0);
+        drive(new Translation2d(), 0, true, false);
+    }
+
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
 
         if (show_drive_data) {
@@ -187,14 +192,18 @@ public class Swerve extends SubsystemBase {
 
         double[] vision_estimate = Limelight.getRobotPosition();
         if (vision_estimate[1] != 0 && ((Math.abs(getYaw().getDegrees() - vision_estimate[2]) + max_angular_tolerance) % 90 < 2 * max_angular_tolerance)) {
-                // y cannot be zero if we actually get a measurement
-            Pose2d estimatedPose = new Pose2d(vision_estimate[0], vision_estimate[1], new Rotation2d(vision_estimate[2] * Math.PI / 180)); 
-                                                // don't put yaw as the angle because yaw might be off by a few degrees
+
+            Pose2d estimatedPose = new Pose2d(vision_estimate[0], vision_estimate[1], new Rotation2d(vision_estimate[2] * Math.PI / 180));  // don't put yaw as the angle because yaw might be off by a few degrees
             addVisionEstimate(estimatedPose, Timer.getFPGATimestamp() - vision_estimate[3] * 1000.0);
+            
         }
 
         SmartDashboard.putNumber("Gyro ", getYaw().getDegrees());
         SmartDashboard.putNumber("Pitch ", getPitch());
+
+        SmartDashboard.putNumber("Estimated Pose X", poseEstimator.getEstimatedPosition().getX());
+        SmartDashboard.putNumber("Estimated Pose Y", poseEstimator.getEstimatedPosition().getY());
+        SmartDashboard.putNumber("Estimated Pose Heading", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
 
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());

@@ -1,11 +1,11 @@
 package frc.robot.commands.SetArmPosition;
 
-import frc.robot.subsystems.DoubleArm;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.DoubleArm;
 
-public class SetArmPosition_Subcommand extends SequentialCommandGroup {
-    
-    public SetArmPosition_Subcommand(DoubleArm doubleArm, double[] position) {
+public class SetArmPositionWithoutIntermediate extends SequentialCommandGroup {
+
+    public SetArmPositionWithoutIntermediate(DoubleArm doubleArm, double[] position) {
         double[] target_angles = DoubleArm.getAnglesFromTarget(position);
         addCommands(
             new SetMaxDistalPosition(doubleArm, target_angles), 
@@ -13,4 +13,5 @@ public class SetArmPosition_Subcommand extends SequentialCommandGroup {
             new SetDistalPosition(doubleArm, target_angles[1])
         );
     }
+    
 }
