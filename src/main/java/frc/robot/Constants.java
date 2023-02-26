@@ -364,8 +364,8 @@ public final class Constants {
                                      intermediatePosition = {15.93, -4.5};
 
         public static final boolean fancy_drive = false, 
-                                    show_drive_data = true,
-                                    test_autonomous = true;
+                                    show_drive_data = false,
+                                    test_autonomous = true; // runs TestPath - should be somethings simple like turning or driving straight
         
         /* Swerve Drive Constants */
 

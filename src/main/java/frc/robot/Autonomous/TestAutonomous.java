@@ -12,7 +12,7 @@ public class TestAutonomous extends SequentialCommandGroup {
         addRequirements(doubleArm, claw, swerve);
 
         addCommands(
-            new RunTrajectory(swerve, "test")
+            new RunTrajectory(swerve, "TestPath")
         );
     }
 }
