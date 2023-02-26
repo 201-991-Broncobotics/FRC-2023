@@ -9,7 +9,7 @@ import static frc.robot.Constants.TuningConstants.*;
 
 public class AlignWithApriltag extends SequentialCommandGroup {
     public AlignWithApriltag(Swerve swerve, DoubleArm doubleArm) {
-        addRequirements(swerve, doubleArm); // means that other functions are not allowed to access it
+        addRequirements(swerve, doubleArm);
         addCommands(
             new SetArmPosition(doubleArm, idlePosition), 
             new AlignWithApriltag_Subcommand_1(swerve), 

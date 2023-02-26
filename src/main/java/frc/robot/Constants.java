@@ -3,7 +3,6 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -19,32 +18,9 @@ public final class Constants {
         public static final int pigeonID = 0;
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
-        public static final COTSFalconSwerveConstants chosenModule = 
-            COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L1);
-
         /* Drivetrain Constants */
         public static final double trackWidth = Units.inchesToMeters(22.750); // May have to change for future robots
         public static final double wheelBase = Units.inchesToMeters(22.750);
-        public static final double wheelCircumference = chosenModule.wheelCircumference;
-
-        /* Swerve Kinematics 
-         * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
-         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
-            new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
-            new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
-            new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
-            new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
-
-        /* Module Gear Ratios */
-        public static final double driveGearRatio = chosenModule.driveGearRatio;
-        public static final double angleGearRatio = chosenModule.angleGearRatio;
-
-        /* Motor Inverts */
-        public static final boolean angleMotorInvert = chosenModule.angleMotorInvert;
-        public static final boolean driveMotorInvert = chosenModule.driveMotorInvert;
-
-        /* Angle Encoder Invert */
-        public static final boolean canCoderInvert = chosenModule.canCoderInvert;
 
         /* Swerve Current Limiting */
         public static final int angleContinuousCurrentLimit = 25;
@@ -62,6 +38,35 @@ public final class Constants {
         public static final double openLoopRamp = 0.25;
         public static final double closedLoopRamp = 0.0;
 
+        /* Neutral Modes */
+        public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
+        public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
+
+        /* Change the values above if you want to but they're not necessary to be tuned */
+
+        public static final COTSFalconSwerveConstants chosenModule = 
+            COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L1);
+
+        public static final double wheelCircumference = chosenModule.wheelCircumference;
+
+        /* Swerve Kinematics */
+         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
+            new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
+            new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
+            new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
+            new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
+
+        /* Module Gear Ratios */
+        public static final double driveGearRatio = chosenModule.driveGearRatio;
+        public static final double angleGearRatio = chosenModule.angleGearRatio;
+
+        /* Motor Inverts */
+        public static final boolean angleMotorInvert = chosenModule.angleMotorInvert;
+        public static final boolean driveMotorInvert = chosenModule.driveMotorInvert;
+
+        /* Angle Encoder Invert */
+        public static final boolean canCoderInvert = chosenModule.canCoderInvert;
+
         /* Angle Motor PID Values */
         public static final double angleKP = chosenModule.angleKP;
         public static final double angleKI = chosenModule.angleKI;
@@ -69,26 +74,22 @@ public final class Constants {
         public static final double angleKF = chosenModule.angleKF;
 
         /* Drive Motor PID Values */
-        public static final double driveKP = 0.05; //TODO: This must be tuned to specific robot
+        public static final double driveKP = TuningConstants.drive_motor_p;
         public static final double driveKI = 0.0;
         public static final double driveKD = 0.0;
         public static final double driveKF = 0.0;
 
         /* Drive Motor Characterization Values 
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
-        public static final double driveKS = (0.32 / 12); //TODO: This must be tuned to specific robot
-        public static final double driveKV = (1.51 / 12);
-        public static final double driveKA = (0.27 / 12);
+        public static final double driveKS = (TuningConstants.drive_static_voltage / 12.0);
+        public static final double driveKV = (TuningConstants.drive_equilibrium_voltage / 12.0);
+        public static final double driveKA = (TuningConstants.drive_acceleration_voltage / 12.0);
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 4; //TODO: This must be tuned to specific robot
+        public static final double maxSpeed = TuningConstants.max_linear_speed * 0.3048;
         /** Radians per Second */
-        public static final double maxAngularVelocity = 10.0; //TODO: This must be tuned to specific robot
-
-        /* Neutral Modes */
-        public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-        public static final NeutralMode driveNeutralMode = NeutralMode.Coast;
+        public static final double maxAngularVelocity = TuningConstants.max_angular_speed * Math.PI / 180.0;
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
@@ -97,8 +98,7 @@ public final class Constants {
             public static final int angleMotorID = 2;
             public static final int canCoderID = 11;
             public static final Rotation2d angleOffset = Rotation2d.fromDegrees(TuningConstants.CANCoder0_zero);
-            public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+            public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
 
         /* Front Right Module - Module 1 */
@@ -107,8 +107,7 @@ public final class Constants {
             public static final int angleMotorID = 8;
             public static final int canCoderID = 14;
             public static final Rotation2d angleOffset = Rotation2d.fromDegrees(TuningConstants.CANCoder1_zero);
-            public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+            public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
         
         /* Back Left Module - Module 2 */
@@ -117,8 +116,7 @@ public final class Constants {
             public static final int angleMotorID = 4;
             public static final int canCoderID = 12;
             public static final Rotation2d angleOffset = Rotation2d.fromDegrees(TuningConstants.CANCoder2_zero);
-            public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+            public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
 
         /* Back Right Module - Module 3 */
@@ -127,34 +125,25 @@ public final class Constants {
             public static final int angleMotorID = 6;
             public static final int canCoderID = 13;
             public static final Rotation2d angleOffset = Rotation2d.fromDegrees(TuningConstants.CANCoder3_zero);
-            public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+            public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
     }
 
-    public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
-        public static final double kMaxSpeedMetersPerSecond = 2;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 1;
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 0.5;
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI * 0.25;
+    public static final class AutoConstants {
+        public static final double kMaxSpeedMetersPerSecond = TuningConstants.max_linear_speed_autonomous * 0.3048;
+        public static final double kMaxAccelerationMetersPerSecondSquared = TuningConstants.max_linear_speed_autonomous * 0.3048 / TuningConstants.ramp_up_time_linear;
+        public static final double kMaxAngularSpeedRadiansPerSecond = TuningConstants.max_angular_speed_autonomous * Math.PI / 180.0;
+        public static final double kMaxAngularSpeedRadiansPerSecondSquared = TuningConstants.max_angular_speed_autonomous * Math.PI / 180.0 / TuningConstants.ramp_up_time_angular;
     
-        public static final double kPXController = 2;
-        public static final double kPYController = 2;
-        public static final double kPThetaController = 2;
+        public static final double kPXController = TuningConstants.translation_p_controller;
+        public static final double kPYController = TuningConstants.translation_p_controller;
+        public static final double kPThetaController = TuningConstants.angle_p_controller;
     
         /* Constraint for the motion profilied robot angle controller */
-        public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-            new TrapezoidProfile.Constraints(
-                kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
-    }
-
-    public static final class AutoBalanceConstants {
-        public static final double drive_speed = 0.16,
-                                   pitch_tolerance = 8, 
-                                   max_linear_acceleration = 0.4,
-                                   ratio = 1.38, 
-                                   min_time = 1.5, 
-                                   min_deriv = 1.5;
+        public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+            kMaxAngularSpeedRadiansPerSecond, 
+            kMaxAngularSpeedRadiansPerSecondSquared
+        );
     }
 
     public static final class AprilTagAlignmentConstants {
@@ -174,25 +163,36 @@ public final class Constants {
                                    max_alignment_time = 5;
     }
 
-    public static final class IntakeConstants {
-        public static final double claw_current_limit = 25, 
-                                   outtake_time = 0.5;
+    public static final class AutoBalanceConstants {
+        public static final double drive_speed = 0.16,
+                                   pitch_tolerance = 8, 
+                                   max_linear_acceleration = 0.4,
+                                   ratio = 1.38, 
+                                   min_time = 1.5, 
+                                   min_deriv = 1.5;
     }
 
-    public static final class SwerveConstants {
+    public static final class ClawConstants {
 
-        public static final Pose2d startingPose = new Pose2d(); 
+        /* CAN ID */
+
+        public static final int claw_motor_ID = 24;
+
+        /* Motor Variables */
+    
+        public static final boolean claw_motor_brake = true;
         
-        public static final double maximum_power = 0.6, 
-                                   maximum_error = 60, // degrees
-                                   exponent = 0.75, 
-                                   calibration_time = 0.5, // seconds
-                                   turn_sensitivity = 0.2, 
-                                   slow = 0.15,
-                                   yaw_tolerance = 2;
+        public static final int claw_motor_max_current = 30;
+        
+        public static final double claw_motor_acceleration_time = 3, 
+                                   claw_motor_voltage_compensation = 0;
 
-            // best tuned so far: 0.6 as maximum_power, 50 as max_error, 0.5 as exponent
+        /* Variables */
+        
+        public static final double intake_power = -1, // intake with negative power
+                                   outtake_power = 1;
     }
+
     public static final class DoubleArmConstants {
 
         /* CAN IDs and Input Channels */
@@ -271,26 +271,23 @@ public final class Constants {
                                    middle_y = 0, 
                                    speed_when_arm_extended = 0.35;
     }
-
-    public static final class ClawConstants {
-
-        /* CAN ID */
-
-        public static final int claw_motor_ID = 24;
-
-        /* Motor Variables */
     
-        public static final boolean claw_motor_brake = true;
-        
-        public static final int claw_motor_max_current = 30;
-        
-        public static final double claw_motor_acceleration_time = 3, 
-                                   claw_motor_voltage_compensation = 0;
+    public static final class IntakeConstants {
+        public static final double claw_current_limit = 25, 
+                                   outtake_time = 0.5;
+    }
 
-        /* Variables */
+    public static final class SwerveConstants {
         
-        public static final double intake_power = -1, // intake with negative power
-                                   outtake_power = 1;
+        public static final double maximum_power = 0.6, 
+                                   maximum_error = 60, // degrees
+                                   exponent = 0.75, 
+                                   calibration_time = 0.5, // seconds
+                                   turn_sensitivity = 0.2, 
+                                   slow = 0.15,
+                                   yaw_tolerance = 2;
+
+            // best tuned so far: 0.6 as maximum_power, 50 as max_error, 0.5 as exponent
     }
 
     public static final class Buttons {
@@ -357,16 +354,35 @@ public final class Constants {
                                    encoder_one_zero = -93.76, 
                                    encoder_two_zero = -123.94;
         
-        public static double[] topPosition = {60.1, 8.9}, 
-                               midPosition = {60.1, -9.2}, 
-                               lowPosition = {42.3, -29.2}, 
-                               intakePosition = {33.6, -39.6}, 
-                               idlePosition = {6.1, -10.8}, 
-                               startPosition = {4.8, -9}, 
+        public static final double[] topPosition = {60.1, 8.9}, 
+                                     midPosition = {60.1, -9.2}, 
+                                     lowPosition = {42.3, -29.2}, 
+                                     intakePosition = {33.6, -39.6}, 
+                                     idlePosition = {6.1, -10.8}, 
+                                     startPosition = {4.8, -9}, 
+                                     
+                                     intermediatePosition = {15.93, -4.5};
 
-                               intermediatePosition = {15.93, -4.5};
+        public static final boolean fancy_drive = false, 
+                                    show_drive_data = true,
+                                    test_autonomous = true;
+        
+        /* Swerve Drive Constants */
 
-        public static boolean fancy_drive = false, 
-                              show_drive_data = true;
+        public static final double drive_motor_p = 0.05,
+                                   drive_static_voltage = 0.32, 
+                                   drive_equilibrium_voltage = 1.51, 
+                                   drive_acceleration_voltage = 0.27, // SYSID values: KS, KV, KA; they are automatically divided by 12 later
+                                   max_linear_speed = 10, // feet per second
+                                   max_angular_speed = 180; // degrees per second
+
+        /* Auto Constants */
+
+        public static final double max_linear_speed_autonomous = 5,
+                                   ramp_up_time_linear = 2, // in seconds to reach max 
+                                   max_angular_speed_autonomous = 60, 
+                                   ramp_up_time_angular = 2,
+                                   translation_p_controller = 2, 
+                                   angle_p_controller = 2;
     }
 }

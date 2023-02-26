@@ -12,7 +12,6 @@ public class SetDistalPosition extends CommandBase { // small arm
 
     public SetDistalPosition(DoubleArm doubleArm, double distalPosition) {
         this.doubleArm = doubleArm;
-        // don't add reqs
         this.distalPosition = distalPosition;
     }
 

@@ -27,7 +27,7 @@ public class AlignWithApriltag_Subcommand_4 extends CommandBase {
             swerve.setTargetHeading(frc.robot.Variables.target_swerve_heading);
             frc.robot.Variables.previous_x = new double[distance_trials];
             frc.robot.Variables.prev_x_average = 0;
-            starting_time = System.currentTimeMillis() / 1000.0;
+            starting_time = Timer.getFPGATimestamp();
             count = 0;
         }
     }
@@ -61,7 +61,7 @@ public class AlignWithApriltag_Subcommand_4 extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (!frc.robot.Variables.continueWithAWA || count >= distance_trials || System.currentTimeMillis() / 1000.0 - starting_time > max_calculation_time);
+        return (!frc.robot.Variables.continueWithAWA || count >= distance_trials || Timer.getFPGATimestamp() - starting_time > max_calculation_time);
     }
 
 }

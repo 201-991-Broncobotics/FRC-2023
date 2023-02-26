@@ -13,7 +13,7 @@ public class AutoBalance_Subcommand_2 extends CommandBase {
 
     public AutoBalance_Subcommand_2(Swerve swerve) {
         this.swerve = swerve;
-        addRequirements(swerve); // means that other functions are not allowed to access it
+        addRequirements(swerve);
     }
 
     @Override

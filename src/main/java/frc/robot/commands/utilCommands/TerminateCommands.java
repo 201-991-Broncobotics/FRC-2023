@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.utilCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
@@ -8,7 +8,7 @@ import frc.robot.subsystems.Swerve;
 public class TerminateCommands extends CommandBase {
 
     public TerminateCommands(Claw claw, DoubleArm doubleArm, Swerve swerve) {
-        addRequirements(doubleArm, claw, swerve); // means that other functions are not allowed to access it
+        addRequirements(doubleArm, claw, swerve);
     }
 
     @Override

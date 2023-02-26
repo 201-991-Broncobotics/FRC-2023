@@ -1,5 +1,6 @@
 package frc.robot.commands.outtake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
 
@@ -19,7 +20,7 @@ public class Outtake_Subcommand extends CommandBase {
     @Override
     public void initialize() {
         claw.outtake();
-        starting_time = System.currentTimeMillis() / 1000.0;
+        starting_time = Timer.getFPGATimestamp();
     }
 
     @Override
@@ -34,6 +35,6 @@ public class Outtake_Subcommand extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return System.currentTimeMillis() / 1000.0 - starting_time > outtake_time;
+        return Timer.getFPGATimestamp() - starting_time > outtake_time;
     }
 }

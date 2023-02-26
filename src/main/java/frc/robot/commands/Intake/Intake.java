@@ -9,7 +9,7 @@ import static frc.robot.Constants.TuningConstants.*;
 
 public class Intake extends SequentialCommandGroup {
     public Intake(Claw claw, DoubleArm doubleArm) {
-        addRequirements(claw); // means that other functions are not allowed to access it
+        addRequirements(claw);
         addCommands(
             new Intake_Subcommand(claw), 
             new SetArmPositionWithoutIntermediate(doubleArm, idlePosition)

@@ -53,9 +53,9 @@ public class Autonomous extends SequentialCommandGroup {
                 );
                 break;
             
-            default: // idk, we'll have to figure out a plan for this
+            default: // just place a cube then do nothing
                 addCommands(
-                    new RunTrajectory(swerve, "TestPath")
+                    new RunTrajectory(swerve, "DefaultPath")
                 );
                 break;
         }

@@ -28,7 +28,7 @@ public class AlignWithApriltag_Subcommand_1 extends CommandBase {
         frc.robot.Variables.angular_offset = 0;
         frc.robot.Variables.previous_x = new double[distance_trials];
         
-        starting_time = System.currentTimeMillis() / 1000.0;
+        starting_time = Timer.getFPGATimestamp();
         count = 0;
     }
 
@@ -54,7 +54,7 @@ public class AlignWithApriltag_Subcommand_1 extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (count >= angle_trials || System.currentTimeMillis() / 1000.0 - starting_time > max_calculation_time);
+        return (count >= angle_trials || Timer.getFPGATimestamp() - starting_time > max_calculation_time);
     }
     
 }

@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.utilCommands;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -11,12 +11,12 @@ public class Turn extends CommandBase {
     private Swerve swerve;
     private double amount;
 
-    /*public Turn(Swerve swerve, double amount) {
+    public Turn(Swerve swerve, double amount) {
         this.swerve = swerve;
-        addRequirements(swerve); // means that other functions are not allowed to access it
+        addRequirements(swerve);
 
         this.amount = amount;
-    }*/
+    }
 
     @Override
     public void initialize() {

@@ -9,8 +9,6 @@ public class Intake_Subcommand extends CommandBase {
     
     private Claw claw;
 
-    private double starting_time;
-
     public Intake_Subcommand(Claw claw) {
         this.claw = claw;
         addRequirements(claw);
@@ -19,7 +17,6 @@ public class Intake_Subcommand extends CommandBase {
     @Override
     public void initialize() {
         claw.intake();
-        starting_time = System.currentTimeMillis() / 1000.0;
     }
 
     @Override
@@ -34,6 +31,6 @@ public class Intake_Subcommand extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return ((claw.getCurrent() > claw_current_limit) && (System.currentTimeMillis() / 1000.0 - starting_time > 0.8));
+        return (claw.getCurrent() > claw_current_limit);
     }
 }

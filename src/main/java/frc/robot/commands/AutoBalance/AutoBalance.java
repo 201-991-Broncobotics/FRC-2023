@@ -9,7 +9,7 @@ import static frc.robot.Constants.TuningConstants.*;
 
 public class AutoBalance extends SequentialCommandGroup {
     public AutoBalance(Swerve swerve, DoubleArm doubleArm) {
-        addRequirements(swerve, doubleArm); // means that other functions are not allowed to access it
+        addRequirements(swerve, doubleArm);
         addCommands(
             new SetArmPosition(doubleArm, idlePosition), 
             new AutoBalance_Subcommand_1(swerve), // sets target angle of swerve

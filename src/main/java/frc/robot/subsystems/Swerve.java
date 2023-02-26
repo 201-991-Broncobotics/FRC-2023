@@ -5,7 +5,6 @@ import frc.robot.Variables;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-// import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import com.ctre.phoenix.sensors.Pigeon2;
@@ -49,7 +48,7 @@ public class Swerve extends SubsystemBase {
         Timer.delay(1.0);
         resetModulesToAbsolute();
 
-        poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, Rotation2d.fromDegrees(0), getModulePositions(), startingPose); 
+        poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, Rotation2d.fromDegrees(0), getModulePositions(), new Pose2d()); 
     }
 
     /** Normalizes angle to between -180 and 180 */
@@ -65,7 +64,7 @@ public class Swerve extends SubsystemBase {
 
     public void setTargetHeading(double target) {
         target_heading = normalizeAngle(target - getYaw().getDegrees()) + getYaw().getDegrees();
-        last_time = System.currentTimeMillis() - (calibration_time + 1) * 1000;
+        last_time = Timer.getFPGATimestamp() - (calibration_time + 1);
     }
 
     public void brake() {
@@ -90,7 +89,7 @@ public class Swerve extends SubsystemBase {
 
         double current_heading = getYaw().getDegrees();
         if (rotation == 0) {
-            if (System.currentTimeMillis() / 1000.0 - last_time < calibration_time) {
+            if (Timer.getFPGATimestamp() - last_time < calibration_time) {
                 target_heading = current_heading;
             } else if (translation.getNorm() != 0 || getError() > yaw_tolerance) {
                 if (Math.abs(target_heading - current_heading) > 180) {
@@ -106,7 +105,7 @@ public class Swerve extends SubsystemBase {
             }
         } else {
             target_heading = current_heading;
-            last_time = System.currentTimeMillis() / 1000.0;
+            last_time = Timer.getFPGATimestamp();
         }
 
         translation = translation.times(frc.robot.Variables.speed_factor);
@@ -168,7 +167,7 @@ public class Swerve extends SubsystemBase {
     public void zeroGyro() {
         gyro.setYaw(0);
         target_heading = 0;
-        last_time = System.currentTimeMillis();
+        last_time = Timer.getFPGATimestamp();
     }
 
     public Rotation2d getYaw() {

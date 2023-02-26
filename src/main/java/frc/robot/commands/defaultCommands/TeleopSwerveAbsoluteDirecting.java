@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.defaultCommands;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;

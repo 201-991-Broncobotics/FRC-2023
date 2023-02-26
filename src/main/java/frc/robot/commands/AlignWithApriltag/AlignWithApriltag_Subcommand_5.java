@@ -2,6 +2,7 @@ package frc.robot.commands.alignWithApriltag;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
@@ -30,7 +31,7 @@ public class AlignWithApriltag_Subcommand_5 extends CommandBase {
         if (frc.robot.Variables.continueWithAWA) {
             swerve.brake();
             swerve.setTargetHeading(frc.robot.Variables.target_swerve_heading);
-            starting_time = System.currentTimeMillis() / 1000.0;
+            starting_time = Timer.getFPGATimestamp();
 
             double tag_offset = 0;
             if (Limelight.getData()[0] == 1) {
@@ -68,7 +69,7 @@ public class AlignWithApriltag_Subcommand_5 extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (!frc.robot.Variables.continueWithAWA || System.currentTimeMillis() / 1000.0 - starting_time > max_alignment_time || swerve.getPose().relativeTo(startingPose).getTranslation().getNorm() > total_offset);
+        return (!frc.robot.Variables.continueWithAWA || Timer.getFPGATimestamp() - starting_time > max_alignment_time || swerve.getPose().relativeTo(startingPose).getTranslation().getNorm() > total_offset);
     }
 
 }
