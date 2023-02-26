@@ -90,9 +90,9 @@ public class Swerve extends SubsystemBase {
 
         double current_heading = getYaw().getDegrees();
         if (rotation == 0) {
-            if (System.currentTimeMillis() - last_time < calibration_time * 1000) {
+            if (System.currentTimeMillis() / 1000.0 - last_time < calibration_time) {
                 target_heading = current_heading;
-            } else {
+            } else if (translation.getNorm() != 0 || getError() > yaw_tolerance) {
                 if (Math.abs(target_heading - current_heading) > 180) {
                     target_heading = current_heading + normalizeAngle(target_heading - current_heading);
                 }
@@ -106,7 +106,7 @@ public class Swerve extends SubsystemBase {
             }
         } else {
             target_heading = current_heading;
-            last_time = System.currentTimeMillis();
+            last_time = System.currentTimeMillis() / 1000.0;
         }
 
         translation = translation.times(frc.robot.Variables.speed_factor);
