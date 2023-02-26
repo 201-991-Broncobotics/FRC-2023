@@ -19,6 +19,7 @@ public class DoubleArm extends SubsystemBase {
     private DutyCycleEncoder first_encoder, second_encoder;
 
     private double[] target_positions = new double[2];
+    private double[] prev_angles = new double[2];
 
     private double time;
     private double time_one_last;
@@ -79,8 +80,8 @@ public class DoubleArm extends SubsystemBase {
         
         // we want it so the encoder increases when the arm goes counterclockwise - may have to adjust them
 
-        target_positions[0] = getCurrentArmAngles()[0];
-        target_positions[1] = getCurrentArmAngles()[1]; // DO NOT reset them
+        target_positions = getCurrentArmAngles();
+        prev_angles = getCurrentArmAngles();
 
         Timer.delay(1.0);
 
@@ -126,9 +127,11 @@ public class DoubleArm extends SubsystemBase {
         }
 
         double[] next_angles = {
-            current_angles[0] + firstPower / first_motor_sensitivity * delta_time * first_motor_max_angular_speed, 
-            current_angles[1] + secondPower / second_motor_sensitivity * delta_time * second_motor_max_angular_speed
+            2 * current_angles[0] - prev_angles[0], 
+            2 * current_angles[1] - prev_angles[1]
         };
+
+        prev_angles = current_angles;
 
         if (firstPower < 0 && next_angles[0] < min_first_angle) {
             firstPower = 0;
@@ -149,8 +152,13 @@ public class DoubleArm extends SubsystemBase {
         if (!checkTargetAngles(next_angles)) { // out of bounds
             if (getPositionFromAngles(next_angles)[1] > max_y) {
                 // it means that we should only power down
-                firstPower = Math.max(firstPower, 0);
-                secondPower = Math.max(secondPower, 0);
+                if (next_angles[1] > 0) {
+                    firstPower = Math.max(firstPower, 0);
+                    secondPower = Math.max(secondPower, 0 - 0.5 * second_motor_max_power);
+                } else {
+                    firstPower = Math.max(firstPower, 0 - 0.5 * first_motor_max_power);
+                    secondPower = Math.max(secondPower, 0);
+                }
             } else if (getPositionFromAngles(next_angles)[0] < min_x) {
                 // only power first motor up, second down
                 firstPower = Math.min(firstPower, 0);

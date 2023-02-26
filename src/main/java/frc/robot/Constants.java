@@ -232,9 +232,6 @@ public final class Constants {
                                    first_motor_max_acceleration = 0.6, // we can't change this as fast
                                    second_motor_max_acceleration = 1.2, // we can change this very fast
 
-                                   first_motor_max_angular_speed = 40, 
-                                   second_motor_max_angular_speed = 105, // experimentally determined
-
                                    first_motor_min_error = 0.5, 
                                    second_motor_min_error = 0.5,
 
