@@ -8,8 +8,6 @@ import frc.robot.subsystems.Swerve;
 import static frc.robot.Constants.AutoBalanceConstants.*;
 
 public class AutoBalance_Subcommand_Two extends CommandBase {
-    // Plan: move to intake position, then intake for some 
-                // amount of time, then finish
     
     private Swerve swerve;
 

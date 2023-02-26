@@ -1,12 +1,11 @@
-package frc.robot.autos;
+package frc.robot.Autonomous;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.DoubleArm;
 
-public class emulatorAuto extends CommandBase { // the main idea is that, repeating the same actions will repeat the robot's actions
+public class EmulatorAuto extends CommandBase { // the main idea is that, repeating the same actions will repeat the robot's actions
     
     private Swerve swerve;
     private double[][] list;
@@ -15,7 +14,7 @@ public class emulatorAuto extends CommandBase { // the main idea is that, repeat
 
     private int index = 0;
 
-    public emulatorAuto(Swerve swerve, double[][] list) {
+    public EmulatorAuto(Swerve swerve, double[][] list) {
         // list: list of {strafe vector x, strafe vector y, turn factor, time}
         this.swerve = swerve;
         this.list = list;

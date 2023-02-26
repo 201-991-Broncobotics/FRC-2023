@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Swerve;
 
 public class AutoBalance_Subcommand_One extends CommandBase {
-    // Plan: move to intake position, then intake for some 
-                // amount of time, then finish
     
     private Swerve swerve;
 

@@ -1,4 +1,4 @@
-package frc.robot.autos;
+package frc.robot.Autonomous;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
@@ -15,10 +15,10 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class exampleAuto extends SequentialCommandGroup {
-    public exampleAuto(Swerve s_Swerve) {
+public class ExampleAuto extends SequentialCommandGroup {
+    public ExampleAuto(Swerve s_Swerve) { // plan: turn around, then read limelight
 
-        String trajectoryJSON = "paths/output/StraightPath.wpilib.json";
+        String trajectoryJSON = "pathplanner/generatedJSON/TestPath.wpilib.json";
 
         final Trajectory trajectory;
 

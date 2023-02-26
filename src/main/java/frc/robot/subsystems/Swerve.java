@@ -57,6 +57,7 @@ public class Swerve extends SubsystemBase {
         return ((degrees + 180) % 360 - 180);
     }
 
+    /** Counterclockwise in degrees */
     public void changeHeading(double delta) {
         setTargetHeading(getYaw().getDegrees() + delta);
     }
