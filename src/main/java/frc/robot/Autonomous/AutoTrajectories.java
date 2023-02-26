@@ -1,4 +1,4 @@
-package frc.robot.Autonomous;
+package frc.robot.autonomous;
 
 public class AutoTrajectories {
     public static final double[][] testTrajectory = { // copy and past the output from the telemetry

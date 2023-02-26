@@ -1,4 +1,4 @@
-package frc.robot.commands.AlignWithApriltag;
+package frc.robot.commands.alignWithApriltag;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Swerve;

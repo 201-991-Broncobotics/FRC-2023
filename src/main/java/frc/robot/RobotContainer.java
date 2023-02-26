@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Autonomous.*;
+import frc.robot.autonomous.*;
 import frc.robot.commands.*;
-import frc.robot.commands.AlignWithApriltag.AlignWithApriltagOld;
-import frc.robot.commands.AutoBalance.AutoBalance;
-import frc.robot.commands.Intake.Intake;
-import frc.robot.commands.Outtake.Outtake;
-import frc.robot.commands.SetArmPosition.*;
+import frc.robot.commands.alignWithApriltag.AlignWithApriltagOld;
+import frc.robot.commands.autoBalance.AutoBalance;
+import frc.robot.commands.intake.Intake;
+import frc.robot.commands.outtake.Outtake;
+import frc.robot.commands.setArmPosition.*;
 import frc.robot.subsystems.*;
 
 import static frc.robot.Constants.Buttons.*;
@@ -118,7 +118,7 @@ public class RobotContainer {
         midGoal.toggleOnTrue(new SetArmPosition(doubleArm, midPosition));
         lowGoal.toggleOnTrue(new SetArmPosition(doubleArm, lowPosition));
         idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePosition));
-        startPos.toggleOnTrue(new SetArmPosition_Subcommand(doubleArm, startPosition));
+        startPos.toggleOnTrue(new SetArmPositionWithoutIntermediate(doubleArm, startPosition));
 
         intake.toggleOnTrue(new Intake(claw, doubleArm));
         outtake.toggleOnTrue(new Outtake(claw, doubleArm));

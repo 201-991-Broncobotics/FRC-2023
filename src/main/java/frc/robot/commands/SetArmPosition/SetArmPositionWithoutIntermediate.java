@@ -1,4 +1,4 @@
-package frc.robot.commands.SetArmPosition;
+package frc.robot.commands.setArmPosition;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DoubleArm;

@@ -1,4 +1,4 @@
-package frc.robot.Autonomous;
+package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

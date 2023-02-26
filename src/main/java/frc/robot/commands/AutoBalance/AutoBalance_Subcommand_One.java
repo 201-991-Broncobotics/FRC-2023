@@ -1,4 +1,4 @@
-package frc.robot.commands.AutoBalance;
+package frc.robot.commands.autoBalance;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;

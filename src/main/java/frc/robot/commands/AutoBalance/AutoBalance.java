@@ -1,7 +1,7 @@
-package frc.robot.commands.AutoBalance;
+package frc.robot.commands.autoBalance;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.SetArmPosition.SetArmPosition;
+import frc.robot.commands.setArmPosition.SetArmPosition;
 import frc.robot.subsystems.DoubleArm;
 import frc.robot.subsystems.Swerve;
 

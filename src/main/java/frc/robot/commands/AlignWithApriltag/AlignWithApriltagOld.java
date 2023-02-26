@@ -1,4 +1,4 @@
-package frc.robot.commands.AlignWithApriltag;
+package frc.robot.commands.alignWithApriltag;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;

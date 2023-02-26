@@ -1,4 +1,4 @@
-package frc.robot.commands.SetArmPosition;
+package frc.robot.commands.setArmPosition;
 
 import frc.robot.subsystems.DoubleArm;
 import static frc.robot.Constants.TuningConstants.*;
