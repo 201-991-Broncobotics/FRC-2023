@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.*;
 import frc.robot.commands.alignWithApriltag.AlignWithApriltag;
 import frc.robot.commands.alignWithApriltag.AlignWithApriltagOld;
@@ -27,29 +28,41 @@ import static frc.robot.Constants.TuningConstants.*;
  */
 public class RobotContainer {
     /* Controllers */
-    private final XboxController driver = new XboxController(1);
-    private final XboxController operator = new XboxController(0);
+    private final XboxController driver = new XboxController(driver_usb_port);
+    private final XboxController operator = new XboxController(operator_usb_port);
 
     /* Driver Buttons */
-    private final JoystickButton zeroGyro = new JoystickButton(driver, zeroGyroButton);
-    private final JoystickButton robotCentric = new JoystickButton(driver, robotCentricButton);
-    private final JoystickButton tagAligner = new JoystickButton(driver, tagAlignerButton);
-    private final JoystickButton tagAlignerNew = new JoystickButton(driver, tagAlignerNewButton);
-    private final JoystickButton autoBalance = new JoystickButton(driver, autoBalanceButton);
-    private final JoystickButton terminateCommandsDriver = new JoystickButton(driver, terminateCommandsDriverButton);
+    private final Trigger zeroGyro = new JoystickButton(driver, zeroGyroButton);
+    private final Trigger robotCentric = new JoystickButton(driver, robotCentricButton);
+    private final Trigger tagAligner = new JoystickButton(driver, tagAlignerButton);
+    private final Trigger tagAlignerNew = new JoystickButton(driver, tagAlignerNewButton);
+    private final Trigger autoBalance = new JoystickButton(driver, autoBalanceButton);
+    private final Trigger terminateCommandsDriver = new JoystickButton(driver, terminateCommandsDriverButton);
 
     /* Operator Buttons */
-    private final JoystickButton topGoal = new JoystickButton(operator, topGoalButton);
-    private final JoystickButton midGoal = new JoystickButton(operator, midGoalButton);
-    private final JoystickButton lowGoal = new JoystickButton(operator, lowGoalButton);
+    private final Trigger topGoal = new JoystickButton(operator, topGoalButton);
+    private final Trigger midGoal = new JoystickButton(operator, midGoalButton);
+    private final Trigger lowGoal = new JoystickButton(operator, lowGoalButton);
 
-    private final JoystickButton idle = new JoystickButton(operator, idleButton);
-    private final JoystickButton startPos = new JoystickButton(operator, startPosButton);
+    private final Trigger idle = new JoystickButton(operator, idleButton);
+    private final Trigger startPos = new JoystickButton(operator, startPosButton);
 
-    private final JoystickButton intake = new JoystickButton(operator, intakeButton);
-    private final JoystickButton outtake = new JoystickButton(operator, outtakeButton);
+    private final Trigger intake = new JoystickButton(operator, intakeButton);
+    private final Trigger outtake = new JoystickButton(operator, outtakeButton);
     
-    private final JoystickButton terminateCommandsOperator = new JoystickButton(operator, terminateCommandsOperatorButton);
+    private final Trigger terminateCommandsOperator = new JoystickButton(operator, terminateCommandsOperatorButton);
+
+    /* Custom Buttons - this is how you make Triggers based on conditions
+    private final Trigger customTrigger = new Trigger(BooleanSupplier condition);
+
+    for example, if you wanted to make a trigger for when the dpad is pressed up, you would do this:
+    private final Trigger dpad_up = new Trigger(() -> operator.getPOV() == 0);
+    .getPOV() method: increases by 45 degrees clockwise, with up being 0, right being 90, down being 180 and left being 270
+
+    if you wanted to make a trigger for when an axis reaches past a certain value, you would do this:
+    private final Trigger right_trigger = new Trigger(() -> operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > joystick_deadzone);
+
+    you could also make a trigger for something more complicated, like if the double arm's x value is greater than 20 */
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();

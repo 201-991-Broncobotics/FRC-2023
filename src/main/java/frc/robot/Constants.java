@@ -292,6 +292,11 @@ public final class Constants {
 
     public static final class Buttons {
 
+        /* Which is which */
+
+        public static final int driver_usb_port = 1, 
+                                operator_usb_port = 0;
+
         /* Driver Buttons */
 
         public static final int translationAxis = XboxController.Axis.kLeftY.value, 
