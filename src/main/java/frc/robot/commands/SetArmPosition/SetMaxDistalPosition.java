@@ -9,21 +9,20 @@ public class SetMaxDistalPosition extends CommandBase { // big arm
 
     private DoubleArm doubleArm;
     
-    private double maxDistalPosition;
     private double distalPosition;
 
     public SetMaxDistalPosition(DoubleArm doubleArm, double[] target_angles) {
         this.doubleArm = doubleArm;
 
-        maxDistalPosition = Math.min(target_angles[0] + 180 - min_difference, target_angles[1]);
-        distalPosition = Math.max(target_angles[0] + 180 - min_difference, target_angles[1]);
+        distalPosition = Math.min(target_angles[0] + 180 - min_difference, target_angles[1]);
     }
 
     @Override
     public void initialize() { // we only want to run if our target proximal is above the current
-        double target_distal = Math.min(Math.max(doubleArm.getCurrentArmAngles()[1], distalPosition), Math.min(doubleArm.getCurrentArmAngles()[0] + 180 - min_difference, maxDistalPosition));
-                    // set it to whichever is greater between the current and target distal. 
-                    // however, cap it at either the current or target max distal, whichever is smaller
+        double target_distal = Math.min(
+            Math.max(doubleArm.getCurrentArmAngles()[1], distalPosition), // whichever is greater of the 2 distal positions
+            doubleArm.getCurrentArmAngles()[0] + 180 - min_difference // but don't set it to an illegal angle
+        );
         doubleArm.resetWhipControl();
         doubleArm.setTargetAngles(new double[] {doubleArm.getCurrentArmAngles()[0], target_distal});
     }
