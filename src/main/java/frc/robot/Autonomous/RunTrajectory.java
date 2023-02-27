@@ -17,7 +17,7 @@ import java.nio.file.Path;
 
 public class RunTrajectory extends SequentialCommandGroup {
     
-    public RunTrajectory(Swerve s_Swerve, String fileName) { // plan: turn around, then read limelight
+    public RunTrajectory(Swerve s_Swerve, String fileName) {
 
         String trajectoryJSON = "pathplanner/generatedJSON/" + fileName + ".wpilib.json";
 
