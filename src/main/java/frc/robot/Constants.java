@@ -284,7 +284,7 @@ public final class Constants {
                                    exponent = 0.75, 
                                    calibration_time = 0.5, // seconds
                                    turn_sensitivity = 0.2, 
-                                   slow = 0.15,
+                                   slow = 0.35,
                                    yaw_tolerance = 2;
 
             // best tuned so far: 0.6 as maximum_power, 50 as max_error, 0.5 as exponent
@@ -368,8 +368,8 @@ public final class Constants {
                                      
                                      intermediatePosition = {15.93, -4.5};
 
-        public static final boolean fancy_drive = false, 
-                                    show_drive_data = false,
+        public static final boolean fancy_drive = true, 
+                                    show_drive_data = false, 
                                     test_autonomous = true; // runs TestPath - should be somethings simple like turning or driving straight
         
         /* Swerve Drive Constants */
