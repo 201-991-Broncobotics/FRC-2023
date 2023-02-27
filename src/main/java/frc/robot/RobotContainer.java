@@ -2,6 +2,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -17,6 +19,7 @@ import frc.robot.commands.setArmPosition.*;
 import frc.robot.commands.utilCommands.*;
 import frc.robot.subsystems.*;
 
+import static frc.robot.Constants.AutonomousNames.*;
 import static frc.robot.Constants.Buttons.*;
 import static frc.robot.Constants.TuningConstants.*;
 
@@ -69,6 +72,9 @@ public class RobotContainer {
     private final DoubleArm doubleArm = new DoubleArm();
     private final Claw claw = new Claw(); // testing purposes, if there's an error then comment this back out
 
+    /* Auto Chooser */
+    private final SendableChooser<String> autonomousChooser = new SendableChooser<String>();
+
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
 
@@ -111,6 +117,9 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
+
+        // Add autonomous choices
+        addAutonomousChoices();
     }
 
     /**
@@ -144,6 +153,14 @@ public class RobotContainer {
         terminateCommandsOperator.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
     }
 
+    private void addAutonomousChoices() {
+        autonomousChooser.setDefaultOption(autos[0][0], autos[0][1]);
+        for (int i = 1; i < autos.length; i++) {
+            autonomousChooser.addOption(autos[i][0], autos[i][1]);
+        }
+        SmartDashboard.putData("Autonomous Choices", autonomousChooser);
+    }
+
     public void teleopInit() {
         doubleArm.resetPID();
     }
@@ -154,10 +171,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        if (test_autonomous) {
-            return new TestAutonomous(claw, doubleArm, s_Swerve);
-        } else {
-            return new Autonomous(claw, doubleArm, s_Swerve);
-        }
+        return new Autonomous(claw, doubleArm, s_Swerve, autonomousChooser.getSelected());
     }
 }

@@ -290,6 +290,21 @@ public final class Constants {
             // best tuned so far: 0.6 as maximum_power, 50 as max_error, 0.5 as exponent
     }
 
+    public static final class AutonomousNames {
+        public static final String[][] autos = {
+            {"Default", "Determine Path from Limelight"}, // first one is the default
+            {"Red Left", "Run Path for Tag 1"},
+            {"Red Center", "Run Path for Tag 2"},
+            {"Red Right", "Run Path for Tag 3"},
+            {"Blue Left", "Run Path for Tag 6"},
+            {"Blue Center", "Run Path for Tag 7"},
+            {"Blue Right", "Run Path for Tag 8"},
+            {"Place Cube", "Run Path for Tag"},
+            {"Test One", "Drive Forward One Meter"},
+            {"Test Two", "Strafe Right One Meter"},
+            {"Test Three", "Turn Clockwise 90 degrees"}
+        };
+    }
     public static final class Buttons {
 
         /* Which is which */
