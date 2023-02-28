@@ -23,6 +23,8 @@ import static frc.robot.Constants.AutonomousNames.*;
 import static frc.robot.Constants.Buttons.*;
 import static frc.robot.Constants.TuningConstants.*;
 
+import java.util.function.BooleanSupplier;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -67,6 +69,9 @@ public class RobotContainer {
 
     you could also make a trigger for something more complicated, like if the double arm's x value is greater than 20 */
 
+    /* Boolean Suppliers */
+    private final BooleanSupplier stopArmsSup = () -> ((operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone));
+
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final DoubleArm doubleArm = new DoubleArm();
@@ -108,8 +113,7 @@ public class RobotContainer {
             new TeleopDoubleArm(
                 doubleArm, 
                 () -> -operator.getRawAxis(motorOneAxis),
-                () -> -operator.getRawAxis(motorTwoAxis), 
-                () -> ((operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone))
+                () -> -operator.getRawAxis(motorTwoAxis)
             )
         );
 
@@ -141,11 +145,11 @@ public class RobotContainer {
         terminateCommandsDriver.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
         
         /* Operator Buttons */
-        topGoal.toggleOnTrue(new SetArmPosition(doubleArm, topPosition));
-        midGoal.toggleOnTrue(new SetArmPosition(doubleArm, midPosition));
-        lowGoal.toggleOnTrue(new SetArmPosition(doubleArm, lowPosition));
-        idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePosition));
-        startPos.toggleOnTrue(new SetArmPositionWithoutIntermediate(doubleArm, startPosition));
+        topGoal.toggleOnTrue(new SetArmPosition(doubleArm, topPosition, stopArmsSup));
+        midGoal.toggleOnTrue(new SetArmPosition(doubleArm, midPosition, stopArmsSup));
+        lowGoal.toggleOnTrue(new SetArmPosition(doubleArm, lowPosition, stopArmsSup));
+        idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePosition, stopArmsSup));
+        startPos.toggleOnTrue(new SetArmPositionWithoutIntermediate(doubleArm, startPosition, stopArmsSup));
 
         intake.toggleOnTrue(new Intake(claw, doubleArm));
         outtake.toggleOnTrue(new Outtake(claw, doubleArm));

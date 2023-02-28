@@ -1,7 +1,6 @@
 package frc.robot.commands.defaultCommands;
 
 import java.util.function.DoubleSupplier;
-import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -17,15 +16,12 @@ public class TeleopDoubleArm extends CommandBase {
     private DoubleSupplier motorOneSup;
     private DoubleSupplier motorTwoSup;
 
-    private BooleanSupplier stopSup;
-
-    public TeleopDoubleArm(DoubleArm doubleArm, DoubleSupplier motorOneSup, DoubleSupplier motorTwoSup, BooleanSupplier stopSup) {
+    public TeleopDoubleArm(DoubleArm doubleArm, DoubleSupplier motorOneSup, DoubleSupplier motorTwoSup) {
         this.doubleArm = doubleArm;
         addRequirements(doubleArm);
 
         this.motorOneSup = motorOneSup;
         this.motorTwoSup = motorTwoSup;
-        this.stopSup = stopSup;
     }
 
     @Override
@@ -33,8 +29,6 @@ public class TeleopDoubleArm extends CommandBase {
         // Account for Stick Drift
         double motorOneVal = signedPower(motorOneSup.getAsDouble());
         double motorTwoVal = signedPower(motorTwoSup.getAsDouble());
-
-        if (stopSup.getAsBoolean()) doubleArm.resetPID();
 
         // Move Arm
         doubleArm.powerArm(
