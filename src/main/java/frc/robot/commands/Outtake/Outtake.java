@@ -8,7 +8,7 @@ import frc.robot.subsystems.DoubleArm;
 import static frc.robot.Constants.TuningConstants.*;
 
 public class Outtake extends SequentialCommandGroup {
-
+    
     public Outtake(Claw claw, DoubleArm doubleArm) {
         addRequirements(claw, doubleArm);
         addCommands(

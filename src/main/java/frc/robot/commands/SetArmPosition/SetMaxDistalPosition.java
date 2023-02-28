@@ -5,15 +5,27 @@ import frc.robot.subsystems.DoubleArm;
 
 import static frc.robot.Constants.DoubleArmConstants.*;
 
+import java.util.function.BooleanSupplier;
+
 public class SetMaxDistalPosition extends CommandBase { // big arm
 
     private DoubleArm doubleArm;
-    
     private double distalPosition;
+    private BooleanSupplier stopSup;
 
     public SetMaxDistalPosition(DoubleArm doubleArm, double[] target_angles) {
         this.doubleArm = doubleArm;
+        addRequirements(doubleArm);
 
+        stopSup = () -> false;
+        distalPosition = Math.min(target_angles[0] + 180 - min_difference, target_angles[1]);
+    }
+
+    public SetMaxDistalPosition(DoubleArm doubleArm, double[] target_angles, BooleanSupplier stopSup) {
+        this.doubleArm = doubleArm;
+        addRequirements(doubleArm);
+
+        this.stopSup = stopSup;
         distalPosition = Math.min(target_angles[0] + 180 - min_difference, target_angles[1]);
     }
 
@@ -45,6 +57,10 @@ public class SetMaxDistalPosition extends CommandBase { // big arm
     
     @Override
     public boolean isFinished() {
+        if (stopSup.getAsBoolean()) {
+            doubleArm.resetPID();
+            return true;
+        }
         return doubleArm.getTotalError() < tolerance;
     }
 }

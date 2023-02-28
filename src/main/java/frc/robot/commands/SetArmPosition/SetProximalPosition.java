@@ -5,14 +5,27 @@ import frc.robot.subsystems.DoubleArm;
 
 import static frc.robot.Constants.DoubleArmConstants.*;
 
+import java.util.function.BooleanSupplier;
+
 public class SetProximalPosition extends CommandBase { // big arm
 
     private DoubleArm doubleArm;
     private double proximalPosition;
+    private BooleanSupplier stopSup;
 
     public SetProximalPosition(DoubleArm doubleArm, double proximalPosition) {
         this.doubleArm = doubleArm;
+        addRequirements(doubleArm);
 
+        stopSup = () -> false;
+        this.proximalPosition = proximalPosition;
+    }
+
+    public SetProximalPosition(DoubleArm doubleArm, double proximalPosition, BooleanSupplier stopSup) {
+        this.doubleArm = doubleArm;
+        addRequirements(doubleArm);
+
+        this.stopSup = stopSup;
         this.proximalPosition = proximalPosition;
     }
 
@@ -40,6 +53,10 @@ public class SetProximalPosition extends CommandBase { // big arm
     
     @Override
     public boolean isFinished() {
+        if (stopSup.getAsBoolean()) {
+            doubleArm.resetPID();
+            return true;
+        }
         return doubleArm.getTotalError() < tolerance;
     }
 }

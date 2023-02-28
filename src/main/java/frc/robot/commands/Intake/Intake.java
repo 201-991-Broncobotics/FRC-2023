@@ -8,8 +8,9 @@ import frc.robot.subsystems.DoubleArm;
 import static frc.robot.Constants.TuningConstants.*;
 
 public class Intake extends SequentialCommandGroup {
+    
     public Intake(Claw claw, DoubleArm doubleArm) {
-        addRequirements(claw);
+        addRequirements(claw, doubleArm);
         addCommands(
             new Intake_Subcommand(claw), 
             new SetArmPositionWithoutIntermediate(doubleArm, idlePosition)
