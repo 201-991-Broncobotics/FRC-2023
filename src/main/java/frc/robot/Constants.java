@@ -248,8 +248,8 @@ public final class Constants {
 
                                    tolerance = 3, // number of inches until we bing chilling
 
-                                   first_arm_length = 32, 
-                                   second_arm_length = 29.368,
+                                   first_arm_length = 32 - 4, // subtract 4 from length of arm to get pivot distance 
+                                   second_arm_length = 15 + 7.751984, // add 7.751984 to length of arm to get pivot distance
 
                                    min_x = 4, 
                                    min_y = -42,
