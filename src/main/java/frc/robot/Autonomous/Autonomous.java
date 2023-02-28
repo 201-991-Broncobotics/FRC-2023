@@ -40,11 +40,11 @@ public class Autonomous extends SequentialCommandGroup {
             auto_number = 10; // Strafe Right One Meter
         } else if (selectedAuto.equals(autos[10][1])) {
             auto_number = 11; // Turn Clockwise 90 degrees
+        } else if (selectedAuto.equals(autos[11][1])) {
+            auto_number = 12; // Test Path
         }
 
         SmartDashboard.putString("Selected Autonomous", selectedAuto);
-
-        auto_number = (int) SmartDashboard.getNumber("April Tag ID", -2);
 
         switch (auto_number) {
             case 1: // Red Right/Bottom
@@ -80,6 +80,30 @@ public class Autonomous extends SequentialCommandGroup {
             case 8: // Blue Left/Bottom
                 addCommands(
                     new RunTrajectory(swerve, "BlueBottomPath")
+                );
+                break;
+            
+            case 9:
+                addCommands(
+                    new RunTrajectory(swerve, "TestForwardPath")
+                );
+                break;
+            
+            case 10:
+                addCommands(
+                    new RunTrajectory(swerve, "TestStrafePath")
+                );
+                break;
+            
+            case 11:
+                addCommands(
+                    new RunTrajectory(swerve, "TestClockwisePath")
+                );
+                break;
+            
+            case 12:
+                addCommands(
+                    new RunTrajectory(swerve, "TestPath")
                 );
                 break;
             

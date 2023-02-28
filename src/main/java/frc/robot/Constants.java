@@ -302,7 +302,8 @@ public final class Constants {
             {"Place Cube", "Run Path for Tag"},
             {"Test One", "Drive Forward One Meter"},
             {"Test Two", "Strafe Right One Meter"},
-            {"Test Three", "Turn Clockwise 90 degrees"}
+            {"Test Three", "Turn Clockwise 90 degrees"}, 
+            {"Test Path", "Run the Test Path"}
         };
     }
     public static final class Buttons {
