@@ -12,7 +12,7 @@ public class SetArmPosition extends SequentialCommandGroup {
     public SetArmPosition(DoubleArm doubleArm, double[] position) {
         addRequirements(doubleArm);
         addCommands(
-            new SetArmPositionWithoutIntermediate(doubleArm, intermediatePosition), 
+            new SetArmPositionWithoutIntermediate(doubleArm, intermediatePositionAngles), 
             new SetArmPositionWithoutIntermediate(doubleArm, position)
         );
     }
@@ -20,7 +20,7 @@ public class SetArmPosition extends SequentialCommandGroup {
     public SetArmPosition(DoubleArm doubleArm, double[] position, BooleanSupplier stopSup) {
         addRequirements(doubleArm);
         addCommands(
-            new SetArmPositionWithoutIntermediate(doubleArm, intermediatePosition, stopSup), 
+            new SetArmPositionWithoutIntermediate(doubleArm, intermediatePositionAngles, stopSup), 
             new SetArmPositionWithoutIntermediate(doubleArm, position, stopSup)
         );
     }

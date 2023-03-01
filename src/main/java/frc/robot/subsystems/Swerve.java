@@ -64,7 +64,7 @@ public class Swerve extends SubsystemBase {
 
     public void setTargetHeading(double target) {
         target_heading = normalizeAngle(target - getYaw().getDegrees()) + getYaw().getDegrees();
-        last_time = Timer.getFPGATimestamp() - (calibration_time + 1);
+        last_time = -999;
     }
 
     public void brake() {

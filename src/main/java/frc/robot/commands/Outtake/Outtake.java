@@ -13,7 +13,7 @@ public class Outtake extends SequentialCommandGroup {
         addRequirements(claw, doubleArm);
         addCommands(
             new Outtake_Subcommand(claw), 
-            new SetArmPosition(doubleArm, idlePosition)
+            new SetArmPosition(doubleArm, idlePositionAngles)
         );
     }
 }

@@ -13,7 +13,7 @@ public class Intake extends SequentialCommandGroup {
         addRequirements(claw, doubleArm);
         addCommands(
             new Intake_Subcommand(claw), 
-            new SetArmPositionWithoutIntermediate(doubleArm, idlePosition)
+            new SetArmPositionWithoutIntermediate(doubleArm, idlePositionAngles)
         );
     }
 }

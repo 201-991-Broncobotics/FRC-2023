@@ -11,7 +11,7 @@ public class AutoBalance extends SequentialCommandGroup {
     public AutoBalance(Swerve swerve, DoubleArm doubleArm) {
         addRequirements(swerve, doubleArm);
         addCommands(
-            new SetArmPosition(doubleArm, idlePosition), 
+            new SetArmPosition(doubleArm, idlePositionAngles), 
             new AutoBalance_Subcommand_1(swerve), // sets target angle of swerve
             new AutoBalance_Subcommand_2(swerve), // drives until we are on the balance thing
             new AutoBalance_Subcommand_3(swerve) // autobalances forever

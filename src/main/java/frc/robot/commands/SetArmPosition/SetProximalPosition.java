@@ -31,13 +31,13 @@ public class SetProximalPosition extends CommandBase { // big arm
 
     @Override
     public void initialize() {
-        doubleArm.resetWhipControl();
-        doubleArm.setTargetAngles(new double[] {proximalPosition, doubleArm.getTargetArmAngles()[1]});
+        if (!stopSup.getAsBoolean())
+            doubleArm.setTargetAngles(new double[] {proximalPosition, doubleArm.getTargetArmAngles()[1]});
     }
 
     @Override
     public void execute() {
-        doubleArm.powerArm(0, 0);
+        doubleArm.PIDPowerArm();
     }
 
     @Override

@@ -168,8 +168,33 @@ public class DoubleArm extends SubsystemBase {
             resetWhipControl();
         }
 
-        first_motor.set(0);//firstPower);
-        second_motor.set(0);//secondPower);
+        first_motor.set(firstPower);
+        second_motor.set(secondPower);
+    }
+
+    public void PIDPowerArm() { // power based only on target angles
+        double[] current_angles = getCurrentArmAngles();
+        double delta_time = System.currentTimeMillis() / 1000.0 - time; // in seconds
+        time = System.currentTimeMillis() / 1000.0;
+
+        double firstPower = pidPower(
+            target_positions[0] - current_angles[0], 
+            first_motor_max_power, 
+            first_motor_min_error, 
+            first_motor_max_error
+        );
+        firstPower = Math.max(first_motor.get() - first_motor_max_acceleration * delta_time, Math.min(first_motor.get() + first_motor_max_acceleration * delta_time, firstPower));
+
+        double secondPower = pidPower(
+            target_positions[1] - current_angles[1], 
+            second_motor_max_power, 
+            second_motor_min_error, 
+            second_motor_max_error
+        );
+        secondPower = Math.max(second_motor.get() - second_motor_max_acceleration * delta_time, Math.min(second_motor.get() + second_motor_max_acceleration * delta_time, secondPower));
+
+        first_motor.set(0 * firstPower);
+        second_motor.set(0 * secondPower);
     }
 
     public void brake() {
@@ -178,8 +203,8 @@ public class DoubleArm extends SubsystemBase {
     }
 
     public void resetWhipControl() {
-        time_one_last = 0;
-        time_two_last = 0;
+        time_one_last = -999;
+        time_two_last = -999;
     }
 
     public void resetPID() {
@@ -194,9 +219,8 @@ public class DoubleArm extends SubsystemBase {
         target_angles[0] = Math.max(min_first_angle, Math.min(max_first_angle, target_angles[0]));
         target_angles[1] = Math.max(min_second_angle, Math.min(Math.min(max_second_angle, target_angles[0] + 180 - min_difference), target_angles[1]));
 
-        if (checkTargetAngles(target_angles)) {
-            target_positions = target_angles;
-        } else {
+        target_positions = target_angles;
+        if (!checkTargetAngles(target_angles)) {
             SmartDashboard.putNumberArray("Position failed", target_angles);
         }
     }
