@@ -219,9 +219,8 @@ public class DoubleArm extends SubsystemBase {
         target_angles[0] = Math.max(min_first_angle, Math.min(max_first_angle, target_angles[0]));
         target_angles[1] = Math.max(min_second_angle, Math.min(Math.min(max_second_angle, target_angles[0] + 180 - min_difference), target_angles[1]));
 
-        if (checkTargetAngles(target_angles)) {
-            target_positions = target_angles;
-        } else {
+        target_positions = target_angles;
+        if (!checkTargetAngles(target_angles)) {
             SmartDashboard.putNumberArray("Position failed", target_angles);
         }
     }

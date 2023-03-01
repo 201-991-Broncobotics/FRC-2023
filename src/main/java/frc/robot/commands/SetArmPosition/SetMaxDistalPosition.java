@@ -32,7 +32,7 @@ public class SetMaxDistalPosition extends CommandBase { // big arm
     @Override
     public void initialize() { // we only want to run if our target proximal is above the current
         if (!stopSup.getAsBoolean()) {
-            double target_distal = Math.max(
+            double target_distal = Math.min(
                 doubleArm.getCurrentArmAngles()[0] + 180 - min_difference, 
                 distalPosition
             ); // maximal possible distal position
