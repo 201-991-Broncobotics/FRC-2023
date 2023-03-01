@@ -7,12 +7,15 @@ import frc.robot.subsystems.Swerve;
 
 public class TerminateCommands extends CommandBase {
 
+    DoubleArm doubleArm;
     public TerminateCommands(Claw claw, DoubleArm doubleArm, Swerve swerve) {
         addRequirements(doubleArm, claw, swerve);
+        this.doubleArm = doubleArm;
     }
 
     @Override
     public void execute() {
+        doubleArm.resetPID();
     }
     
     @Override
