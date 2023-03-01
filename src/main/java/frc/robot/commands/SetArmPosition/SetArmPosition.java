@@ -3,8 +3,6 @@ package frc.robot.commands.setArmPosition;
 import frc.robot.subsystems.DoubleArm;
 import static frc.robot.Constants.TuningConstants.*;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class SetArmPosition extends SequentialCommandGroup {
@@ -14,14 +12,6 @@ public class SetArmPosition extends SequentialCommandGroup {
         addCommands(
             new SetArmPositionWithoutIntermediate(doubleArm, intermediatePositionAngles), 
             new SetArmPositionWithoutIntermediate(doubleArm, position)
-        );
-    }
-
-    public SetArmPosition(DoubleArm doubleArm, double[] position, BooleanSupplier stopSup) {
-        addRequirements(doubleArm);
-        addCommands(
-            new SetArmPositionWithoutIntermediate(doubleArm, intermediatePositionAngles, stopSup), 
-            new SetArmPositionWithoutIntermediate(doubleArm, position, stopSup)
         );
     }
 }

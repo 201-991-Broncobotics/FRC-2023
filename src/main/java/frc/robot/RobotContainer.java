@@ -23,8 +23,6 @@ import static frc.robot.Constants.AutonomousNames.*;
 import static frc.robot.Constants.Buttons.*;
 import static frc.robot.Constants.TuningConstants.*;
 
-import java.util.function.BooleanSupplier;
-
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -69,8 +67,10 @@ public class RobotContainer {
 
     you could also make a trigger for something more complicated, like if the double arm's x value is greater than 20 */
 
-    /* Boolean Suppliers */
-    private final BooleanSupplier stopArmsSup = () -> ((operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone));
+    private final Trigger stopArmCommands = new Trigger(() -> (
+        (operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || 
+        (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone)
+    ));
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -145,11 +145,13 @@ public class RobotContainer {
         terminateCommandsDriver.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
         
         /* Operator Buttons */
-        topGoal.toggleOnTrue(new SetArmPosition(doubleArm, topPositionAngles, stopArmsSup));
-        midGoal.toggleOnTrue(new SetArmPosition(doubleArm, midPositionAngles, stopArmsSup));
-        lowGoal.toggleOnTrue(new SetArmPosition(doubleArm, lowPositionAngles, stopArmsSup));
-        idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePositionAngles, stopArmsSup));
-        startPos.toggleOnTrue(new SetArmPositionWithoutIntermediate(doubleArm, startPositionAngles, stopArmsSup));
+        topGoal.toggleOnTrue(new SetArmPosition(doubleArm, topPositionAngles));
+        midGoal.toggleOnTrue(new SetArmPosition(doubleArm, midPositionAngles));
+        lowGoal.toggleOnTrue(new SetArmPosition(doubleArm, lowPositionAngles));
+        idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePositionAngles));
+        startPos.toggleOnTrue(new SetArmPositionWithoutIntermediate(doubleArm, startPositionAngles));
+
+        stopArmCommands.onTrue(new TerminateArmCommands(doubleArm));
 
         intake.toggleOnTrue(new Intake(claw, doubleArm));
         outtake.toggleOnTrue(new Outtake(claw, doubleArm));
