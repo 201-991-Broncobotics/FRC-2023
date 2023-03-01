@@ -44,43 +44,43 @@ public class Autonomous extends SequentialCommandGroup {
             auto_number = 12; // Test Path
         }
 
-        if (auto_number == -2) auto_number = 9; // manual override
+        auto_number = 11; // manual override
         SmartDashboard.putString("Selected Autonomous", selectedAuto);
 
         switch (auto_number) {
             case 1: // Red Right/Bottom
                 addCommands(
-                    new RunTrajectory(swerve, "RedBottomPath")
+                    new RunTrajectoryAdvanced(swerve, "RedBottomPath")
                 );
                 break;
 
             case 2: // Red Center/Middle
                 addCommands(
-                    new RunTrajectory(swerve, "RedMiddlePath")
+                    new RunTrajectoryAdvanced(swerve, "RedMiddlePath")
                 );
                 break;
             
             case 3: // Red Left/Top
                 addCommands(
-                    new RunTrajectory(swerve, "RedTopPath")
+                    new RunTrajectoryAdvanced(swerve, "RedTopPath")
                 );
                 break;
             
             case 6: // Blue Right/Top
                 addCommands(
-                    new RunTrajectory(swerve, "BlueTopPath")
+                    new RunTrajectoryAdvanced(swerve, "BlueTopPath")
                 );
                 break;
             
             case 7: // Blue Center/Middle
                 addCommands(
-                    new RunTrajectory(swerve, "BlueMiddlePath")
+                    new RunTrajectoryAdvanced(swerve, "BlueMiddlePath")
                 );
                 break;
             
             case 8: // Blue Left/Bottom
                 addCommands(
-                    new RunTrajectory(swerve, "BlueBottomPath")
+                    new RunTrajectoryAdvanced(swerve, "BlueBottomPath")
                 );
                 break;
             
@@ -92,25 +92,25 @@ public class Autonomous extends SequentialCommandGroup {
             
             case 10:
                 addCommands(
-                    new RunTrajectory(swerve, "TestStrafePath")
+                    new RunTrajectoryAdvanced(swerve, "TestStrafePath")
                 );
                 break;
             
             case 11:
                 addCommands(
-                    new RunTrajectory(swerve, "TestClockwisePath")
+                    new RunTrajectoryAdvanced(swerve, "TestClockwisePath")
                 );
                 break;
             
             case 12:
                 addCommands(
-                    new RunTrajectory(swerve, "TestPath")
+                    new RunTrajectoryAdvanced(swerve, "TestPath")
                 );
                 break;
             
             default: // just place a cube then do nothing
                 addCommands(
-                    new RunTrajectory(swerve, "DefaultPath")
+                    new RunTrajectoryAdvanced(swerve, "DefaultPath")
                 );
                 break;
         }
