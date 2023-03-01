@@ -91,7 +91,7 @@ public class Swerve extends SubsystemBase {
         if (rotation == 0) {
             if (Timer.getFPGATimestamp() - last_time < calibration_time) {
                 target_heading = current_heading;
-            } else if (translation.getNorm() != 0 || getError() > yaw_tolerance) {
+            } else if (translation.getNorm() != 0 || Math.abs(getError()) > yaw_tolerance) {
                 if (Math.abs(target_heading - current_heading) > 180) {
                     target_heading = current_heading + normalizeAngle(target_heading - current_heading);
                 }
