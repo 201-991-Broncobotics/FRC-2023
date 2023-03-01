@@ -9,9 +9,8 @@ import frc.robot.subsystems.DoubleArm;
 
 public class SetArmPositionWithoutIntermediate extends SequentialCommandGroup {
 
-    public SetArmPositionWithoutIntermediate(DoubleArm doubleArm, double[] position) {
+    public SetArmPositionWithoutIntermediate(DoubleArm doubleArm, double[] target_angles) {
         addRequirements(doubleArm);
-        double[] target_angles = DoubleArm.getAnglesFromTarget(position);
         addCommands(
             new SetMaxDistalPosition(doubleArm, target_angles[0]), 
             new SetProximalPosition(doubleArm, target_angles[0]), 
@@ -19,9 +18,8 @@ public class SetArmPositionWithoutIntermediate extends SequentialCommandGroup {
         );
     }
 
-    public SetArmPositionWithoutIntermediate(DoubleArm doubleArm, double[] position, BooleanSupplier stopSup) {
+    public SetArmPositionWithoutIntermediate(DoubleArm doubleArm, double[] target_angles, BooleanSupplier stopSup) {
         addRequirements(doubleArm);
-        double[] target_angles = DoubleArm.getAnglesFromTarget(position);
         addCommands(
             new InstantCommand(() -> SmartDashboard.putString("Status", "Set Max Distal")),
             new SetMaxDistalPosition(doubleArm, target_angles[0], stopSup), 

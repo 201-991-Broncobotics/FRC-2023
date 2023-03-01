@@ -256,7 +256,7 @@ public final class Constants {
                                    max_x = 61.368, 
                                    max_y = 20, 
 
-                                   min_first_angle = -108, 
+                                   min_first_angle = -115, 
                                    max_first_angle = 20, 
                                    min_second_angle = -80, 
                                    max_second_angle = 80, 
@@ -375,14 +375,15 @@ public final class Constants {
                                    encoder_one_zero = -93.76, 
                                    encoder_two_zero = -123.94;
         
-        public static final double[] topPosition = {60.1, 8.9}, 
-                                     midPosition = {60.1, -9.2}, 
-                                     lowPosition = {42.3, -29.2}, 
-                                     intakePosition = {33.6, -39.6}, 
-                                     idlePosition = {6.1, -10.8}, 
-                                     startPosition = {4.8, -9}, 
+        /* The angles we want to go to - NOT the x and y */
+        public static final double[] topPositionAngles = {2.7, 19.0}, 
+                                     midPositionAngles = {-21.4, 0}, 
+                                     lowPositionAngles = {-64, 0}, 
+                                     intakePositionAngles = {-82.3, -32.9}, 
+                                     idlePositionAngles = {-90, 60}, 
+                                     startPositionAngles = {-115, 50}, 
                                      
-                                     intermediatePosition = {15.93, -4.5};
+                                     intermediatePositionAngles = {-70, 80};
 
         public static final boolean fancy_drive = true, 
                                     show_drive_data = false, 
