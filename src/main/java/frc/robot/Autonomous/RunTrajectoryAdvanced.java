@@ -19,7 +19,7 @@ public class RunTrajectoryAdvanced extends SequentialCommandGroup {
     public RunTrajectoryAdvanced(Swerve swerve, String fileName) {
 
         PathPlannerTrajectory trajectoryPath = PathPlanner.loadPath(
-            "fileName", 
+            fileName, 
             new PathConstraints(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared)
         );
 

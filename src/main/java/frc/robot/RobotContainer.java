@@ -162,7 +162,7 @@ public class RobotContainer {
         for (int i = 1; i < autos.length; i++) {
             autonomousChooser.addOption(autos[i][0], autos[i][1]);
         }
-        SmartDashboard.putData("Autonomous Choices", autonomousChooser);
+        SmartDashboard.putData("Auto Selector", autonomousChooser);
     }
 
     public void teleopInit() {

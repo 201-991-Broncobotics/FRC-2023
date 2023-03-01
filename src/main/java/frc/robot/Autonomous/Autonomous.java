@@ -44,6 +44,7 @@ public class Autonomous extends SequentialCommandGroup {
             auto_number = 12; // Test Path
         }
 
+        if (auto_number == -2) auto_number = 9; // manual override
         SmartDashboard.putString("Selected Autonomous", selectedAuto);
 
         switch (auto_number) {
@@ -85,7 +86,7 @@ public class Autonomous extends SequentialCommandGroup {
             
             case 9:
                 addCommands(
-                    new RunTrajectory(swerve, "TestForwardPath")
+                    new RunTrajectoryAdvanced(swerve, "TestForwardPath")
                 );
                 break;
             

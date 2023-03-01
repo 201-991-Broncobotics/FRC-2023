@@ -9,8 +9,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import java.lang.IllegalArgumentException;
-
 import static frc.robot.Constants.DoubleArmConstants.*;
 
 public class DoubleArm extends SubsystemBase {
@@ -170,8 +168,8 @@ public class DoubleArm extends SubsystemBase {
             resetWhipControl();
         }
 
-        first_motor.set(firstPower);
-        second_motor.set(secondPower);
+        first_motor.set(0);//firstPower);
+        second_motor.set(0);//secondPower);
     }
 
     public void brake() {
@@ -336,13 +334,13 @@ public class DoubleArm extends SubsystemBase {
             frc.robot.Variables.speed_factor = speed_when_arm_extended;
         }
 
-        if (target_positions[0] > 20) {
+        /* if (target_positions[0] > 20) {
             brake();
             System.out.println("Bad x and y" + getPositionFromAngles(target_positions)[0] + " " + getPositionFromAngles(target_positions)[1]);
             System.out.println("Bad angles" + target_positions[0] + " " + target_positions[1]);
             Timer.delay(0.5);
             throw new IllegalArgumentException();
-        }
+        } */
         // target_positions[0] = Math.max(-120, Math.min(20, target_positions[0]));
         // target_positions[1] = Math.max(-80, Math.min(80, target_positions[1]));
         // target_xy = getPositionFromAngles(target_positions[0], target_positions[1]);

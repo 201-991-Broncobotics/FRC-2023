@@ -36,7 +36,7 @@ public class RunTrajectory extends SequentialCommandGroup {
             Constants.AutoConstants.kPThetaController, 
             0, 
             0, 
-        Constants.AutoConstants.kThetaControllerConstraints
+            Constants.AutoConstants.kThetaControllerConstraints
         );
 
         thetaController.enableContinuousInput(-Math.PI, Math.PI);

@@ -401,9 +401,9 @@ public final class Constants {
 
         public static final double max_linear_speed_autonomous = 5,
                                    ramp_up_time_linear = 2, // in seconds to reach max 
-                                   max_angular_speed_autonomous = 60, 
+                                   max_angular_speed_autonomous = 180, 
                                    ramp_up_time_angular = 2,
                                    translation_p_controller = 2, 
-                                   angle_p_controller = 2;
+                                   angle_p_controller = 4;
     }
 }
