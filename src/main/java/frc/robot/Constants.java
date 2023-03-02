@@ -279,15 +279,13 @@ public final class Constants {
 
     public static final class SwerveConstants {
         
-        public static final double maximum_power = 0.6, 
+        public static final double maximum_power = 0.8, 
                                    maximum_error = 60, // degrees
-                                   exponent = 0.75, 
+                                   exponent = 0.85, 
                                    calibration_time = 0.5, // seconds
-                                   turn_sensitivity = 0.2, 
+                                   turn_sensitivity = 0.35, 
                                    slow = 0.35,
                                    yaw_tolerance = 2;
-
-            // best tuned so far: 0.6 as maximum_power, 50 as max_error, 0.5 as exponent
     }
 
     public static final class AutonomousNames {
