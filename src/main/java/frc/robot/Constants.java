@@ -246,7 +246,7 @@ public final class Constants {
 
                                    k_exponent = 1.15,  // 1.0 for a normal PID
 
-                                   tolerance = 3, // number of inches until we bing chilling
+                                   tolerance = 5, // number of inches until we bing chilling
 
                                    first_arm_length = 32 - 4, // subtract 4 from length of arm to get pivot distance 
                                    second_arm_length = 15 + 7.751984, // add 7.751984 to length of arm to get pivot distance

@@ -137,6 +137,7 @@ public class DoubleArm extends SubsystemBase {
             firstPower = 0;
         } else if (firstPower < 0 && next_angles[0] + 180 - min_difference < next_angles[1]) {
             secondPower = -0.1;
+            target_positions[1] = current_angles[1]; // might not work but idk
         }
 
         if (secondPower < 0 && next_angles[1] < min_second_angle) {
@@ -193,8 +194,8 @@ public class DoubleArm extends SubsystemBase {
         );
         secondPower = Math.max(second_motor.get() - second_motor_max_acceleration * delta_time, Math.min(second_motor.get() + second_motor_max_acceleration * delta_time, secondPower));
 
-        first_motor.set(0 * firstPower);
-        second_motor.set(0 * secondPower);
+        first_motor.set(firstPower);
+        second_motor.set(secondPower);
     }
 
     public void brake() {
