@@ -137,17 +137,17 @@ public class DoubleArm extends SubsystemBase {
                 // it means that we should only power down
 
                 if (next_angles[1] > 0) {
-                    firstPower = Math.max(firstPower, 0);
-                    secondPower = Math.max(secondPower, 0 - 0.5 * second_motor_max_power);
+                    firstPower = Math.min(firstPower, 0);
+                    secondPower = Math.min(secondPower, 0 - 0.5 * second_motor_max_power);
                 } else {
-                    firstPower = Math.max(firstPower, 0 - 0.5 * first_motor_max_power);
-                    secondPower = Math.max(secondPower, 0);
+                    firstPower = Math.min(firstPower, 0 - 0.5 * first_motor_max_power);
+                    secondPower = Math.min(secondPower, 0);
                 }
             } else if (getPositionFromAngles(next_angles)[0] < min_x) {
                 // only power first motor up, second down
 
-                firstPower = Math.min(firstPower, 0);
-                secondPower = Math.max(secondPower, 0);
+                firstPower = Math.max(firstPower, 0);
+                secondPower = Math.min(secondPower, 0);
             } else { // must be less than min_y because not possible to be greater than max_x
                 // power second one a bit to correct
                 secondPower = Math.max(secondPower, second_motor_max_power * 0.5);

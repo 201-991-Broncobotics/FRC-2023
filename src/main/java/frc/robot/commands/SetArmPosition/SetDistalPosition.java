@@ -32,10 +32,8 @@ public class SetDistalPosition extends CommandBase { // small arm
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            // code for if it ended by interruption
+            doubleArm.resetPID();
         } else {
-            // code for if it ended by reaching the target position
-            // if we manually move it it will say it's finished
             doubleArm.brake();
         }
     }

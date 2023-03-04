@@ -32,11 +32,7 @@ public class SetProximalPosition extends CommandBase { // big arm
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            // code for if it ended by interruption
-        } else {
-            // code for if it ended by reaching the target position
-            // if we manually move it it will say it's finished
-            doubleArm.brake();
+            doubleArm.resetPID();
         }
     }
     

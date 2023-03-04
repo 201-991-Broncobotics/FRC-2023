@@ -260,9 +260,9 @@ public final class Constants {
 
                                    min_first_angle = -115, 
                                    max_first_angle = 20, 
-                                   min_second_angle = -80, 
-                                   max_second_angle = 80, 
-                                   min_difference = 20, 
+                                   min_second_angle = -20, 
+                                   max_second_angle = 90, 
+                                   min_difference = 15, 
 
                                    clipping_one = 1.2, 
                                    clipping_two = 0.99,
@@ -383,7 +383,7 @@ public final class Constants {
                                      idlePositionAngles = {-90, 60}, 
                                      startPositionAngles = {-115, 50}, 
                                      
-                                     intermediatePositionAngles = {-70, 80};
+                                     intermediatePositionAngles = {-70, 90};
 
         public static final boolean fancy_drive = true, 
                                     show_drive_data = false, 
