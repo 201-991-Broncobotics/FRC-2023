@@ -370,8 +370,8 @@ public final class Constants {
                                    CANCoder1_zero = 292.5, 
                                    CANCoder2_zero = 318.78, 
                                    CANCoder3_zero = 271.14, 
-                                   encoder_one_zero = -93.76, 
-                                   encoder_two_zero = -123.94;
+                                   encoder_one_zero = -90.3, 
+                                   encoder_two_zero = -301.6;
         
         /* The angles we want to go to - NOT the x and y */
         public static final double[] topPositionAngles = {2.7, 19.0}, 
