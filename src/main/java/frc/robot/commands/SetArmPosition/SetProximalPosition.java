@@ -9,6 +9,7 @@ public class SetProximalPosition extends CommandBase { // big arm
 
     private DoubleArm doubleArm;
     private double proximalPosition;
+    private boolean greater;
 
     public SetProximalPosition(DoubleArm doubleArm, double proximalPosition) {
         this.doubleArm = doubleArm;
@@ -20,11 +21,12 @@ public class SetProximalPosition extends CommandBase { // big arm
     @Override
     public void initialize() {
         doubleArm.setTargetAngles(new double[] {proximalPosition, doubleArm.getTargetArmAngles()[1]});
+        greater = doubleArm.getCurrentArmAngles()[0] < proximalPosition;
     }
 
     @Override
     public void execute() {
-        doubleArm.PIDPowerArm();
+        doubleArm.bangbang(true);
     }
 
     @Override
@@ -40,6 +42,6 @@ public class SetProximalPosition extends CommandBase { // big arm
     
     @Override
     public boolean isFinished() {
-        return doubleArm.getTotalError() < tolerance;
+        return (doubleArm.getTotalError() < tolerance) || ((doubleArm.getCurrentArmAngles()[0] > proximalPosition) == greater);
     }
 }

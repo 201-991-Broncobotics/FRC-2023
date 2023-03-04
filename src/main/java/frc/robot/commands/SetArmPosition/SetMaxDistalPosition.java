@@ -9,6 +9,8 @@ public class SetMaxDistalPosition extends CommandBase { // big arm
 
     private DoubleArm doubleArm;
     private double distalPosition;
+    private boolean greater;
+    private double target_distal;
 
     public SetMaxDistalPosition(DoubleArm doubleArm, double proximalPosition) {
         this.doubleArm = doubleArm;
@@ -19,17 +21,18 @@ public class SetMaxDistalPosition extends CommandBase { // big arm
 
     @Override
     public void initialize() { // we only want to run if our target proximal is above the current
-        double target_distal = Math.min(
+        target_distal = Math.min(
             doubleArm.getCurrentArmAngles()[0] + 180 - min_difference, 
             distalPosition
         ); // maximal possible distal position
 
         doubleArm.setTargetAngles(new double[] {doubleArm.getCurrentArmAngles()[0], target_distal});
+        greater = doubleArm.getCurrentArmAngles()[1] < target_distal;
     }
 
     @Override
     public void execute() {
-        doubleArm.PIDPowerArm();
+        doubleArm.bangbang(false);
     }
 
     @Override
@@ -45,6 +48,6 @@ public class SetMaxDistalPosition extends CommandBase { // big arm
     
     @Override
     public boolean isFinished() {
-        return doubleArm.getTotalError() < tolerance;
+        return (doubleArm.getTotalError() < tolerance) || ((doubleArm.getCurrentArmAngles()[1] > target_distal) == greater);
     }
 }

@@ -83,7 +83,7 @@ public class DoubleArm extends SubsystemBase {
 
         Timer.delay(1.0);
 
-        time = System.currentTimeMillis() / 1000.0;
+        time = Timer.getFPGATimestamp() / 1000.0;
         time_one_last = 0;
         time_two_last = 0;
     }
@@ -91,38 +91,8 @@ public class DoubleArm extends SubsystemBase {
     public void powerArm(double firstPower, double secondPower) { // power the arms manually
 
         double[] current_angles = getCurrentArmAngles();
-        double delta_time = System.currentTimeMillis() / 1000.0 - time; // in seconds
-        time = System.currentTimeMillis() / 1000.0;
-
-        if (firstPower != 0) {
-            target_positions[0] = current_angles[0];
-            time_one_last = time;
-        } else if (time - time_one_last < whiplash_time_one) {
-            target_positions[0] = current_angles[0];
-        } else {
-            firstPower = pidPower(
-                target_positions[0] - current_angles[0], 
-                first_motor_max_power, 
-                first_motor_min_error, 
-                first_motor_max_error
-            );
-            firstPower = Math.max(first_motor.get() - first_motor_max_acceleration * delta_time, Math.min(first_motor.get() + first_motor_max_acceleration * delta_time, firstPower));
-        }
-
-        if (secondPower != 0) {
-            target_positions[1] = current_angles[1];
-            time_two_last = time;
-        } else if (time - time_two_last < whiplash_time_two) {
-            target_positions[1] = current_angles[1];
-        } else {
-            secondPower = pidPower(
-                target_positions[1] - current_angles[1], 
-                second_motor_max_power, 
-                second_motor_min_error, 
-                second_motor_max_error
-            );
-            secondPower = Math.max(second_motor.get() - second_motor_max_acceleration * delta_time, Math.min(second_motor.get() + second_motor_max_acceleration * delta_time, secondPower));
-        }
+        double delta_time = Timer.getFPGATimestamp() / 1000.0 - time; // in seconds
+        time = Timer.getFPGATimestamp() / 1000.0;
 
         double[] next_angles = {
             2 * current_angles[0] - prev_angles[0], 
@@ -131,26 +101,41 @@ public class DoubleArm extends SubsystemBase {
 
         prev_angles = current_angles;
 
+        boolean manual_control_one = true;
+        boolean manual_control_two = true;
+
         if (firstPower < 0 && next_angles[0] < min_first_angle) {
             firstPower = 0;
+            manual_control_one = false;
+            target_positions[0] = min_first_angle;
         } else if (firstPower > 0 && next_angles[0] > max_first_angle) {
             firstPower = 0;
-        } else if (firstPower < 0 && next_angles[0] + 180 - min_difference < next_angles[1]) {
-            secondPower = -0.1;
-            target_positions[1] = current_angles[1]; // might not work but idk
+            manual_control_one = false;
+            target_positions[1] = max_first_angle;
+        } else if (firstPower < 0 && next_angles[0] + 180 - min_difference < next_angles[1]) { // this shouldn't really ever happen but JUST IN CASE
+            secondPower = Math.min(secondPower, 0 - 0.5 * second_motor_max_power); // we go down a bit
+            manual_control_two = false;
+            target_positions[1] = next_angles[0] + 180 - min_difference;
         }
 
         if (secondPower < 0 && next_angles[1] < min_second_angle) {
             secondPower = 0;
+            manual_control_two = false;
+            target_positions[1] = min_second_angle;
         } else if (secondPower > 0 && next_angles[1] > max_second_angle) {
             secondPower = 0;
+            manual_control_two = false;
+            target_positions[1] = max_second_angle;
         } else if (secondPower > 0 && next_angles[1] > next_angles[0] + 180 - min_difference) {
             secondPower = 0;
+            manual_control_two = false;
+            target_positions[1] = next_angles[0] + 180 - min_difference;
         }
 
         if (!checkTargetAngles(next_angles)) { // out of bounds
             if (getPositionFromAngles(next_angles)[1] > max_y) {
                 // it means that we should only power down
+
                 if (next_angles[1] > 0) {
                     firstPower = Math.max(firstPower, 0);
                     secondPower = Math.max(secondPower, 0 - 0.5 * second_motor_max_power);
@@ -160,38 +145,92 @@ public class DoubleArm extends SubsystemBase {
                 }
             } else if (getPositionFromAngles(next_angles)[0] < min_x) {
                 // only power first motor up, second down
+
                 firstPower = Math.min(firstPower, 0);
                 secondPower = Math.max(secondPower, 0);
             } else { // must be less than min_y because not possible to be greater than max_x
                 // power second one a bit to correct
-                secondPower = second_motor_max_power * 0.5; // idk
+                secondPower = Math.max(secondPower, second_motor_max_power * 0.5);
             }
             resetWhipControl();
         }
+
+        if (manual_control_one) {
+            if (firstPower != 0) {
+                target_positions[0] = current_angles[0];
+                time_one_last = time;
+            } else if (time - time_one_last < whiplash_time_one) {
+                target_positions[0] = current_angles[0];
+            } else {
+                firstPower = pidPower(
+                    target_positions[0] - current_angles[0], 
+                    first_motor_max_power, 
+                    first_motor_min_error, 
+                    first_motor_max_error
+                );
+            }
+        } else {
+            time_one_last = time;
+        }
+
+        if (manual_control_two) {
+            if (secondPower != 0) {
+                target_positions[1] = current_angles[1];
+                time_two_last = time;
+            } else if (time - time_two_last < whiplash_time_two) {
+                target_positions[1] = current_angles[1];
+            } else {
+                secondPower = pidPower(
+                    target_positions[1] - current_angles[1], 
+                    second_motor_max_power, 
+                    second_motor_min_error, 
+                    second_motor_max_error
+                );
+            }
+        } else {
+            time_two_last = time;
+        }
+
+        firstPower = Math.max(first_motor.get() - first_motor_max_acceleration * delta_time, Math.min(first_motor.get() + first_motor_max_acceleration * delta_time, firstPower));
+        secondPower = Math.max(second_motor.get() - second_motor_max_acceleration * delta_time, Math.min(second_motor.get() + second_motor_max_acceleration * delta_time, secondPower));
 
         first_motor.set(firstPower);
         second_motor.set(secondPower);
     }
 
-    public void PIDPowerArm() { // power based only on target angles
+    public void bangbang(boolean first_arm) {
         double[] current_angles = getCurrentArmAngles();
-        double delta_time = System.currentTimeMillis() / 1000.0 - time; // in seconds
-        time = System.currentTimeMillis() / 1000.0;
+        double delta_time = Timer.getFPGATimestamp() - time; // in seconds
+        time = Timer.getFPGATimestamp() / 1000.0;
 
-        double firstPower = pidPower(
-            target_positions[0] - current_angles[0], 
-            first_motor_max_power, 
-            first_motor_min_error, 
-            first_motor_max_error
-        );
+        double firstPower;
+        double secondPower;
+
+        if (first_arm) {
+
+            firstPower = target_positions[0] > current_angles[0] ? first_motor_bangbang_power : -first_motor_bangbang_power;
+
+            secondPower = pidPower(
+                target_positions[1] - current_angles[1], 
+                second_motor_max_power, 
+                second_motor_min_error, 
+                second_motor_max_error
+            );
+
+        } else {
+
+            firstPower = pidPower(
+                target_positions[0] - current_angles[0], 
+                first_motor_max_power, 
+                first_motor_min_error, 
+                first_motor_max_error
+            );
+
+            secondPower = target_positions[1] > current_angles[1] ? second_motor_bangbang_power : -second_motor_bangbang_power;
+
+        }
+        
         firstPower = Math.max(first_motor.get() - first_motor_max_acceleration * delta_time, Math.min(first_motor.get() + first_motor_max_acceleration * delta_time, firstPower));
-
-        double secondPower = pidPower(
-            target_positions[1] - current_angles[1], 
-            second_motor_max_power, 
-            second_motor_min_error, 
-            second_motor_max_error
-        );
         secondPower = Math.max(second_motor.get() - second_motor_max_acceleration * delta_time, Math.min(second_motor.get() + second_motor_max_acceleration * delta_time, secondPower));
 
         first_motor.set(firstPower);

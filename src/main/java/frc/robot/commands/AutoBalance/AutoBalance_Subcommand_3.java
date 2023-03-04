@@ -1,6 +1,7 @@
 package frc.robot.commands.autoBalance;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -29,15 +30,15 @@ public class AutoBalance_Subcommand_3 extends CommandBase {
 
     @Override
     public void initialize() {
-        prev_time = System.currentTimeMillis() / 1000.0;
+        prev_time = Timer.getFPGATimestamp();
         start_time = prev_time;
         prev_pitch = swerve.getPitch();
     }
 
     @Override
     public void execute() {
-        double delta_time = System.currentTimeMillis() / 1000.0 - prev_time;
-        prev_time = System.currentTimeMillis() / 1000.0;
+        double delta_time = Timer.getFPGATimestamp() - prev_time;
+        prev_time = Timer.getFPGATimestamp();
         
         // Positive Pitch means angled down --> must drive backward
 

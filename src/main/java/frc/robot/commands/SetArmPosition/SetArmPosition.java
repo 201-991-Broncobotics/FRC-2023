@@ -10,8 +10,11 @@ public class SetArmPosition extends SequentialCommandGroup {
     public SetArmPosition(DoubleArm doubleArm, double[] position) {
         addRequirements(doubleArm);
         addCommands(
-            new SetArmPositionWithoutIntermediate(doubleArm, intermediatePositionAngles), 
-            new SetArmPositionWithoutIntermediate(doubleArm, position)
+            new SetMaxDistalPosition(doubleArm, intermediatePositionAngles[0]), 
+            new SetProximalPosition(doubleArm, intermediatePositionAngles[0]), 
+            new SetMaxDistalPosition(doubleArm, position[0]), 
+            new SetProximalPosition(doubleArm, position[0]), 
+            new SetDistalPosition(doubleArm, position[1])
         );
     }
 }

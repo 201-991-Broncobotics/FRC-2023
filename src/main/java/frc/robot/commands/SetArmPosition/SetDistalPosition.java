@@ -9,6 +9,7 @@ public class SetDistalPosition extends CommandBase { // small arm
 
     private DoubleArm doubleArm;
     private double distalPosition;
+    private boolean greater;
 
     public SetDistalPosition(DoubleArm doubleArm, double distalPosition) {
         this.doubleArm = doubleArm;
@@ -20,11 +21,12 @@ public class SetDistalPosition extends CommandBase { // small arm
     @Override
     public void initialize() {
         doubleArm.setTargetAngles(new double[] {doubleArm.getTargetArmAngles()[0], distalPosition});
+        greater = doubleArm.getCurrentArmAngles()[1] < distalPosition;
     }
 
     @Override
     public void execute() {
-        doubleArm.PIDPowerArm();
+        doubleArm.bangbang(false);
     }
 
     @Override
@@ -40,7 +42,7 @@ public class SetDistalPosition extends CommandBase { // small arm
     
     @Override
     public boolean isFinished() {
-        return doubleArm.getTotalError() < tolerance;
+        return (doubleArm.getTotalError() < tolerance) || ((doubleArm.getCurrentArmAngles()[1] > distalPosition) == greater);
     }
 
 }
