@@ -264,7 +264,7 @@ public final class Constants {
 
                                    min_first_angle = -115, 
                                    max_first_angle = 20, 
-                                   min_second_angle = -20, 
+                                   min_second_angle = -45, 
                                    max_second_angle = 90, 
                                    min_difference = 15, 
 

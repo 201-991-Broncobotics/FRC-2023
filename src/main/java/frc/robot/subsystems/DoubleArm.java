@@ -83,7 +83,7 @@ public class DoubleArm extends SubsystemBase {
 
         Timer.delay(1.0);
 
-        time = Timer.getFPGATimestamp() / 1000.0;
+        time = Timer.getFPGATimestamp();
         time_one_last = 0;
         time_two_last = 0;
     }
@@ -91,8 +91,8 @@ public class DoubleArm extends SubsystemBase {
     public void powerArm(double firstPower, double secondPower) { // power the arms manually
 
         double[] current_angles = getCurrentArmAngles();
-        double delta_time = Timer.getFPGATimestamp() / 1000.0 - time; // in seconds
-        time = Timer.getFPGATimestamp() / 1000.0;
+        double delta_time = Timer.getFPGATimestamp() - time; // in seconds
+        time = Timer.getFPGATimestamp();
 
         double[] next_angles = {
             2 * current_angles[0] - prev_angles[0], 
@@ -125,10 +125,15 @@ public class DoubleArm extends SubsystemBase {
                     secondPower = Math.min(secondPower, 0);
                 }
             } else if (getPositionFromAngles(next_angles)[0] < min_x) {
-                // only power first motor up, second down
+                // only power first motor up, second toward 0
 
                 firstPower = Math.max(firstPower, 0);
-                secondPower = Math.min(secondPower, 0);
+                
+                if (next_angles[1] > 0) {
+                    secondPower = Math.min(secondPower, 0);
+                } else {
+                    secondPower = Math.max(secondPower, 0);
+                }
             } else { // must be less than min_y because not possible to be greater than max_x
                 // power second one a bit to correct
                 secondPower = Math.max(secondPower, correction_ratio * second_motor_max_power);
@@ -173,7 +178,7 @@ public class DoubleArm extends SubsystemBase {
     public void bangbang(boolean first_arm) {
         double[] current_angles = getCurrentArmAngles();
         double delta_time = Timer.getFPGATimestamp() - time; // in seconds
-        time = Timer.getFPGATimestamp() / 1000.0;
+        time = Timer.getFPGATimestamp();
 
         double firstPower;
         double secondPower;
@@ -212,7 +217,7 @@ public class DoubleArm extends SubsystemBase {
     public void powerProximalMaxDistal() { // powers the proximal while keeping the maximal distal at all times
         double[] current_angles = getCurrentArmAngles();
         double delta_time = Timer.getFPGATimestamp() - time; // in seconds
-        time = Timer.getFPGATimestamp() / 1000.0;
+        time = Timer.getFPGATimestamp();
 
         double target_distal = Math.min(Math.min(90, max_second_angle), current_angles[0] + 180 - min_difference);
 
