@@ -217,6 +217,10 @@ public class DoubleArm extends SubsystemBase {
         double target_distal = Math.min(Math.min(90, max_second_angle), current_angles[0] + 180 - min_difference);
 
         double firstPower = target_positions[0] > current_angles[0] ? first_motor_bangbang_power : -first_motor_bangbang_power;
+
+        if (Math.abs(target_positions[0] - current_angles[0]) < first_motor_constant_min_error) {
+            firstPower *= nonconstant_multiplier; // if we're within 15 degrees don't go to the full bangbang power
+        }
         
         double secondPower = pidPower(
             target_distal - current_angles[1], 

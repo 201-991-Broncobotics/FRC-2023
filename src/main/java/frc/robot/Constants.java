@@ -235,6 +235,8 @@ public final class Constants {
                                    second_motor_bangbang_power = 0.1, 
 
                                    correction_ratio = 0.15, 
+                                   first_motor_constant_min_error = 15, 
+                                   nonconstant_multiplier = 0.5, 
 
                                    first_motor_max_acceleration = 0.6, // we can't change this as fast
                                    second_motor_max_acceleration = 1.2, // we can change this very fast
