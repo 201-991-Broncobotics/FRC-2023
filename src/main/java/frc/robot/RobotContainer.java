@@ -149,7 +149,7 @@ public class RobotContainer {
         midGoal.toggleOnTrue(new SetArmPositionV2(doubleArm, midPositionAngles));
         lowGoal.toggleOnTrue(new SetArmPositionV2(doubleArm, lowPositionAngles));
         idle.toggleOnTrue(new SetArmPositionV2(doubleArm, idlePositionAngles));
-        startPos.toggleOnTrue(new SetArmPositionWithoutIntermediate(doubleArm, startPositionAngles));
+        startPos.toggleOnTrue(new SetArmPositionV2(doubleArm, startPositionAngles));
 
         stopArmCommands.onTrue(new TerminateArmCommands(doubleArm));
 

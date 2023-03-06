@@ -101,35 +101,16 @@ public class DoubleArm extends SubsystemBase {
 
         prev_angles = current_angles;
 
-        boolean manual_control_one = true;
-        boolean manual_control_two = true;
-
-        if (firstPower < 0 && next_angles[0] < min_first_angle) {
-            firstPower = 0;
-            manual_control_one = false;
-            target_positions[0] = min_first_angle;
-        } else if (firstPower > 0 && next_angles[0] > max_first_angle) {
-            firstPower = 0;
-            manual_control_one = false;
-            target_positions[1] = max_first_angle;
-        } else if (firstPower < 0 && next_angles[0] + 180 - min_difference < next_angles[1]) { // this shouldn't really ever happen but JUST IN CASE
-            secondPower = Math.min(secondPower, 0 - 0.5 * second_motor_max_power); // we go down a bit
-            manual_control_two = false;
-            target_positions[1] = next_angles[0] + 180 - min_difference;
+        if (next_angles[0] < min_first_angle) {
+            firstPower = Math.max(correction_ratio * first_motor_max_power, firstPower);
+        } else if (next_angles[0] > max_first_angle) {
+            firstPower = Math.min(-correction_ratio * first_motor_max_power, firstPower);
         }
 
-        if (secondPower < 0 && next_angles[1] < min_second_angle) {
-            secondPower = 0;
-            manual_control_two = false;
-            target_positions[1] = min_second_angle;
-        } else if (secondPower > 0 && next_angles[1] > max_second_angle) {
-            secondPower = 0;
-            manual_control_two = false;
-            target_positions[1] = max_second_angle;
-        } else if (secondPower > 0 && next_angles[1] > next_angles[0] + 180 - min_difference) {
-            secondPower = 0;
-            manual_control_two = false;
-            target_positions[1] = next_angles[0] + 180 - min_difference;
+        if (next_angles[1] < min_second_angle) {
+            secondPower = Math.max(correction_ratio * second_motor_max_power, secondPower);
+        } else if (next_angles[1] > Math.min(max_second_angle, next_angles[0] + 180 - min_difference)) {
+            secondPower = Math.min(-correction_ratio * second_motor_max_power, secondPower);
         }
 
         if (!checkTargetAngles(next_angles)) { // out of bounds
@@ -138,9 +119,9 @@ public class DoubleArm extends SubsystemBase {
 
                 if (next_angles[1] > 0) {
                     firstPower = Math.min(firstPower, 0);
-                    secondPower = Math.min(secondPower, 0 - 0.5 * second_motor_max_power);
+                    secondPower = Math.min(secondPower, -correction_ratio * second_motor_max_power);
                 } else {
-                    firstPower = Math.min(firstPower, 0 - 0.5 * first_motor_max_power);
+                    firstPower = Math.min(firstPower, -correction_ratio * first_motor_max_power);
                     secondPower = Math.min(secondPower, 0);
                 }
             } else if (getPositionFromAngles(next_angles)[0] < min_x) {
@@ -150,45 +131,36 @@ public class DoubleArm extends SubsystemBase {
                 secondPower = Math.min(secondPower, 0);
             } else { // must be less than min_y because not possible to be greater than max_x
                 // power second one a bit to correct
-                secondPower = Math.max(secondPower, second_motor_max_power * 0.5);
+                secondPower = Math.max(secondPower, correction_ratio * second_motor_max_power);
             }
-            resetWhipControl();
         }
 
-        if (manual_control_one) {
-            if (firstPower != 0) {
-                target_positions[0] = current_angles[0];
-                time_one_last = time;
-            } else if (time - time_one_last < whiplash_time_one) {
-                target_positions[0] = current_angles[0];
-            } else {
-                firstPower = pidPower(
-                    target_positions[0] - current_angles[0], 
-                    first_motor_max_power, 
-                    first_motor_min_error, 
-                    first_motor_max_error
-                );
-            }
-        } else {
+        if (firstPower != 0) {
+            target_positions[0] = current_angles[0];
             time_one_last = time;
+        } else if (time - time_one_last < whiplash_time_one) {
+            target_positions[0] = current_angles[0];
+        } else {
+            firstPower = pidPower(
+                target_positions[0] - current_angles[0], 
+                first_motor_max_power, 
+                first_motor_min_error, 
+                first_motor_max_error
+            );
         }
 
-        if (manual_control_two) {
-            if (secondPower != 0) {
-                target_positions[1] = current_angles[1];
-                time_two_last = time;
-            } else if (time - time_two_last < whiplash_time_two) {
-                target_positions[1] = current_angles[1];
-            } else {
-                secondPower = pidPower(
-                    target_positions[1] - current_angles[1], 
-                    second_motor_max_power, 
-                    second_motor_min_error, 
-                    second_motor_max_error
-                );
-            }
-        } else {
+        if (secondPower != 0) {
+            target_positions[1] = current_angles[1];
             time_two_last = time;
+        } else if (time - time_two_last < whiplash_time_two) {
+            target_positions[1] = current_angles[1];
+        } else {
+            secondPower = pidPower(
+                target_positions[1] - current_angles[1], 
+                second_motor_max_power, 
+                second_motor_min_error, 
+                second_motor_max_error
+            );
         }
 
         firstPower = Math.max(first_motor.get() - first_motor_max_acceleration * delta_time, Math.min(first_motor.get() + first_motor_max_acceleration * delta_time, firstPower));

@@ -228,11 +228,13 @@ public final class Constants {
         
         public static final double first_motor_sensitivity = 0.55,
                                    first_motor_max_power = 0.6,
-                                   first_motor_bangbang_power = 0.6, 
+                                   first_motor_bangbang_power = 0.15, 
 
                                    second_motor_sensitivity = 0.35,
                                    second_motor_max_power = 0.4,
-                                   second_motor_bangbang_power = 0.4, 
+                                   second_motor_bangbang_power = 0.1, 
+
+                                   correction_ratio = 0.15, 
 
                                    first_motor_max_acceleration = 0.6, // we can't change this as fast
                                    second_motor_max_acceleration = 1.2, // we can change this very fast
