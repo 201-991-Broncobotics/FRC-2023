@@ -238,8 +238,8 @@ public final class Constants {
                                    first_motor_constant_min_error = 15, 
                                    nonconstant_multiplier = 0.5, 
 
-                                   first_motor_max_acceleration = 0.6, // we can't change this as fast
-                                   second_motor_max_acceleration = 1.2, // we can change this very fast
+                                   first_motor_max_acceleration = 1.5, // we can't change this as fast
+                                   second_motor_max_acceleration = 2.0, // we can change this very fast
 
                                    first_motor_min_error = 0.5, 
                                    second_motor_min_error = 0.5,
@@ -247,7 +247,7 @@ public final class Constants {
                                    first_motor_max_error = 55.0, 
                                    second_motor_max_error = 55.0,
 
-                                   whiplash_time_one = 1.25, 
+                                   whiplash_time_one = 0.75, 
                                    whiplash_time_two = 0.4, 
 
                                    k_exponent = 1.15,  // 1.0 for a normal PID

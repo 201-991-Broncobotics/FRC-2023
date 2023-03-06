@@ -44,6 +44,6 @@ public class SetMaxDistalPosition extends CommandBase { // big arm
     
     @Override
     public boolean isFinished() {
-        return (doubleArm.getTotalError() < tolerance) || ((doubleArm.getCurrentArmAngles()[1] > target_distal) == greater);
+        return (doubleArm.getCurrentArmAngles()[1] > target_distal) == greater;
     }
 }

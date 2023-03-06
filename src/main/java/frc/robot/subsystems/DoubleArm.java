@@ -94,25 +94,35 @@ public class DoubleArm extends SubsystemBase {
         double delta_time = Timer.getFPGATimestamp() - time; // in seconds
         time = Timer.getFPGATimestamp();
 
+        // want to predict the angles at the next whiplash time
+
         double[] next_angles = {
-            2 * current_angles[0] - prev_angles[0], 
-            2 * current_angles[1] - prev_angles[1]
+            (current_angles[0] - prev_angles[0]) / delta_time * whiplash_time_one + current_angles[0], 
+            (current_angles[1] - prev_angles[1]) / delta_time * whiplash_time_two + current_angles[1]
         };
 
         prev_angles = current_angles;
 
         if (next_angles[0] < min_first_angle) {
             firstPower = Math.max(correction_ratio * first_motor_max_power, firstPower);
+            if (second_motor.get() < 0) second_motor.set(0);
+            System.out.println("wtf");
         } else if (next_angles[0] > max_first_angle) {
             firstPower = Math.min(-correction_ratio * first_motor_max_power, firstPower);
+            if (second_motor.get() > 0) second_motor.set(0);
         }
 
         if (next_angles[1] < min_second_angle) {
             secondPower = Math.max(correction_ratio * second_motor_max_power, secondPower);
+            if (second_motor.get() < 0) second_motor.set(0);
         } else if (next_angles[1] > Math.min(max_second_angle, next_angles[0] + 180 - min_difference)) {
             secondPower = Math.min(-correction_ratio * second_motor_max_power, secondPower);
+            if (second_motor.get() > 0) second_motor.set(0);
         }
+        
+        // maybe do something with target angles because those don't change
 
+        /*
         if (!checkTargetAngles(next_angles)) { // out of bounds
             if (getPositionFromAngles(next_angles)[1] > max_y) {
                 // it means that we should only power down
@@ -138,7 +148,7 @@ public class DoubleArm extends SubsystemBase {
                 // power second one a bit to correct
                 secondPower = Math.max(secondPower, correction_ratio * second_motor_max_power);
             }
-        }
+        } */
 
         if (firstPower != 0) {
             target_positions[0] = current_angles[0];

@@ -38,6 +38,6 @@ public class SetProximalPosition extends CommandBase { // big arm
     
     @Override
     public boolean isFinished() {
-        return (doubleArm.getTotalError() < tolerance) || ((doubleArm.getCurrentArmAngles()[0] > proximalPosition) == greater);
+        return (doubleArm.getCurrentArmAngles()[0] > proximalPosition) == greater;
     }
 }

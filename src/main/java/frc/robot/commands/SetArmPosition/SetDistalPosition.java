@@ -40,7 +40,7 @@ public class SetDistalPosition extends CommandBase { // small arm
     
     @Override
     public boolean isFinished() {
-        return (doubleArm.getTotalError() < tolerance) || ((doubleArm.getCurrentArmAngles()[1] > distalPosition) == greater);
+        return (doubleArm.getCurrentArmAngles()[1] > distalPosition) == greater;
     }
 
 }

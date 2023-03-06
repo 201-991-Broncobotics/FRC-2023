@@ -54,7 +54,7 @@ class SetMaximalDistalVersionDos extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return (doubleArm.getTotalError() < tolerance) || ((doubleArm.getCurrentArmAngles()[1] > distalPosition) == greater);
+        return (doubleArm.getCurrentArmAngles()[1] > distalPosition) == greater;
     }
 }
 
@@ -91,7 +91,7 @@ class SetProximalPositionV2 extends CommandBase { // big arm
     
     @Override
     public boolean isFinished() {
-        return (doubleArm.getTotalError() < tolerance) || ((doubleArm.getCurrentArmAngles()[0] > proximalPosition) == greater);
+        return (doubleArm.getCurrentArmAngles()[0] > proximalPosition) == greater;
     }
     
 }
