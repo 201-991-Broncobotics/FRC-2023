@@ -237,6 +237,29 @@ public class DoubleArm extends SubsystemBase {
         second_motor.set(secondPower);
     }
 
+    public void powerProximalMaxDistal() { // powers the proximal while keeping the maximal distal at all times
+        double[] current_angles = getCurrentArmAngles();
+        double delta_time = Timer.getFPGATimestamp() - time; // in seconds
+        time = Timer.getFPGATimestamp() / 1000.0;
+
+        double target_distal = Math.min(Math.min(90, max_second_angle), current_angles[0] + 180 - min_difference);
+
+        double firstPower = target_positions[0] > current_angles[0] ? first_motor_bangbang_power : -first_motor_bangbang_power;
+        
+        double secondPower = pidPower(
+            target_distal - current_angles[1], 
+            second_motor_max_power, 
+            second_motor_min_error, 
+            second_motor_max_error
+        );
+
+        firstPower = Math.max(first_motor.get() - first_motor_max_acceleration * delta_time, Math.min(first_motor.get() + first_motor_max_acceleration * delta_time, firstPower));
+        secondPower = Math.max(second_motor.get() - second_motor_max_acceleration * delta_time, Math.min(second_motor.get() + second_motor_max_acceleration * delta_time, secondPower));
+
+        first_motor.set(firstPower);
+        second_motor.set(secondPower);
+    }
+
     public void brake() {
         first_motor.set(0);
         second_motor.set(0);

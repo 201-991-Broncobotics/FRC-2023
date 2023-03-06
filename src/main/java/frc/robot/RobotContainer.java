@@ -145,10 +145,10 @@ public class RobotContainer {
         terminateCommandsDriver.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
         
         /* Operator Buttons */
-        topGoal.toggleOnTrue(new SetArmPosition(doubleArm, topPositionAngles));
-        midGoal.toggleOnTrue(new SetArmPosition(doubleArm, midPositionAngles));
-        lowGoal.toggleOnTrue(new SetArmPosition(doubleArm, lowPositionAngles));
-        idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePositionAngles));
+        topGoal.toggleOnTrue(new SetArmPositionV2(doubleArm, topPositionAngles));
+        midGoal.toggleOnTrue(new SetArmPositionV2(doubleArm, midPositionAngles));
+        lowGoal.toggleOnTrue(new SetArmPositionV2(doubleArm, lowPositionAngles));
+        idle.toggleOnTrue(new SetArmPositionV2(doubleArm, idlePositionAngles));
         startPos.toggleOnTrue(new SetArmPositionWithoutIntermediate(doubleArm, startPositionAngles));
 
         stopArmCommands.onTrue(new TerminateArmCommands(doubleArm));
