@@ -286,7 +286,7 @@ public final class Constants {
         
         public static final double swerve_min_error = 2, 
                                    swerve_max_error = 30, 
-                                   swerve_exponent = 0.75, 
+                                   swerve_exponent = 0.65, 
                                    swerve_max_power = 0.8,
                                    calibration_time = 0.5, // seconds
                                    turn_sensitivity = 0.35, 
@@ -310,6 +310,13 @@ public final class Constants {
         };
     }
     public static final class Buttons {
+
+        /* D-pad */
+
+        public static final int dpad_up = 0, 
+                                dpad_right = 90, 
+                                dpad_down = 180, 
+                                dpad_left = 270;
 
         /* Which is which */
 
@@ -347,11 +354,13 @@ public final class Constants {
                                 midGoalButton = XboxController.Button.kB.value, 
                                 lowGoalButton = XboxController.Button.kA.value, 
 
-                                intakeButton = XboxController.Button.kRightBumper.value, 
-                                outtakeButton = XboxController.Button.kLeftBumper.value, 
+                                intakeUpperValue = dpad_up, 
+                                intakeLowerValue = dpad_down, 
 
-                                idleButton = XboxController.Button.kX.value, 
-                                startPosButton = XboxController.Button.kStart.value,
+                                intakeButton = XboxController.Button.kLeftBumper.value, 
+                                outtakeButton = XboxController.Button.kRightBumper.value, 
+
+                                idleButton = XboxController.Button.kStart.value, 
 
                                 stopArmFromMovingButtonOne = XboxController.Axis.kRightTrigger.value,
                                 stopArmFromMovingButtonTwo = XboxController.Axis.kLeftTrigger.value,
@@ -407,9 +416,11 @@ public final class Constants {
         public static final double[] topPositionAngles = {2.7, 19.0}, 
                                      midPositionAngles = {-21.4, 0}, 
                                      lowPositionAngles = {-64, 0}, 
-                                     intakePositionAngles = {-82.3, -32.9}, 
-                                     idlePositionAngles = {-115, 42}, 
-                                     startPositionAngles = {-115, 50};
+
+                                     intakeUpperAngles = {-65.3, 32.9}, 
+                                     intakeLowerAngles = {-82.3, -32.9}, 
+
+                                     idlePositionAngles = {-115, 42};
 
         public static final boolean fancy_drive = true, 
                                     show_drive_data = false, 

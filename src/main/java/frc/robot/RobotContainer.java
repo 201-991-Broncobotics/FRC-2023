@@ -13,7 +13,7 @@ import frc.robot.commands.alignWithApriltag.AlignWithApriltag;
 import frc.robot.commands.alignWithApriltag.AlignWithApriltagOld;
 import frc.robot.commands.autoBalance.AutoBalance;
 import frc.robot.commands.defaultCommands.*;
-import frc.robot.commands.intake.Intake;
+import frc.robot.commands.intake.*;
 import frc.robot.commands.outtake.Outtake;
 import frc.robot.commands.setArmPosition.*;
 import frc.robot.commands.utilCommands.*;
@@ -49,7 +49,6 @@ public class RobotContainer {
     private final Trigger lowGoal = new JoystickButton(operator, lowGoalButton);
 
     private final Trigger idle = new JoystickButton(operator, idleButton);
-    private final Trigger startPos = new JoystickButton(operator, startPosButton);
 
     private final Trigger intake = new JoystickButton(operator, intakeButton);
     private final Trigger outtake = new JoystickButton(operator, outtakeButton);
@@ -72,6 +71,11 @@ public class RobotContainer {
         (operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || 
         (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone)
     ));
+
+    private final Trigger intakeUpper = new Trigger(() -> (operator.getPOV() == intakeUpperValue));
+    private final Trigger intakeLower = new Trigger(() -> (operator.getPOV() == intakeLowerValue));
+
+    private final Trigger doneWithIntake = new Trigger(() -> (frc.robot.Variables.go_to_startposition));
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -150,11 +154,15 @@ public class RobotContainer {
         midGoal.toggleOnTrue(new SetArmPosition(doubleArm, midPositionAngles));
         lowGoal.toggleOnTrue(new SetArmPosition(doubleArm, lowPositionAngles));
         idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePositionAngles));
-        startPos.toggleOnTrue(new SetArmPosition(doubleArm, startPositionAngles));
+
+        intakeUpper.toggleOnTrue(new SetArmPosition(doubleArm, intakeUpperAngles));
+        intakeLower.toggleOnTrue(new SetArmPosition(doubleArm, intakeLowerAngles));
+
+        doneWithIntake.toggleOnTrue(new SetArmPositionAfterIntake(claw, doubleArm));
 
         stopArmCommands.onTrue(new TerminateArmCommands(doubleArm));
 
-        intake.toggleOnTrue(new Intake(claw, doubleArm, () -> -operator.getRawAxis(motorOneAxis), () -> -operator.getRawAxis(motorTwoAxis)));
+        intake.toggleOnTrue(new Intake(claw));
         outtake.toggleOnTrue(new Outtake(claw, doubleArm));
         
         terminateCommandsOperator.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));

@@ -1,20 +1,43 @@
 package frc.robot.commands.intake;
 
-import java.util.function.DoubleSupplier;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.setArmPosition.SetArmPosition;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.DoubleArm;
 
-import static frc.robot.Constants.TuningConstants.*;
+import static frc.robot.Constants.IntakeConstants.*;
 
-public class Intake extends SequentialCommandGroup {
+public class Intake extends CommandBase {
     
-    public Intake(Claw claw, DoubleArm doubleArm, DoubleSupplier motorOneSup, DoubleSupplier motorTwoSup) {
-        addRequirements(claw, doubleArm);
-        addCommands(
-            new Intake_Subcommand(claw, doubleArm, motorOneSup, motorTwoSup), 
-            new SetArmPosition(doubleArm, idlePositionAngles)
-        );
+    private Claw claw;
+
+    private double starting_time;
+
+    public Intake(Claw claw) {
+        this.claw = claw;
+        addRequirements(claw);
+    }
+
+    @Override
+    public void initialize() {
+        claw.intake();
+        starting_time = Timer.getFPGATimestamp();
+    }
+
+    @Override
+    public void execute() {
+        // nothing
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        claw.stop();
+        if (!interrupted) {
+            frc.robot.Variables.go_to_startposition = true;
+        }
+    }
+    
+    @Override
+    public boolean isFinished() {
+        return (claw.getCurrent() > claw_current_limit) && (Timer.getFPGATimestamp() - starting_time > 0.5);
     }
 }
