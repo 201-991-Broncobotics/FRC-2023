@@ -40,7 +40,7 @@ public final class Constants {
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-        public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
+        public static final NeutralMode driveNeutralMode = NeutralMode.Coast; // TODO Decide this later
 
         /* Change the values above if you want to but they're not necessary to be tuned */
 
@@ -229,13 +229,13 @@ public final class Constants {
         public static final double first_motor_sensitivity = 0.55,
 
                                    first_motor_min_error = 0.5, 
-                                   first_motor_max_error = 15.0, 
-                                   first_motor_exponent = 0.5, 
+                                   first_motor_max_error = 30.0, 
+                                   first_motor_exponent = 0.75, 
                                    first_motor_max_power_up = 0.6,
                                    first_motor_max_power_down = 0.6,
 
-                                   first_motor_max_acceleration = 2.25,
-                                   whiplash_time_one = 0.4, 
+                                   first_motor_max_acceleration = 2.0,
+                                   whiplash_time_one = 0.5, 
 
                                    first_motor_min_angle = -115, 
                                    first_motor_max_angle = 20, 
@@ -247,13 +247,13 @@ public final class Constants {
                                    second_motor_sensitivity = 0.35,
 
                                    second_motor_min_error = 0.5,
-                                   second_motor_max_error = 5.0,
-                                   second_motor_exponent = 0.35, 
-                                   second_motor_max_power_up = 0.4,
-                                   second_motor_max_power_down = 0.4,
+                                   second_motor_max_error = 15.0,
+                                   second_motor_exponent = 0.75, 
+                                   second_motor_max_power_up = 0.15,
+                                   second_motor_max_power_down = 0.15,
 
-                                   second_motor_max_acceleration = 3.5,
-                                   whiplash_time_two = 0.2, 
+                                   second_motor_max_acceleration = 1.2,
+                                   whiplash_time_two = 0.25, 
 
                                    second_motor_min_angle = -45, 
                                    second_motor_max_angle = 90, 
@@ -286,7 +286,7 @@ public final class Constants {
         
         public static final double swerve_min_error = 2, 
                                    swerve_max_error = 30, 
-                                   swerve_exponent = 0.65, 
+                                   swerve_exponent = 0.7, 
                                    swerve_max_power = 0.8,
                                    calibration_time = 0.5, // seconds
                                    turn_sensitivity = 0.35, 

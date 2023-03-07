@@ -17,7 +17,7 @@ public class DoubleArm extends SubsystemBase {
     private CANSparkMax first_motor, first_motor_follower, second_motor;
     private DutyCycleEncoder first_encoder, second_encoder;
 
-    private double[] target_angles = new double[2];
+    private double[] target_angles = new double[2], last_manually_targeted_positions = new double[2];
 
     private double time, time_one_last, time_two_last;
 
@@ -77,6 +77,7 @@ public class DoubleArm extends SubsystemBase {
         // we want it so the encoder increases when the arm goes counterclockwise - may have to adjust them
 
         target_angles = getCurrentArmAngles();
+        last_manually_targeted_positions = getCurrentArmAngles();
 
         Timer.delay(1.0);
 
@@ -91,24 +92,28 @@ public class DoubleArm extends SubsystemBase {
         double delta_time = Timer.getFPGATimestamp() - time; // in seconds
         time = Timer.getFPGATimestamp();
 
-        if ((current_angles[0] < first_motor_min_angle) || (target_angles[0] <= first_motor_min_angle)) {
-            time_one_last = -999;
+        if ((current_angles[0] < first_motor_min_angle) || (last_manually_targeted_positions[0] <= first_motor_min_angle)) {
+            time_one_last = time;
             firstPower = Math.max(0, secondPower);
             target_angles[0] = first_motor_min_angle;
-        } else if ((current_angles[0] > first_motor_max_angle) || (target_angles[0] >= first_motor_max_angle)) {
-            time_one_last = -999;
+            last_manually_targeted_positions[0] = first_motor_min_angle;
+        } else if ((current_angles[0] > first_motor_max_angle) || (last_manually_targeted_positions[0] >= first_motor_max_angle)) {
+            time_one_last = time;
             firstPower = Math.min(0, secondPower);
             target_angles[0] = first_motor_max_angle;
+            last_manually_targeted_positions[0] = first_motor_max_angle;
         }
 
-        if ((current_angles[1] < second_motor_min_angle) || (target_angles[1] <= second_motor_min_angle)) {
-            time_two_last = -999;
+        if ((current_angles[1] < second_motor_min_angle) || (last_manually_targeted_positions[1] <= second_motor_min_angle)) {
+            time_two_last = time;
             secondPower = Math.max(0, secondPower);
             target_angles[1] = second_motor_min_angle;
-        } else if ((current_angles[1] > Math.min(second_motor_max_angle, current_angles[0] + 180 - min_difference)) || (target_angles[1] >= Math.min(second_motor_max_angle, current_angles[0] + 180 - min_difference))) {
-            time_two_last = -999;
+            last_manually_targeted_positions[1] = second_motor_min_angle;
+        } else if ((current_angles[1] > Math.min(second_motor_max_angle, current_angles[0] + 180 - min_difference)) || (last_manually_targeted_positions[1] >= Math.min(second_motor_max_angle, current_angles[0] + 180 - min_difference))) {
+            time_two_last = time;
             secondPower = Math.min(0, secondPower);
             target_angles[1] = Math.min(second_motor_max_angle, current_angles[0] + 180 - min_difference);
+            last_manually_targeted_positions[1] = Math.min(second_motor_max_angle, current_angles[0] + 180 - min_difference);
         }
 
         if (!checkTargetAngles(current_angles)) { // out of bounds
@@ -117,7 +122,7 @@ public class DoubleArm extends SubsystemBase {
 
                 firstPower = Math.min(firstPower, 0);
 
-                time_two_last = -999;
+                time_two_last = time;
                 secondPower = Math.min(secondPower, 0);
 
                 double delta_y = max_y - first_arm_length * Math.sin(current_angles[0] * Math.PI / 180.0);
@@ -139,7 +144,7 @@ public class DoubleArm extends SubsystemBase {
 
             } else { // must be less than min_y because not possible to be greater than max_x
                 
-                time_two_last = -999;
+                time_two_last = time;
                 secondPower = Math.max(secondPower, 0);
                 
                 double delta_y = min_y - first_arm_length * Math.sin(current_angles[0] * Math.PI / 180.0);
@@ -153,6 +158,7 @@ public class DoubleArm extends SubsystemBase {
 
         if (firstPower != 0) {
             target_angles[0] = current_angles[0];
+            last_manually_targeted_positions[0] = current_angles[0];
             time_one_last = time;
         } else if (time - time_one_last < whiplash_time_one) {
             target_angles[0] = current_angles[0];
@@ -170,6 +176,7 @@ public class DoubleArm extends SubsystemBase {
         if (secondPower != 0) {
             target_angles[1] = current_angles[1];
             time_two_last = time;
+            last_manually_targeted_positions[1] = current_angles[1];
         } else if (time - time_two_last < whiplash_time_two) {
             target_angles[1] = current_angles[1];
         } else {
