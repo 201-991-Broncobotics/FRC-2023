@@ -21,6 +21,7 @@ import frc.robot.subsystems.*;
 
 import static frc.robot.Constants.AutonomousNames.*;
 import static frc.robot.Constants.Buttons.*;
+import static frc.robot.Constants.GeneralConstants.*;
 import static frc.robot.Constants.TuningConstants.*;
 
 /**
@@ -145,11 +146,11 @@ public class RobotContainer {
         terminateCommandsDriver.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
         
         /* Operator Buttons */
-        topGoal.toggleOnTrue(new SetArmPositionV2(doubleArm, topPositionAngles));
-        midGoal.toggleOnTrue(new SetArmPositionV2(doubleArm, midPositionAngles));
-        lowGoal.toggleOnTrue(new SetArmPositionV2(doubleArm, lowPositionAngles));
-        idle.toggleOnTrue(new SetArmPositionV2(doubleArm, idlePositionAngles));
-        startPos.toggleOnTrue(new SetArmPositionV2(doubleArm, startPositionAngles));
+        topGoal.toggleOnTrue(new SetArmPosition(doubleArm, topPositionAngles));
+        midGoal.toggleOnTrue(new SetArmPosition(doubleArm, midPositionAngles));
+        lowGoal.toggleOnTrue(new SetArmPosition(doubleArm, lowPositionAngles));
+        idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePositionAngles));
+        startPos.toggleOnTrue(new SetArmPosition(doubleArm, startPositionAngles));
 
         stopArmCommands.onTrue(new TerminateArmCommands(doubleArm));
 

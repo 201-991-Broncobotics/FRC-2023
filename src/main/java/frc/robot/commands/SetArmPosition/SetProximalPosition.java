@@ -3,8 +3,8 @@ package frc.robot.commands.setArmPosition;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DoubleArm;
 
-public class SetProximalPosition extends CommandBase { // big arm
-
+public class SetProximalPosition extends CommandBase {
+    
     private DoubleArm doubleArm;
     private double proximalPosition;
     private boolean greater;
@@ -24,7 +24,7 @@ public class SetProximalPosition extends CommandBase { // big arm
 
     @Override
     public void execute() {
-        doubleArm.bangbang(true);
+        doubleArm.pidPowerKeepMaxDistal();
     }
 
     @Override
@@ -38,4 +38,5 @@ public class SetProximalPosition extends CommandBase { // big arm
     public boolean isFinished() {
         return (doubleArm.getCurrentArmAngles()[0] > proximalPosition) == greater;
     }
+    
 }

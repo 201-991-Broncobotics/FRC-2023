@@ -8,7 +8,7 @@ import frc.robot.subsystems.DoubleArm;
 
 import static frc.robot.Constants.IntakeConstants.*;
 import static frc.robot.Constants.DoubleArmConstants.*;
-import static frc.robot.Constants.Buttons.*;
+import static frc.robot.Constants.GeneralConstants.*;
 
 public class Intake_Subcommand extends CommandBase {
     

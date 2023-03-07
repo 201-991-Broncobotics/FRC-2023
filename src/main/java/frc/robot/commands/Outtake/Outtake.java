@@ -1,7 +1,7 @@
 package frc.robot.commands.outtake;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.setArmPosition.SetArmPositionV2;
+import frc.robot.commands.setArmPosition.SetArmPosition;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
 
@@ -13,7 +13,7 @@ public class Outtake extends SequentialCommandGroup {
         addRequirements(claw, doubleArm);
         addCommands(
             new Outtake_Subcommand(claw), 
-            new SetArmPositionV2(doubleArm, idlePositionAngles)
+            new SetArmPosition(doubleArm, idlePositionAngles)
         );
     }
 }

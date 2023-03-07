@@ -24,7 +24,7 @@ public class SetDistalPosition extends CommandBase { // small arm
 
     @Override
     public void execute() {
-        doubleArm.bangbang(false);
+        doubleArm.pidPowerArm();
     }
 
     @Override

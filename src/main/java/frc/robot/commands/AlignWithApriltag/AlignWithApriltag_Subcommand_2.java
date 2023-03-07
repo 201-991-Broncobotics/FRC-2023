@@ -41,6 +41,6 @@ public class AlignWithApriltag_Subcommand_2 extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return ((!frc.robot.Variables.continueWithAWA) || (Math.abs(swerve.getError()) < yaw_tolerance));
+        return ((!frc.robot.Variables.continueWithAWA) || (Math.abs(swerve.getError()) < swerve_min_error));
     }
 }

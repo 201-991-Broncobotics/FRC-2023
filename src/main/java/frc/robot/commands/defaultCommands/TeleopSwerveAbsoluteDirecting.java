@@ -8,7 +8,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 
 import static frc.robot.Constants.SwerveConstants.*;
-import static frc.robot.Constants.Buttons.*;
+import static frc.robot.Constants.GeneralConstants.*;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -70,14 +70,7 @@ public class TeleopSwerveAbsoluteDirecting extends CommandBase {
                 } else {
                     target_heading = Math.atan(y_dir / x_dir) * 180.0 / Math.PI - 90;
                 }
-
-                double error_in_percent = Math.max(Math.min(Swerve.normalizeAngle(target_heading - s_Swerve.getYaw().getDegrees()) / maximum_error, 1), -1);
-                int multiplier = 1;
-                if (error_in_percent < 0) {
-                    error_in_percent = 0 - error_in_percent;
-                    multiplier = -1;
-                }
-                turnVal = Math.pow(error_in_percent, exponent) * maximum_power * multiplier;
+                turnVal = getCorrection(Swerve.normalizeAngle(target_heading - s_Swerve.getYaw().getDegrees()), swerve_min_error, swerve_max_error, swerve_exponent, swerve_max_power * Math.sqrt(x_dir * x_dir + y_dir * y_dir));
 
             } else if (targetSup.getAsInt() % 90 == 0) { // setTargetHeading on purpose
                 s_Swerve.setTargetHeading(targetSup.getAsInt());

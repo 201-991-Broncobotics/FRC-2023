@@ -227,36 +227,39 @@ public final class Constants {
         /* Variables */
         
         public static final double first_motor_sensitivity = 0.55,
-                                   first_motor_max_power = 0.6,
-                                   first_motor_bangbang_power = 0.6, 
-
-                                   second_motor_sensitivity = 0.35,
-                                   second_motor_max_power = 0.4,
-                                   second_motor_bangbang_power = 0.4, 
-                                   second_motor_bangbang_power_two = 0.2, 
-                                   second_motor_bangbang_power_two_down = 0.4, 
-
-                                   correction_ratio = 0.05, 
-                                   first_motor_constant_min_error = 15, 
-                                   second_motor_constant_min_error = 20, 
-                                   nonconstant_multiplier_one = 0.35, 
-                                   nonconstant_multiplier_two = 0.25, 
-
-                                   first_motor_max_acceleration = 2.25, // we can't change this as fast
-                                   second_motor_max_acceleration = 3.5, // we can change this very fast
 
                                    first_motor_min_error = 0.5, 
-                                   second_motor_min_error = 0.5,
+                                   first_motor_max_error = 15.0, 
+                                   first_motor_exponent = 0.5, 
+                                   first_motor_max_power_up = 0.6,
+                                   first_motor_max_power_down = 0.6,
 
-                                   first_motor_max_error = 55.0, 
-                                   second_motor_max_error = 55.0,
-
+                                   first_motor_max_acceleration = 2.25,
                                    whiplash_time_one = 0.4, 
+
+                                   first_motor_min_angle = -115, 
+                                   first_motor_max_angle = 20, 
+
+
+
+                                   second_motor_sensitivity = 0.35,
+
+                                   second_motor_min_error = 0.5,
+                                   second_motor_max_error = 5.0,
+                                   second_motor_exponent = 0.35, 
+                                   second_motor_max_power_up = 0.4,
+                                   second_motor_max_power_down = 0.4,
+
+                                   second_motor_max_acceleration = 3.5,
                                    whiplash_time_two = 0.2, 
 
-                                   k_exponent = 1.15,  // 1.0 for a normal PID
+                                   second_motor_min_angle = -45, 
+                                   second_motor_max_angle = 90, 
 
-                                   tolerance = 5, // number of inches until we bing chilling
+
+                                   
+                                   min_difference = 15, 
+                                   correction_ratio = 0.05, 
 
                                    first_arm_length = 32 - 4, // subtract 4 from length of arm to get pivot distance 
                                    second_arm_length = 15 + 7.751984, // add 7.751984 to length of arm to get pivot distance
@@ -265,17 +268,6 @@ public final class Constants {
                                    min_y = -42,
                                    max_x = 61.368, 
                                    max_y = 20, 
-
-                                   min_first_angle = -115, 
-                                   max_first_angle = 20, 
-                                   min_second_angle = -45, 
-                                   max_second_angle = 90, 
-                                   min_difference = 25, 
-
-                                   clipping_one = 1.2, 
-                                   clipping_two = 0.99,
-
-                                   switching_angle = 90, // if below this --> concave up, if above this --> concave down
 
                                    middle_x = 45, // above this, we go at a slower rate
                                    middle_y = 0, 
@@ -289,13 +281,13 @@ public final class Constants {
 
     public static final class SwerveConstants {
         
-        public static final double maximum_power = 0.8, 
-                                   maximum_error = 30, // degrees
-                                   exponent = 0.75, 
+        public static final double swerve_min_error = 2, 
+                                   swerve_max_error = 30, 
+                                   swerve_exponent = 0.75, 
+                                   swerve_max_power = 0.8,
                                    calibration_time = 0.5, // seconds
                                    turn_sensitivity = 0.35, 
-                                   slow = 0.35,
-                                   yaw_tolerance = 2;
+                                   slow = 0.35;
     }
 
     public static final class AutonomousNames {
@@ -361,8 +353,9 @@ public final class Constants {
                                 stopArmFromMovingButtonOne = XboxController.Axis.kRightTrigger.value,
                                 stopArmFromMovingButtonTwo = XboxController.Axis.kLeftTrigger.value,
                                 terminateCommandsOperatorButton = XboxController.Button.kBack.value;
-            
-        /* General Constants */
+    }
+
+    public static final class GeneralConstants {
 
         public static final double joystick_deadzone = 0.1,
                                    axis_exponent = 1.3;
@@ -372,6 +365,30 @@ public final class Constants {
             if (axis_value == 0) return 0;
             if (axis_value < 0) return 0 - Math.pow(0 - axis_value, axis_exponent);
             return Math.pow(axis_value, axis_exponent);
+        }
+
+        public static final double getCorrection(double error, double min_error, double max_error, double exponent, double max_power) {
+            if (Math.abs(error) < min_error) return 0;
+            double multiplier = max_power;
+            if (error < 0) {
+                error = 0 - error;
+                multiplier = -max_power;
+            }
+            if (error > max_error) error = max_error;
+            error /= max_error;
+            return Math.pow(error, exponent) * multiplier;
+        }
+
+        public static final double getCorrection(double error, double min_error, double max_error, double exponent, double max_power_up, double max_power_down) {
+            if (Math.abs(error) < min_error) return 0;
+            double multiplier = max_power_up;
+            if (error < 0) {
+                error = 0 - error;
+                multiplier = -max_power_down;
+            }
+            if (error > max_error) error = max_error;
+            error /= max_error;
+            return Math.pow(error, exponent) * multiplier;
         }
     }
 

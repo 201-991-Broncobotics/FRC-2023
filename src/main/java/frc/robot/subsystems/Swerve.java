@@ -20,7 +20,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.SwerveConstants.*;
 import static frc.robot.Constants.TuningConstants.*;
-import static frc.robot.Constants.AprilTagAlignmentConstants.*; // for max angular tolerance
+import static frc.robot.Constants.GeneralConstants.*;
+import static frc.robot.Constants.AprilTagAlignmentConstants.*;
 
 public class Swerve extends SubsystemBase {
     public static SwerveDrivePoseEstimator poseEstimator; 
@@ -91,17 +92,17 @@ public class Swerve extends SubsystemBase {
         if (rotation == 0) {
             if (Timer.getFPGATimestamp() - last_time < calibration_time) {
                 target_heading = current_heading;
-            } else if (translation.getNorm() != 0 || Math.abs(getError()) > yaw_tolerance) {
+            } else {
                 if (Math.abs(target_heading - current_heading) > 180) {
                     target_heading = current_heading + normalizeAngle(target_heading - current_heading);
                 }
-                double error_in_percent = Math.max(Math.min((target_heading - current_heading) / maximum_error, 1), -1);
-                int multiplier = 1;
-                if (error_in_percent < 0) {
-                    error_in_percent = 0 - error_in_percent;
-                    multiplier = -1;
-                }
-                rotation = Math.pow(error_in_percent, exponent) * maximum_power * multiplier * Constants.BaseFalconSwerve.maxAngularVelocity;
+                rotation = getCorrection(
+                    target_heading - current_heading, 
+                    swerve_min_error, 
+                    swerve_max_error, 
+                    swerve_exponent, 
+                    swerve_max_power * Constants.BaseFalconSwerve.maxAngularVelocity
+                );
             }
         } else {
             target_heading = current_heading;
