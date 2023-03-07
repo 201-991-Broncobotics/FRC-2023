@@ -119,7 +119,13 @@ public class DoubleArm extends SubsystemBase {
 
                 time_two_last = -999;
                 secondPower = Math.min(secondPower, 0);
-                target_angles[1] = Math.asin((max_y - first_arm_length * Math.sin(current_angles[0] * Math.PI / 180.0)) / second_arm_length) * 180.0 / Math.PI;
+
+                double delta_y = max_y - first_arm_length * Math.sin(current_angles[0] * Math.PI / 180.0);
+                if (Math.abs(delta_y) < second_arm_length - 0.5) {
+                    target_angles[1] = Math.asin(delta_y / second_arm_length) * 180.0 / Math.PI;
+                } else {
+                    target_angles[1] = Math.min(90, second_motor_max_angle);
+                }
 
             } else if (getPositionFromAngles(current_angles)[0] < min_x) {
 
@@ -135,8 +141,13 @@ public class DoubleArm extends SubsystemBase {
                 
                 time_two_last = -999;
                 secondPower = Math.max(secondPower, 0);
-                target_angles[1] = Math.asin((min_y - first_arm_length * Math.sin(current_angles[0] * Math.PI / 180.0)) / second_arm_length) * 180.0 / Math.PI;
-
+                
+                double delta_y = min_y - first_arm_length * Math.sin(current_angles[0] * Math.PI / 180.0);
+                if (Math.abs(delta_y) < second_arm_length - 0.5) {
+                    target_angles[1] = Math.asin(delta_y / second_arm_length) * 180.0 / Math.PI;
+                } else {
+                    target_angles[1] = Math.max(-90, second_motor_min_angle);
+                }
             }
         }
 
