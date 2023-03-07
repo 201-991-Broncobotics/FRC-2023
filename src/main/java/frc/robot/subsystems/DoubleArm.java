@@ -152,7 +152,7 @@ public class DoubleArm extends SubsystemBase {
                 first_motor_max_error, 
                 first_motor_exponent, 
                 first_motor_max_power_up, 
-                first_motor_max_power_up
+                first_motor_max_power_down
             );
         }
 
@@ -168,7 +168,7 @@ public class DoubleArm extends SubsystemBase {
                 second_motor_max_error, 
                 second_motor_exponent, 
                 second_motor_max_power_up, 
-                second_motor_max_power_up
+                second_motor_max_power_down
             );
         }
 
@@ -192,7 +192,7 @@ public class DoubleArm extends SubsystemBase {
             first_motor_max_error, 
             first_motor_exponent, 
             first_motor_max_power_up, 
-            first_motor_max_power_up
+            first_motor_max_power_down
         );
 
         double secondPower = getCorrection(
@@ -201,7 +201,7 @@ public class DoubleArm extends SubsystemBase {
             second_motor_max_error, 
             second_motor_exponent, 
             second_motor_max_power_up, 
-            second_motor_max_power_up
+            second_motor_max_power_down
         );
 
         firstPower = Math.max(first_motor.get() - first_motor_max_acceleration * delta_time, Math.min(first_motor.get() + first_motor_max_acceleration * delta_time, firstPower));
@@ -225,7 +225,7 @@ public class DoubleArm extends SubsystemBase {
             first_motor_max_error, 
             first_motor_exponent, 
             first_motor_max_power_up, 
-            first_motor_max_power_up
+            first_motor_max_power_down
         );
 
         double secondPower = getCorrection(
@@ -234,7 +234,7 @@ public class DoubleArm extends SubsystemBase {
             second_motor_max_error, 
             second_motor_exponent, 
             second_motor_max_power_up, 
-            second_motor_max_power_up
+            second_motor_max_power_down
         );
 
         firstPower = Math.max(first_motor.get() - first_motor_max_acceleration * delta_time, Math.min(first_motor.get() + first_motor_max_acceleration * delta_time, firstPower));
@@ -242,7 +242,6 @@ public class DoubleArm extends SubsystemBase {
 
         first_motor.set(firstPower);
         second_motor.set(secondPower);
-
     }
 
     public void brake() {

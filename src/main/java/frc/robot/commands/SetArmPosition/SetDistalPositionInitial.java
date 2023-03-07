@@ -8,7 +8,6 @@ import static frc.robot.Constants.DoubleArmConstants.*;
 public class SetDistalPositionInitial extends CommandBase { // small arm
 
     private DoubleArm doubleArm;
-    private boolean greater;
     private double targetDistal;
 
     public SetDistalPositionInitial(DoubleArm doubleArm) {
@@ -21,7 +20,6 @@ public class SetDistalPositionInitial extends CommandBase { // small arm
         doubleArm.resetPID();
         targetDistal = Math.min(Math.min(90, second_motor_max_angle), doubleArm.getTargetArmAngles()[0] + 180 - min_difference);
         doubleArm.setTargetAngles(new double[] {doubleArm.getTargetArmAngles()[0], targetDistal});
-        greater = doubleArm.getCurrentArmAngles()[1] < targetDistal;
     }
 
     @Override
@@ -38,7 +36,7 @@ public class SetDistalPositionInitial extends CommandBase { // small arm
     
     @Override
     public boolean isFinished() {
-        return (doubleArm.getCurrentArmAngles()[1] > targetDistal) == greater;
+        return Math.abs(doubleArm.getCurrentArmAngles()[1] - targetDistal) < second_motor_tolerance;
     }
 
 }

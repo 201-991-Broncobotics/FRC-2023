@@ -2,12 +2,12 @@ package frc.robot.commands.setArmPosition;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DoubleArm;
+import static frc.robot.Constants.DoubleArmConstants.*;
 
 public class SetProximalPosition extends CommandBase {
     
     private DoubleArm doubleArm;
     private double proximalPosition;
-    private boolean greater;
 
     public SetProximalPosition(DoubleArm doubleArm, double proximalPosition) {
         this.doubleArm = doubleArm;
@@ -19,7 +19,6 @@ public class SetProximalPosition extends CommandBase {
     @Override
     public void initialize() {
         doubleArm.setTargetAngles(new double[] {proximalPosition, doubleArm.getTargetArmAngles()[1]});
-        greater = doubleArm.getCurrentArmAngles()[0] < proximalPosition;
     }
 
     @Override
@@ -36,7 +35,7 @@ public class SetProximalPosition extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return (doubleArm.getCurrentArmAngles()[0] > proximalPosition) == greater;
+        return Math.abs(doubleArm.getCurrentArmAngles()[0] - proximalPosition) < first_motor_tolerance;
     }
     
 }

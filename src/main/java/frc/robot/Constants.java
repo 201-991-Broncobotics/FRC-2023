@@ -240,6 +240,8 @@ public final class Constants {
                                    first_motor_min_angle = -115, 
                                    first_motor_max_angle = 20, 
 
+                                   first_motor_tolerance = 2.5, 
+
 
 
                                    second_motor_sensitivity = 0.35,
@@ -256,10 +258,11 @@ public final class Constants {
                                    second_motor_min_angle = -45, 
                                    second_motor_max_angle = 90, 
 
+                                   second_motor_tolerance = 2.5, 
+
 
                                    
-                                   min_difference = 15, 
-                                   correction_ratio = 0.05, 
+                                   min_difference = 20, 
 
                                    first_arm_length = 32 - 4, // subtract 4 from length of arm to get pivot distance 
                                    second_arm_length = 15 + 7.751984, // add 7.751984 to length of arm to get pivot distance
