@@ -229,8 +229,8 @@ public final class Constants {
         public static final double first_motor_sensitivity = 0.55,
 
                                    first_motor_min_error = 0.5, 
-                                   first_motor_max_error = 30.0, 
-                                   first_motor_exponent = 0.75, 
+                                   first_motor_max_error = 15.0, 
+                                   first_motor_exponent = 1.2, 
                                    first_motor_max_power_up = 0.6,
                                    first_motor_max_power_down = 0.6,
 
@@ -248,9 +248,9 @@ public final class Constants {
 
                                    second_motor_min_error = 0.5,
                                    second_motor_max_error = 15.0,
-                                   second_motor_exponent = 0.75, 
-                                   second_motor_max_power_up = 0.15,
-                                   second_motor_max_power_down = 0.15,
+                                   second_motor_exponent = 1.2, 
+                                   second_motor_max_power_up = 0.4,
+                                   second_motor_max_power_down = 0.4,
 
                                    second_motor_max_acceleration = 1.2,
                                    whiplash_time_two = 0.25, 

@@ -116,6 +116,7 @@ public class DoubleArm extends SubsystemBase {
             last_manually_targeted_positions[1] = Math.min(second_motor_max_angle, current_angles[0] + 180 - min_difference);
         }
 
+        /* 
         if (!checkTargetAngles(current_angles)) { // out of bounds
 
             if (getPositionFromAngles(current_angles)[1] > max_y) {
@@ -154,7 +155,7 @@ public class DoubleArm extends SubsystemBase {
                     target_angles[1] = Math.max(-90, second_motor_min_angle);
                 }
             }
-        }
+        } */
 
         if (firstPower != 0) {
             target_angles[0] = current_angles[0];
