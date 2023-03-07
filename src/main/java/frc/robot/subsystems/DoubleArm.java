@@ -88,21 +88,19 @@ public class DoubleArm extends SubsystemBase {
 
     public void powerArm(double firstPower, double secondPower) { // power the arms manually
 
-        // Predicting it is stupid
-
         double[] current_angles = getCurrentArmAngles();
         double delta_time = Timer.getFPGATimestamp() - time; // in seconds
         time = Timer.getFPGATimestamp();
 
         if (first_motor_mode * firstPower > 0) {
             firstPower = 0;
-        } else {
+        } else if (firstPower != 0) {
             first_motor_mode = 0;
         }
         
         if (second_motor_mode * secondPower > 0) { // technically I could simplify this to firstPower * first_motor_mode > 0
             secondPower = 0;
-        } else {
+        } else if (secondPower != 0) {
             second_motor_mode = 0;
         }
 
