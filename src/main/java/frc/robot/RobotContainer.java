@@ -153,7 +153,7 @@ public class RobotContainer {
 
         stopArmCommands.onTrue(new TerminateArmCommands(doubleArm));
 
-        intake.toggleOnTrue(new Intake(claw, doubleArm));
+        intake.toggleOnTrue(new Intake(claw, doubleArm, () -> -operator.getRawAxis(motorOneAxis), () -> -operator.getRawAxis(motorTwoAxis)));
         outtake.toggleOnTrue(new Outtake(claw, doubleArm));
         
         terminateCommandsOperator.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));

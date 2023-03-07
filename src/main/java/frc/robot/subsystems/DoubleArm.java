@@ -245,20 +245,19 @@ public class DoubleArm extends SubsystemBase {
         double delta_time = Timer.getFPGATimestamp() - time; // in seconds
         time = Timer.getFPGATimestamp();
 
-        double target_distal = Math.min(Math.min(90, max_second_angle), current_angles[0] + 180 - min_difference);
-
         double firstPower = target_positions[0] > current_angles[0] ? first_motor_bangbang_power : -first_motor_bangbang_power;
 
         if (Math.abs(target_positions[0] - current_angles[0]) < first_motor_constant_min_error) {
-            firstPower *= nonconstant_multiplier; // if we're within 15 degrees don't go to the full bangbang power
+            firstPower *= nonconstant_multiplier_one; // if we're within 15 degrees don't go to the full bangbang power
         }
         
-        double secondPower = pidPower(
-            target_distal - current_angles[1], 
-            second_motor_max_power, 
-            second_motor_min_error, 
-            second_motor_max_error
-        );
+        target_positions[1] = Math.min(Math.min(90, max_second_angle), current_angles[0] + 180 - min_difference);
+        
+        double secondPower = target_positions[1] > current_angles[1] ? second_motor_bangbang_power : -second_motor_bangbang_power;
+
+        if (Math.abs(target_positions[1] - current_angles[1]) < second_motor_constant_min_error) {
+            secondPower *= nonconstant_multiplier_two; // if we're within 15 degrees don't go to the full bangbang power
+        }
 
         firstPower = Math.max(first_motor.get() - first_motor_max_acceleration * delta_time, Math.min(first_motor.get() + first_motor_max_acceleration * delta_time, firstPower));
         secondPower = Math.max(second_motor.get() - second_motor_max_acceleration * delta_time, Math.min(second_motor.get() + second_motor_max_acceleration * delta_time, secondPower));
