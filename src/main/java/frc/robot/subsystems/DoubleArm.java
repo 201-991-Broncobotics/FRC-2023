@@ -17,11 +17,10 @@ public class DoubleArm extends SubsystemBase {
     private DutyCycleEncoder first_encoder, second_encoder;
 
     private double[] target_positions = new double[2];
-    private double[] prev_angles = new double[2];
 
-    private double time;
-    private double time_one_last;
-    private double time_two_last;
+    private double time, time_one_last, time_two_last;
+
+    private int first_motor_mode = 0, second_motor_mode = 0;
 
     public DoubleArm() { // Initialize the motors, encoders, and target positions
         first_motor = new CANSparkMax(first_motor_ID, MotorType.kBrushless); // NEO Motors are brushless
@@ -79,7 +78,6 @@ public class DoubleArm extends SubsystemBase {
         // we want it so the encoder increases when the arm goes counterclockwise - may have to adjust them
 
         target_positions = getCurrentArmAngles();
-        prev_angles = getCurrentArmAngles();
 
         Timer.delay(1.0);
 
@@ -90,65 +88,77 @@ public class DoubleArm extends SubsystemBase {
 
     public void powerArm(double firstPower, double secondPower) { // power the arms manually
 
+        // Predicting it is stupid
+
         double[] current_angles = getCurrentArmAngles();
         double delta_time = Timer.getFPGATimestamp() - time; // in seconds
         time = Timer.getFPGATimestamp();
 
-        // want to predict the angles at the next whiplash time
-
-        double[] next_angles = {
-            (current_angles[0] - prev_angles[0]) / delta_time * whiplash_time_one + current_angles[0], 
-            (current_angles[1] - prev_angles[1]) / delta_time * whiplash_time_two + current_angles[1]
-        };
-
-        prev_angles = current_angles;
-
-        if (next_angles[0] < min_first_angle) {
-            firstPower = Math.max(correction_ratio * first_motor_max_power, firstPower);
-            if (second_motor.get() < 0) second_motor.set(0);
-            System.out.println("wtf");
-        } else if (next_angles[0] > max_first_angle) {
-            firstPower = Math.min(-correction_ratio * first_motor_max_power, firstPower);
-            if (second_motor.get() > 0) second_motor.set(0);
-        }
-
-        if (next_angles[1] < min_second_angle) {
-            secondPower = Math.max(correction_ratio * second_motor_max_power, secondPower);
-            if (second_motor.get() < 0) second_motor.set(0);
-        } else if (next_angles[1] > Math.min(max_second_angle, next_angles[0] + 180 - min_difference)) {
-            secondPower = Math.min(-correction_ratio * second_motor_max_power, secondPower);
-            if (second_motor.get() > 0) second_motor.set(0);
+        if (first_motor_mode * firstPower > 0) {
+            firstPower = 0;
+        } else {
+            first_motor_mode = 0;
         }
         
-        // maybe do something with target angles because those don't change
+        if (second_motor_mode * secondPower > 0) { // technically I could simplify this to firstPower * first_motor_mode > 0
+            secondPower = 0;
+        } else {
+            second_motor_mode = 0;
+        }
 
-        /*
-        if (!checkTargetAngles(next_angles)) { // out of bounds
-            if (getPositionFromAngles(next_angles)[1] > max_y) {
+        if (current_angles[0] < min_first_angle) { // don't power it down until we manually power it up again
+            firstPower = Math.max(correction_ratio * first_motor_max_power, firstPower);
+            first_motor_mode = -1; // don't allow manual power to be down
+        } else if (current_angles[0] > max_first_angle) {
+            firstPower = Math.min(-correction_ratio * first_motor_max_power, firstPower);
+            first_motor_mode = 1;
+        }
+
+        if (current_angles[1] < min_second_angle) {
+            secondPower = Math.max(correction_ratio * second_motor_max_power, secondPower);
+            second_motor_mode = -1;
+        } else if (current_angles[1] > Math.min(max_second_angle, current_angles[0] + 180 - min_difference)) {
+            secondPower = Math.min(-correction_ratio * second_motor_max_power, secondPower);
+            second_motor_mode = 1;
+        }
+
+        if (!checkTargetAngles(current_angles)) { // out of bounds
+
+            System.out.println("current position is out of bounds");
+
+            if (getPositionFromAngles(current_angles)[1] > max_y) {
                 // it means that we should only power down
 
-                if (next_angles[1] > 0) {
+                first_motor_mode = 1;
+                second_motor_mode = 1;
+
+                if (current_angles[1] > 0) {
                     firstPower = Math.min(firstPower, 0);
                     secondPower = Math.min(secondPower, -correction_ratio * second_motor_max_power);
                 } else {
                     firstPower = Math.min(firstPower, -correction_ratio * first_motor_max_power);
                     secondPower = Math.min(secondPower, 0);
                 }
-            } else if (getPositionFromAngles(next_angles)[0] < min_x) {
+            } else if (getPositionFromAngles(current_angles)[0] < min_x) {
                 // only power first motor up, second toward 0
+
+                first_motor_mode = -1;
 
                 firstPower = Math.max(firstPower, 0);
                 
-                if (next_angles[1] > 0) {
+                if (current_angles[1] > 0) {
+                    second_motor_mode = 1;
                     secondPower = Math.min(secondPower, 0);
                 } else {
+                    second_motor_mode = -1;
                     secondPower = Math.max(secondPower, 0);
                 }
             } else { // must be less than min_y because not possible to be greater than max_x
                 // power second one a bit to correct
+                second_motor_mode = -1;
                 secondPower = Math.max(secondPower, correction_ratio * second_motor_max_power);
             }
-        } */
+        }
 
         if (firstPower != 0) {
             target_positions[0] = current_angles[0];
@@ -186,6 +196,10 @@ public class DoubleArm extends SubsystemBase {
     }
 
     public void bangbang(boolean first_arm) {
+
+        first_motor_mode = 0;
+        second_motor_mode = 0;
+
         double[] current_angles = getCurrentArmAngles();
         double delta_time = Timer.getFPGATimestamp() - time; // in seconds
         time = Timer.getFPGATimestamp();
@@ -225,6 +239,10 @@ public class DoubleArm extends SubsystemBase {
     }
 
     public void powerProximalMaxDistal() { // powers the proximal while keeping the maximal distal at all times
+        
+        first_motor_mode = 0;
+        second_motor_mode = 0;
+
         double[] current_angles = getCurrentArmAngles();
         double delta_time = Timer.getFPGATimestamp() - time; // in seconds
         time = Timer.getFPGATimestamp();

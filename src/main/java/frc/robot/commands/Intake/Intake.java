@@ -1,7 +1,7 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.setArmPosition.SetArmPositionWithoutIntermediate;
+import frc.robot.commands.setArmPosition.SetArmPositionV2;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
 
@@ -13,7 +13,7 @@ public class Intake extends SequentialCommandGroup {
         addRequirements(claw, doubleArm);
         addCommands(
             new Intake_Subcommand(claw), 
-            new SetArmPositionWithoutIntermediate(doubleArm, idlePositionAngles)
+            new SetArmPositionV2(doubleArm, idlePositionAngles)
         );
     }
 }

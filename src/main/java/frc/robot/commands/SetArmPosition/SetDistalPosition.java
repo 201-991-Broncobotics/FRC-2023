@@ -3,8 +3,6 @@ package frc.robot.commands.setArmPosition;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DoubleArm;
 
-import static frc.robot.Constants.DoubleArmConstants.*;
-
 public class SetDistalPosition extends CommandBase { // small arm
 
     private DoubleArm doubleArm;

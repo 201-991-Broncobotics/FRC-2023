@@ -1,7 +1,7 @@
 package frc.robot.commands.alignWithApriltag;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.setArmPosition.SetArmPosition;
+import frc.robot.commands.setArmPosition.SetArmPositionV2;
 import frc.robot.subsystems.DoubleArm;
 import frc.robot.subsystems.Swerve;
 
@@ -11,7 +11,7 @@ public class AlignWithApriltag extends SequentialCommandGroup {
     public AlignWithApriltag(Swerve swerve, DoubleArm doubleArm) {
         addRequirements(swerve, doubleArm);
         addCommands(
-            new SetArmPosition(doubleArm, idlePositionAngles), 
+            new SetArmPositionV2(doubleArm, idlePositionAngles), 
             new AlignWithApriltag_Subcommand_1(swerve), 
             new AlignWithApriltag_Subcommand_2(swerve), 
             new AlignWithApriltag_Subcommand_3(swerve), 

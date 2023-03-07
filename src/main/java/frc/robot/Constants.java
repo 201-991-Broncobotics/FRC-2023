@@ -384,7 +384,7 @@ public final class Constants {
                                      midPositionAngles = {-21.4, 0}, 
                                      lowPositionAngles = {-64, 0}, 
                                      intakePositionAngles = {-82.3, -32.9}, 
-                                     idlePositionAngles = {-90, 60}, 
+                                     idlePositionAngles = {-102, 34}, 
                                      startPositionAngles = {-115, 50};
 
         public static final boolean fancy_drive = true, 
