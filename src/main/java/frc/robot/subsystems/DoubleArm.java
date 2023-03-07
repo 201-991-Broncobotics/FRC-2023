@@ -225,8 +225,11 @@ public class DoubleArm extends SubsystemBase {
                 first_motor_max_error
             );
 
-            secondPower = target_positions[1] > current_angles[1] ? second_motor_bangbang_power : -second_motor_bangbang_power;
+            secondPower = target_positions[1] > current_angles[1] ? second_motor_bangbang_power : -second_motor_bangbang_power_two;
 
+            if (Math.abs(target_positions[1] - current_angles[1]) < second_motor_constant_min_error) {
+                secondPower *= nonconstant_multiplier_one; // if we're within 15 degrees don't go to the full bangbang power
+            }
         }
         
         firstPower = Math.max(first_motor.get() - first_motor_max_acceleration * delta_time, Math.min(first_motor.get() + first_motor_max_acceleration * delta_time, firstPower));
@@ -253,7 +256,7 @@ public class DoubleArm extends SubsystemBase {
         
         target_positions[1] = Math.min(Math.min(90, max_second_angle), current_angles[0] + 180 - min_difference);
         
-        double secondPower = target_positions[1] > current_angles[1] ? second_motor_bangbang_power : -second_motor_bangbang_power;
+        double secondPower = target_positions[1] > current_angles[1] ? second_motor_bangbang_power_two : -second_motor_bangbang_power_two_down;
 
         if (Math.abs(target_positions[1] - current_angles[1]) < second_motor_constant_min_error) {
             secondPower *= nonconstant_multiplier_two; // if we're within 15 degrees don't go to the full bangbang power

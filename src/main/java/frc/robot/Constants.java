@@ -233,15 +233,17 @@ public final class Constants {
                                    second_motor_sensitivity = 0.35,
                                    second_motor_max_power = 0.4,
                                    second_motor_bangbang_power = 0.4, 
+                                   second_motor_bangbang_power_two = 0.2, 
+                                   second_motor_bangbang_power_two_down = 0.4, 
 
-                                   correction_ratio = 0.5, 
+                                   correction_ratio = 0.05, 
                                    first_motor_constant_min_error = 15, 
-                                   second_motor_constant_min_error = 5, 
-                                   nonconstant_multiplier_one = 0.5, 
+                                   second_motor_constant_min_error = 20, 
+                                   nonconstant_multiplier_one = 0.35, 
                                    nonconstant_multiplier_two = 0.25, 
 
-                                   first_motor_max_acceleration = 1.5, // we can't change this as fast
-                                   second_motor_max_acceleration = 2.0, // we can change this very fast
+                                   first_motor_max_acceleration = 2.25, // we can't change this as fast
+                                   second_motor_max_acceleration = 3.5, // we can change this very fast
 
                                    first_motor_min_error = 0.5, 
                                    second_motor_min_error = 0.5,
@@ -249,8 +251,8 @@ public final class Constants {
                                    first_motor_max_error = 55.0, 
                                    second_motor_max_error = 55.0,
 
-                                   whiplash_time_one = 0.75, 
-                                   whiplash_time_two = 0.4, 
+                                   whiplash_time_one = 0.4, 
+                                   whiplash_time_two = 0.2, 
 
                                    k_exponent = 1.15,  // 1.0 for a normal PID
 
@@ -259,7 +261,7 @@ public final class Constants {
                                    first_arm_length = 32 - 4, // subtract 4 from length of arm to get pivot distance 
                                    second_arm_length = 15 + 7.751984, // add 7.751984 to length of arm to get pivot distance
 
-                                   min_x = 4, 
+                                   min_x = -2, 
                                    min_y = -42,
                                    max_x = 61.368, 
                                    max_y = 20, 
@@ -268,7 +270,7 @@ public final class Constants {
                                    max_first_angle = 20, 
                                    min_second_angle = -45, 
                                    max_second_angle = 90, 
-                                   min_difference = 15, 
+                                   min_difference = 25, 
 
                                    clipping_one = 1.2, 
                                    clipping_two = 0.99,
@@ -288,8 +290,8 @@ public final class Constants {
     public static final class SwerveConstants {
         
         public static final double maximum_power = 0.8, 
-                                   maximum_error = 60, // degrees
-                                   exponent = 0.85, 
+                                   maximum_error = 30, // degrees
+                                   exponent = 0.75, 
                                    calibration_time = 0.5, // seconds
                                    turn_sensitivity = 0.35, 
                                    slow = 0.35,
@@ -386,7 +388,7 @@ public final class Constants {
                                      midPositionAngles = {-21.4, 0}, 
                                      lowPositionAngles = {-64, 0}, 
                                      intakePositionAngles = {-82.3, -32.9}, 
-                                     idlePositionAngles = {-102, 34}, 
+                                     idlePositionAngles = {-115, 42}, 
                                      startPositionAngles = {-115, 50};
 
         public static final boolean fancy_drive = true, 
