@@ -73,6 +73,23 @@ public class Swerve extends SubsystemBase {
         drive(new Translation2d(), 0, true, false);
     }
 
+    public void makeX() {
+        changeHeading(0);
+
+        SwerveModuleState[] swerveModuleStates = { // FL, FR, BL, BR
+            new SwerveModuleState(0, new Rotation2d(Math.PI / 4)), 
+            new SwerveModuleState(0, new Rotation2d(-Math.PI / 4)), 
+            new SwerveModuleState(0, new Rotation2d(-Math.PI / 4)), 
+            new SwerveModuleState(0, new Rotation2d(Math.PI / 4))
+        }; // I think this works???
+
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.BaseFalconSwerve.maxSpeed);
+
+        for (SwerveModule mod : mSwerveMods) {
+            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], false);
+        }
+    }
+
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
 
         if (show_drive_data) {
@@ -197,7 +214,7 @@ public class Swerve extends SubsystemBase {
         if (vision_estimate[1] != 0 && ((Math.abs(getYaw().getDegrees() - vision_estimate[2]) + max_angular_tolerance) % 90 < 2 * max_angular_tolerance)) {
 
             Pose2d estimatedPose = new Pose2d(vision_estimate[0], vision_estimate[1], new Rotation2d(vision_estimate[2] * Math.PI / 180));  // don't put yaw as the angle because yaw might be off by a few degrees
-            addVisionEstimate(estimatedPose, Timer.getFPGATimestamp() - vision_estimate[3] * 1000.0);
+            poseEstimator.addVisionMeasurement(estimatedPose, Timer.getFPGATimestamp() - vision_estimate[3] * 1000.0);
             
         }
 
@@ -213,9 +230,5 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
-    }
-
-    public static void addVisionEstimate(Pose2d estimate, double time) {
-        poseEstimator.addVisionMeasurement(estimate, time);
     }
 }

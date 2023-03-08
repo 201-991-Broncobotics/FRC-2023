@@ -341,9 +341,8 @@ public final class Constants {
 
                                 zeroGyroButton = XboxController.Button.kY.value, 
                                 robotCentricButton = XboxController.Button.kLeftBumper.value,
-                                tagAlignerButton = XboxController.Button.kA.value,
-                                tagAlignerExitButton = XboxController.Button.kA.value, 
-                                tagAlignerNewButton = XboxController.Button.kX.value, 
+                                tagAlignerButton = XboxController.Button.kA.value, 
+                                makeXButton = XboxController.Button.kX.value, 
                                 autoBalanceButton = XboxController.Button.kB.value,
                                 terminateCommandsDriverButton = XboxController.Button.kBack.value;
 
