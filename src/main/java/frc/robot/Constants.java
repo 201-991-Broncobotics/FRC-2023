@@ -231,8 +231,8 @@ public final class Constants {
         public static final double first_motor_sensitivity = 0.55,
 
                                    first_motor_min_error = 0.5, 
-                                   first_motor_max_error = 15.0, 
-                                   first_motor_exponent = 1.2, 
+                                   first_motor_max_error = 17.5, 
+                                   first_motor_exponent = 1.35, 
                                    first_motor_max_power_up = 0.6,
                                    first_motor_max_power_down = 0.6,
 
@@ -249,12 +249,12 @@ public final class Constants {
                                    second_motor_sensitivity = 0.65,
 
                                    second_motor_min_error = 0.5,
-                                   second_motor_max_error = 20.0,
-                                   second_motor_exponent = 2, 
+                                   second_motor_max_error = 8.5,
+                                   second_motor_exponent = 2.5, 
                                    second_motor_max_power_up = 0.7,
-                                   second_motor_max_power_down = 0.7,
+                                   second_motor_max_power_down = 1.0,
 
-                                   second_motor_max_acceleration = 3.0,
+                                   second_motor_max_acceleration = 12.0,
                                    whiplash_time_two = 0.5, 
 
                                    second_motor_min_angle = -45, 
@@ -403,6 +403,12 @@ public final class Constants {
             error /= max_error;
             return Math.pow(error, exponent) * multiplier;
         }
+
+        /** Normalizes angle to between -180 and 180 */
+        public static double normalizeAngle(double degrees) {
+            if (degrees < 0) return ((degrees - 180) % 360 + 180);
+            return ((degrees + 180) % 360 - 180);
+        }
     }
 
     public static final class TuningConstants {
@@ -410,8 +416,8 @@ public final class Constants {
                                    CANCoder1_zero = 307.88, 
                                    CANCoder2_zero = 315.00, 
                                    CANCoder3_zero = 261.60, 
-                                   encoder_one_zero = -90.3, 
-                                   encoder_two_zero = -301.6;
+                                   encoder_one_zero = -93.1, 
+                                   encoder_two_zero = -304.6;
         
         /* The angles we want to go to - NOT the x and y */
         public static final double[] topPositionAngles = {2.7, 19.0}, 

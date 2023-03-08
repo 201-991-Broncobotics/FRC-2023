@@ -93,25 +93,29 @@ public class DoubleArm extends SubsystemBase {
         time = Timer.getFPGATimestamp();
 
         if ((current_angles[0] < first_motor_min_angle) || (last_manually_targeted_positions[0] <= first_motor_min_angle)) {
-            time_one_last = time;
-            firstPower = Math.max(0, secondPower);
+            time_one_last = -999;
+            firstPower = Math.max(0, firstPower);
+            first_motor.set(firstPower);
             target_angles[0] = first_motor_min_angle;
             last_manually_targeted_positions[0] = first_motor_min_angle;
         } else if ((current_angles[0] > first_motor_max_angle) || (last_manually_targeted_positions[0] >= first_motor_max_angle)) {
-            time_one_last = time;
-            firstPower = Math.min(0, secondPower);
+            time_one_last = -999;
+            firstPower = Math.min(0, firstPower);
+            first_motor.set(firstPower);
             target_angles[0] = first_motor_max_angle;
             last_manually_targeted_positions[0] = first_motor_max_angle;
         }
 
         if ((current_angles[1] < second_motor_min_angle) || (last_manually_targeted_positions[1] <= second_motor_min_angle)) {
-            time_two_last = time;
+            time_two_last = -999;
             secondPower = Math.max(0, secondPower);
+            second_motor.set(secondPower);
             target_angles[1] = second_motor_min_angle;
             last_manually_targeted_positions[1] = second_motor_min_angle;
         } else if ((current_angles[1] > Math.min(second_motor_max_angle, current_angles[0] + 180 - min_difference)) || (last_manually_targeted_positions[1] >= Math.min(second_motor_max_angle, current_angles[0] + 180 - min_difference))) {
-            time_two_last = time;
+            time_two_last = -999;
             secondPower = Math.min(0, secondPower);
+            second_motor.set(secondPower);
             target_angles[1] = Math.min(second_motor_max_angle, current_angles[0] + 180 - min_difference);
             last_manually_targeted_positions[1] = Math.min(second_motor_max_angle, current_angles[0] + 180 - min_difference);
         }
@@ -242,8 +246,6 @@ public class DoubleArm extends SubsystemBase {
         double delta_time = Timer.getFPGATimestamp() - time; // in seconds
         time = Timer.getFPGATimestamp();
 
-        target_angles[1] = Math.min(Math.min(second_motor_max_angle, 90), current_angles[0] + 180 - min_difference);
-
         double firstPower = getCorrection(
             target_angles[0] - current_angles[0], 
             first_motor_min_error, 
@@ -252,15 +254,27 @@ public class DoubleArm extends SubsystemBase {
             first_motor_max_power_up, 
             first_motor_max_power_down
         );
+        
+        double secondPower;
 
-        double secondPower = getCorrection(
-            target_angles[1] - current_angles[1], 
-            second_motor_min_error, 
-            second_motor_max_error, 
-            second_motor_exponent, 
-            second_motor_max_power_up, 
-            second_motor_max_power_down
-        );
+        target_angles[1] = Math.min(Math.min(second_motor_max_angle, 90), current_angles[0] + 180 - min_difference);
+
+        if (target_angles[1] > current_angles[0] + 180 - min_difference) {
+            target_angles[1] = 90;
+            second_motor.set(0);
+            secondPower = 0;
+        } else {
+            target_angles[1] = Math.min(Math.min(second_motor_max_angle, 90), current_angles[0] + 180 - min_difference);
+
+            secondPower = getCorrection(
+                target_angles[1] - current_angles[1], 
+                second_motor_min_error, 
+                second_motor_max_error, 
+                second_motor_exponent, 
+                second_motor_max_power_up, 
+                second_motor_max_power_down
+            );
+        }
 
         firstPower = Math.max(first_motor.get() - first_motor_max_acceleration * delta_time, Math.min(first_motor.get() + first_motor_max_acceleration * delta_time, firstPower));
         secondPower = Math.max(second_motor.get() - second_motor_max_acceleration * delta_time, Math.min(second_motor.get() + second_motor_max_acceleration * delta_time, secondPower));
@@ -293,8 +307,8 @@ public class DoubleArm extends SubsystemBase {
 
     public double[] getCurrentArmAngles() {
         return new double[] {
-            first_encoder.getDistance() - first_encoder_zero, 
-            first_encoder.getDistance() - first_encoder_zero + second_encoder.getDistance() - second_encoder_zero
+            normalizeAngle(first_encoder.getDistance() - first_encoder_zero), 
+            normalizeAngle(first_encoder.getDistance() - first_encoder_zero + second_encoder.getDistance() - second_encoder_zero)
         };
     }
     

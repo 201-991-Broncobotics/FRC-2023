@@ -7,6 +7,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 
+import static frc.robot.Constants.GeneralConstants.*;
 import static frc.robot.Constants.AprilTagAlignmentConstants.*;
 
 import java.util.function.BooleanSupplier;
@@ -50,10 +51,10 @@ public class AlignWithApriltagOld extends CommandBase {
         System.out.println(angular_offset);
         System.out.println((Math.abs(swerve.getYaw().getDegrees() + angular_offset) + max_angular_tolerance) % 90);
 
-        double target_heading = Swerve.normalizeAngle(swerve.getYaw().getDegrees() + angular_offset); // target pose = where we want to 
+        double target_heading = normalizeAngle(swerve.getYaw().getDegrees() + angular_offset); // target pose = where we want to 
 
-        while ((Math.abs(Swerve.normalizeAngle(target_heading - swerve.getYaw().getDegrees())) > angular_tolerance) && (!exitSup.getAsBoolean())) {
-            if (Swerve.normalizeAngle(target_heading - swerve.getYaw().getDegrees()) < 0) {
+        while ((Math.abs(normalizeAngle(target_heading - swerve.getYaw().getDegrees())) > angular_tolerance) && (!exitSup.getAsBoolean())) {
+            if (normalizeAngle(target_heading - swerve.getYaw().getDegrees()) < 0) {
                 swerve.drive(new Translation2d(), -rotation_speed * Constants.BaseFalconSwerve.maxAngularVelocity, false, true);
             } else {
                 swerve.drive(new Translation2d(), rotation_speed * Constants.BaseFalconSwerve.maxAngularVelocity, false, true);

@@ -52,12 +52,6 @@ public class Swerve extends SubsystemBase {
         poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, Rotation2d.fromDegrees(0), getModulePositions(), new Pose2d()); 
     }
 
-    /** Normalizes angle to between -180 and 180 */
-    public static double normalizeAngle(double degrees) {
-        if (degrees < 0) return ((degrees - 180) % 360 + 180);
-        return ((degrees + 180) % 360 - 180);
-    }
-
     /** Counterclockwise in degrees */
     public void changeHeading(double delta) {
         setTargetHeading(getYaw().getDegrees() + delta);
