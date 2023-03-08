@@ -77,16 +77,16 @@ public class Swerve extends SubsystemBase {
         changeHeading(0);
 
         SwerveModuleState[] swerveModuleStates = { // FL, FR, BL, BR
-            new SwerveModuleState(0, new Rotation2d(Math.PI / 4)), 
-            new SwerveModuleState(0, new Rotation2d(-Math.PI / 4)), 
-            new SwerveModuleState(0, new Rotation2d(-Math.PI / 4)), 
-            new SwerveModuleState(0, new Rotation2d(Math.PI / 4))
-        }; // I think this works???
-
+            new SwerveModuleState(0.05, new Rotation2d(Math.PI / 4)), 
+            new SwerveModuleState(0.05, new Rotation2d(-Math.PI / 4)), 
+            new SwerveModuleState(0.05, new Rotation2d(3.0 * Math.PI / 4)), 
+            new SwerveModuleState(0.05, new Rotation2d(-3.0 * Math.PI / 4))
+        };
+        
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.BaseFalconSwerve.maxSpeed);
 
         for (SwerveModule mod : mSwerveMods) {
-            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], false);
+            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], true);
         }
     }
 

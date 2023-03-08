@@ -246,15 +246,15 @@ public final class Constants {
 
 
 
-                                   second_motor_sensitivity = 0.55,
+                                   second_motor_sensitivity = 0.65,
 
                                    second_motor_min_error = 0.5,
-                                   second_motor_max_error = 15.0,
-                                   second_motor_exponent = 1.2, 
-                                   second_motor_max_power_up = 0.6,
-                                   second_motor_max_power_down = 0.6,
+                                   second_motor_max_error = 20.0,
+                                   second_motor_exponent = 2, 
+                                   second_motor_max_power_up = 0.7,
+                                   second_motor_max_power_down = 0.7,
 
-                                   second_motor_max_acceleration = 1.2,
+                                   second_motor_max_acceleration = 3.0,
                                    whiplash_time_two = 0.5, 
 
                                    second_motor_min_angle = -45, 

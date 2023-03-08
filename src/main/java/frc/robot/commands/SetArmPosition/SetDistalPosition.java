@@ -28,11 +28,7 @@ public class SetDistalPosition extends CommandBase { // small arm
 
     @Override
     public void end(boolean interrupted) {
-        if (interrupted) {
-            doubleArm.resetPID();
-        } else {
-            doubleArm.brake();
-        }
+        doubleArm.resetPID();
     }
     
     @Override

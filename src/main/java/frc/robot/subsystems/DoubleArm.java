@@ -201,6 +201,9 @@ public class DoubleArm extends SubsystemBase {
 
     public void pidPowerArm() {
 
+        last_manually_targeted_positions[0] = 0;
+        last_manually_targeted_positions[1] = 0;
+
         double[] current_angles = getCurrentArmAngles();
         double delta_time = Timer.getFPGATimestamp() - time; // in seconds
         time = Timer.getFPGATimestamp();
@@ -232,6 +235,9 @@ public class DoubleArm extends SubsystemBase {
 
     public void pidPowerKeepMaxDistal() {
         
+        last_manually_targeted_positions[0] = 0;
+        last_manually_targeted_positions[1] = 0;
+
         double[] current_angles = getCurrentArmAngles();
         double delta_time = Timer.getFPGATimestamp() - time; // in seconds
         time = Timer.getFPGATimestamp();
@@ -276,6 +282,8 @@ public class DoubleArm extends SubsystemBase {
     public void resetPID() {
         target_angles[0] = getCurrentArmAngles()[0];
         target_angles[1] = getCurrentArmAngles()[1];
+        time_one_last = Timer.getFPGATimestamp();
+        time_two_last = Timer.getFPGATimestamp();
         brake();
     }
 

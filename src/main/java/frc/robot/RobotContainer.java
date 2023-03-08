@@ -140,7 +140,7 @@ public class RobotContainer {
 
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-        makeX.onTrue(new InstantCommand(() -> s_Swerve.makeX()));
+        makeX.onTrue(new Brake(s_Swerve));
 
         tagAligner.toggleOnTrue(new AlignWithApriltag(s_Swerve, doubleArm));
                         // new AlignWithApriltagOld(s_Swerve, () -> false)
