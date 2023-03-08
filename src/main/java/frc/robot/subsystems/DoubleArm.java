@@ -259,7 +259,7 @@ public class DoubleArm extends SubsystemBase {
 
         target_angles[1] = Math.min(Math.min(second_motor_max_angle, 90), current_angles[0] + 180 - min_difference);
 
-        if (target_angles[1] > current_angles[0] + 180 - min_difference) {
+        if (target_angles[1] < current_angles[0] + 180 - min_difference - 5) {
             target_angles[1] = 90;
             second_motor.set(0);
             secondPower = 0;
