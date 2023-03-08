@@ -40,7 +40,7 @@ public final class Constants {
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-        public static final NeutralMode driveNeutralMode = NeutralMode.Coast; // TODO Decide this later
+        public static final NeutralMode driveNeutralMode = NeutralMode.Brake; // TODO Decide this later
 
         /* Change the values above if you want to but they're not necessary to be tuned */
 
@@ -164,12 +164,14 @@ public final class Constants {
     }
 
     public static final class AutoBalanceConstants {
-        public static final double drive_speed = 0.16,
+        public static final double drive_speed = 0.104,
+                                   drive_speed_get_on = 0.2, 
                                    pitch_tolerance = 8, 
                                    max_linear_acceleration = 0.4,
-                                   ratio = 1.38, 
-                                   min_time = 1.5, 
-                                   min_deriv = 1.5;
+                                   ratio = 1.1, 
+                                   min_time = 0.5, 
+                                   mt2 = 2.2, 
+                                   min_deriv = 0.025;
     }
 
     public static final class ClawConstants {
@@ -207,7 +209,7 @@ public final class Constants {
     
         public static final boolean invert_first_motor = true, 
                                     invert_first_motor_follower = false, 
-                                    invert_second_motor = true, 
+                                    invert_second_motor = false, 
                                     invert_first_encoder = true, 
                                     invert_second_encoder = true, 
                                     first_motor_brake = true, 
@@ -244,16 +246,16 @@ public final class Constants {
 
 
 
-                                   second_motor_sensitivity = 0.35,
+                                   second_motor_sensitivity = 0.55,
 
                                    second_motor_min_error = 0.5,
                                    second_motor_max_error = 15.0,
                                    second_motor_exponent = 1.2, 
-                                   second_motor_max_power_up = 0.4,
-                                   second_motor_max_power_down = 0.4,
+                                   second_motor_max_power_up = 0.6,
+                                   second_motor_max_power_down = 0.6,
 
                                    second_motor_max_acceleration = 1.2,
-                                   whiplash_time_two = 0.25, 
+                                   whiplash_time_two = 0.5, 
 
                                    second_motor_min_angle = -45, 
                                    second_motor_max_angle = 90, 
@@ -405,10 +407,10 @@ public final class Constants {
     }
 
     public static final class TuningConstants {
-        public static final double CANCoder0_zero = 277.38, 
-                                   CANCoder1_zero = 292.5, 
-                                   CANCoder2_zero = 318.78, 
-                                   CANCoder3_zero = 271.14, 
+        public static final double CANCoder0_zero = 275.27, 
+                                   CANCoder1_zero = 307.88, 
+                                   CANCoder2_zero = 315.00, 
+                                   CANCoder3_zero = 261.60, 
                                    encoder_one_zero = -90.3, 
                                    encoder_two_zero = -301.6;
         

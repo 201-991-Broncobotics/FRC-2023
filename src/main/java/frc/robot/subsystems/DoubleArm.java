@@ -24,7 +24,7 @@ public class DoubleArm extends SubsystemBase {
     public DoubleArm() { // Initialize the motors, encoders, and target positions
         first_motor = new CANSparkMax(first_motor_ID, MotorType.kBrushless); // NEO Motors are brushless
         first_motor_follower = new CANSparkMax(first_motor_follower_ID, MotorType.kBrushless);
-        second_motor = new CANSparkMax(second_motor_ID, MotorType.kBrushless);
+        second_motor = new CANSparkMax(second_motor_ID, MotorType.kBrushed);
 
         first_motor.restoreFactoryDefaults();
         first_motor.setInverted(invert_first_motor);
