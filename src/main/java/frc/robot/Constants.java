@@ -151,7 +151,9 @@ public final class Constants {
         public static final int angle_trials = 25, 
                                 distance_trials = 10; // longer means slower but more accurate
 
-        public static final double offset = 0.1, // in inches; from center of robot
+        public static final double offset = 10.9008, // in inches; from center of robot
+                                   cone_offset = 22, // between center of april tags and center of poles; tags are in line with cube scoring stations
+                                   
                                    sideways_tolerance = 0.5, // in inches
                                    sideways_speed = 0.15, 
                                    rotation_speed = 0.15, // percentage of maxima
@@ -450,5 +452,14 @@ public final class Constants {
                                    ramp_up_time_angular = 2,
                                    translation_p_controller = 2, 
                                    angle_p_controller = 4;
+        
+        /* Arm Constants */
+
+        public static final double p1 = 0.2, 
+                                   d1 = 0, 
+                                   i1 = 0, 
+                                   p2 = 0.2, 
+                                   d2 = 0, 
+                                   i2 = 0;
     }
 }

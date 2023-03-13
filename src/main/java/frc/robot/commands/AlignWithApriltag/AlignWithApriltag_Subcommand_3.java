@@ -27,16 +27,17 @@ public class AlignWithApriltag_Subcommand_3 extends CommandBase {
         if (frc.robot.Variables.continueWithAWA) {
             swerve.brake();
             swerve.setTargetHeading(frc.robot.Variables.target_swerve_heading);
-            if (Limelight.getData()[0] == -12) {
-                if (frc.robot.Variables.angular_offset < 0) {
-                    strafe_speed = sideways_speed;
-                } else {
-                    strafe_speed = 0 - sideways_speed;
-                }
-                time = 0;
-                starting_time = Timer.getFPGATimestamp();
+
+            if (frc.robot.Variables.angular_offset < 0) {
+                strafe_speed = sideways_speed;
             } else {
-                strafe_speed = 0.0;
+                strafe_speed = 0 - sideways_speed;
+            }
+            time = 0;
+            starting_time = Timer.getFPGATimestamp();
+
+            if (Limelight.getData()[0] != -12) {
+                strafe_speed *= 0.5;
             }
         }
     }
