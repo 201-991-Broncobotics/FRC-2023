@@ -75,31 +75,33 @@ public class DoubleArm extends SubsystemBase {
         
         // we want it so the encoder increases when the arm goes counterclockwise - may have to adjust them
 
+        Timer.delay(1.0); // invert correctly
+
         first = new PIDMotor(first_motor, () -> getCurrentArmAngles()[0], whiplash_time_one, first_motor_min_angle, first_motor_max_angle, first_motor_max_power_up, first_motor_max_acceleration, p1, d1, i1);
         second = new PIDMotor(second_motor, () -> getCurrentArmAngles()[1], whiplash_time_two, second_motor_min_angle, second_motor_max_angle, second_motor_max_power_up, second_motor_max_acceleration, p2, d2, i2);
-
-        Timer.delay(1.0);
     }
 
     public void powerArm(double firstPower, double secondPower) { // power the arms manually
-        first.power(firstPower);
-        second.power(secondPower);
 
-        /* 
+        double[] current_angles = getCurrentArmAngles();
+        if (current_angles[1] > current_angles[0] + 180 - min_difference) {
+            second.setTarget(current_angles[0] + 180 - min_difference);
+            secondPower = Math.min(secondPower, 0);
+        } // all of zay others are gewd
+
         if (!checkTargetAngles(current_angles)) { // out of bounds
 
             if (getPositionFromAngles(current_angles)[1] > max_y) {
 
                 firstPower = Math.min(firstPower, 0);
 
-                time_two_last = time;
                 secondPower = Math.min(secondPower, 0);
 
                 double delta_y = max_y - first_arm_length * Math.sin(current_angles[0] * Math.PI / 180.0);
                 if (Math.abs(delta_y) < second_arm_length - 0.5) {
-                    target_angles[1] = Math.asin(delta_y / second_arm_length) * 180.0 / Math.PI;
+                    second.setTarget(Math.asin(delta_y / second_arm_length) * 180.0 / Math.PI);
                 } else {
-                    target_angles[1] = Math.min(90, second_motor_max_angle);
+                    second.setTarget(Math.min(90, second_motor_max_angle));
                 }
 
             } else if (getPositionFromAngles(current_angles)[0] < min_x) {
@@ -114,17 +116,19 @@ public class DoubleArm extends SubsystemBase {
 
             } else { // must be less than min_y because not possible to be greater than max_x
                 
-                time_two_last = time;
                 secondPower = Math.max(secondPower, 0);
                 
                 double delta_y = min_y - first_arm_length * Math.sin(current_angles[0] * Math.PI / 180.0);
                 if (Math.abs(delta_y) < second_arm_length - 0.5) {
-                    target_angles[1] = Math.asin(delta_y / second_arm_length) * 180.0 / Math.PI;
+                    second.setTarget(Math.asin(delta_y / second_arm_length) * 180.0 / Math.PI);
                 } else {
-                    target_angles[1] = Math.max(-90, second_motor_min_angle);
+                    second.setTarget(Math.max(-90, second_motor_min_angle));
                 }
             }
-        } */
+        }
+
+        first.power(firstPower);
+        second.power(secondPower);
     }
     
 

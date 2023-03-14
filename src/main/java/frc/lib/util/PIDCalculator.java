@@ -31,7 +31,7 @@ public class PIDCalculator {
 
     public double update(double currentPosition) {
 
-        double error = currentPosition - targetPosition;
+        double error = targetPosition - currentPosition;
         double delta_time = Timer.getFPGATimestamp() - previous_time;
         double delta_error = error - previous_error;
 
@@ -53,7 +53,7 @@ public class PIDCalculator {
         }
         integral += error * delta_time;
         i = integral * kI;
-        correction = Math.max(0 - maxPower, Math.min(maxPower, p + i + d));
+        correction = Math.max(-1, Math.min(1, p + i + d)) * maxPower;
         return correction;
     }
 

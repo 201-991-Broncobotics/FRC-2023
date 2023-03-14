@@ -32,15 +32,17 @@ public class PIDMotor {
 
         double currentPosition = positionSup.getAsDouble();
 
-        if (currentPosition < minPosition || lmtPosition < minPosition) {
+        if (currentPosition < minPosition || lmtPosition <= minPosition) {
             previousTime = -1000;
             power = Math.max(0, power);
-            pidCalculator.forceReset(minPosition);
+            motor.set(power);
+            pidCalculator.reset(minPosition);
             lmtPosition = minPosition;
-        } else if (currentPosition > maxPosition || lmtPosition > maxPosition) {
+        } else if (currentPosition > maxPosition || lmtPosition >= maxPosition) {
             previousTime = -1000;
             power = Math.min(0, power);
-            pidCalculator.forceReset(maxPosition);
+            motor.set(power);
+            pidCalculator.reset(maxPosition);
             lmtPosition = maxPosition;
         }
         
@@ -61,7 +63,10 @@ public class PIDMotor {
     }
 
     public void setTarget(double targetPosition) {
+        previousTime = -1000;
         pidCalculator.reset(targetPosition);
+        motor.set(0);
+        lmtPosition = targetPosition;
     }
 
     public void pidPower() {

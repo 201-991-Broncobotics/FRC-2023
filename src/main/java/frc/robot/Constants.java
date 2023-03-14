@@ -244,7 +244,7 @@ public final class Constants {
                                    first_motor_min_angle = -115, 
                                    first_motor_max_angle = 20, 
 
-                                   first_motor_tolerance = 2.5, 
+                                   first_motor_tolerance = 4, 
 
 
 
@@ -262,7 +262,7 @@ public final class Constants {
                                    second_motor_min_angle = -45, 
                                    second_motor_max_angle = 90, 
 
-                                   second_motor_tolerance = 2.5, 
+                                   second_motor_tolerance = 4, 
 
 
                                    
@@ -360,8 +360,8 @@ public final class Constants {
                                 intakeUpperValue = dpad_up, 
                                 intakeLowerValue = dpad_down, 
 
-                                intakeButton = XboxController.Button.kLeftBumper.value, 
-                                outtakeButton = XboxController.Button.kRightBumper.value, 
+                                intakeButton = XboxController.Button.kRightBumper.value, 
+                                outtakeButton = XboxController.Button.kLeftBumper.value, 
 
                                 idleButton = XboxController.Button.kStart.value, 
 
@@ -455,10 +455,10 @@ public final class Constants {
         
         /* Arm Constants */
 
-        public static final double p1 = 0.2, 
+        public static final double p1 = 0.038, 
                                    d1 = 0, 
                                    i1 = 0, 
-                                   p2 = 0.2, 
+                                   p2 = 0.028, 
                                    d2 = 0, 
                                    i2 = 0;
     }
