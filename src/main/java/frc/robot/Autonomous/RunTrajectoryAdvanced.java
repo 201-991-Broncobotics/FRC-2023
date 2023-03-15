@@ -4,6 +4,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -18,10 +19,12 @@ public class RunTrajectoryAdvanced extends SequentialCommandGroup {
     
     public RunTrajectoryAdvanced(Swerve swerve, String fileName) {
 
-        PathPlannerTrajectory trajectoryPath = PathPlanner.loadPath(
+        PathPlannerTrajectory temporaryPath = PathPlanner.loadPath(
             fileName, 
             new PathConstraints(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared)
         );
+
+        PathPlannerTrajectory trajectoryPath = PathPlannerTrajectory.transformTrajectoryForAlliance(temporaryPath, DriverStation.Alliance.Red);
 
         PIDController thetaController = new PIDController(kPThetaController, 0, 0);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);

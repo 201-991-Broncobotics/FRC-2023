@@ -38,6 +38,6 @@ public class Intake extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return (claw.getCurrent() > claw_current_limit) && (Timer.getFPGATimestamp() - starting_time > 0.5);
+        return (claw.getCurrent() > claw_current_limit) && (Timer.getFPGATimestamp() - starting_time > 1);
     }
 }

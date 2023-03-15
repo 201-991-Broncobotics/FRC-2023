@@ -19,6 +19,50 @@ public class Autonomous extends SequentialCommandGroup {
         addCommands(
             new RunTrajectoryAdvanced(swerve, selectedAuto)
         );
+
+        String alliance_side = "null", location = "null";
+        int number_of_elements = -1;
+        boolean autobalance = false;
+        double[] temp = SmartDashboard.getNumberArray("Auto Data", new double[] {-1});
+        if (temp.length != -1) {
+            switch ((int) temp[0]) {
+                case 0:
+                    alliance_side = "blue";
+                    break;
+                case 1:
+                    alliance_side = "red";
+                    break;
+            }
+            switch ((int) temp[1]) {
+                case 0:
+                    location = "short";
+                    break;
+                case 1:
+                    location = "medium";
+                    break;
+                case 2:
+                    location = "long";
+                    break;
+            }
+            switch ((int) temp[2]) {
+                case 0:
+                    number_of_elements = 1;
+                    break;
+                case 1:
+                    number_of_elements = 2;
+                    break;
+            }
+            switch ((int) temp[3]) {
+                case 0:
+                    autobalance = true;
+                    break;
+                case 1:
+                    autobalance = false;
+                    break;
+            }
+        }
+
+        System.out.println("Auto Selector gave : " + alliance_side + " " + location + " " + number_of_elements + " " + autobalance);
         /*
         switch (auto_number) {
             case 1: // Red Right/Bottom
