@@ -17,14 +17,14 @@ import static frc.robot.Constants.AutoConstants.*;
 
 public class RunTrajectoryAdvanced extends SequentialCommandGroup {
     
-    public RunTrajectoryAdvanced(Swerve swerve, String fileName) {
+    public RunTrajectoryAdvanced(Swerve swerve, String fileName, DriverStation.Alliance alliance) {
 
         PathPlannerTrajectory temporaryPath = PathPlanner.loadPath(
             fileName, 
             new PathConstraints(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared)
         );
 
-        PathPlannerTrajectory trajectoryPath = PathPlannerTrajectory.transformTrajectoryForAlliance(temporaryPath, DriverStation.Alliance.Red);
+        PathPlannerTrajectory trajectoryPath = PathPlannerTrajectory.transformTrajectoryForAlliance(temporaryPath, alliance);
 
         PIDController thetaController = new PIDController(kPThetaController, 0, 0);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);

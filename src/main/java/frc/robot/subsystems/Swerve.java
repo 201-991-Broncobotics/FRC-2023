@@ -33,6 +33,7 @@ public class Swerve extends SubsystemBase {
     private PIDCalculator pid;
 
     public Swerve() {
+        pid = new PIDCalculator(pS, dS, iS, swerve_max_power * Constants.BaseFalconSwerve.maxAngularVelocity, 0);
         gyro = new Pigeon2(Constants.BaseFalconSwerve.pigeonID);
         gyro.configFactoryDefault();
         zeroGyro();
@@ -49,7 +50,6 @@ public class Swerve extends SubsystemBase {
          */
         Timer.delay(1.0);
         resetModulesToAbsolute();
-        pid = new PIDCalculator(pS, dS, iS, swerve_max_power * Constants.BaseFalconSwerve.maxAngularVelocity, 0);
 
         poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, Rotation2d.fromDegrees(0), getModulePositions(), new Pose2d()); 
     }

@@ -1,10 +1,7 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -22,8 +19,6 @@ import frc.robot.subsystems.*;
 import static frc.robot.Constants.Buttons.*;
 import static frc.robot.Constants.GeneralConstants.*;
 import static frc.robot.Constants.TuningConstants.*;
-
-import java.io.File;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -83,9 +78,6 @@ public class RobotContainer {
     private final DoubleArm doubleArm = new DoubleArm();
     private final Claw claw = new Claw(); // testing purposes, if there's an error then comment this back out
 
-    /* Auto Chooser */
-    private final SendableChooser<String> autonomousChooser = new SendableChooser<String>();
-
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
 
@@ -127,9 +119,6 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
-
-        // Add autonomous choices
-        addAutonomousChoices();
     }
 
     /**
@@ -170,27 +159,6 @@ public class RobotContainer {
         terminateCommandsOperator.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
     }
 
-    private File FFFFFFF(File directory, String search) {
-        File[] t = directory.listFiles();
-        for (int i = 0; i < t.length; i++) {
-            if (t[i].getName().equals(search)) {
-                System.out.println("result " + t[i].getName());
-                return t[i];
-            }
-        }
-        return null;
-    }
-
-    public void addAutonomousChoices() {
-        File[] deployDirectoryFiles = FFFFFFF(Filesystem.getDeployDirectory(), "pathplanner").listFiles();
-
-        for (File path : deployDirectoryFiles) {
-            if (!path.getName().endsWith(".path")) continue;
-            autonomousChooser.addOption(path.getName().substring(0, path.getName().length() - 5), path.getName().substring(0, path.getName().length() - 5));
-        }
-        SmartDashboard.putData("PathSelector", autonomousChooser);
-    }
-
     public void teleopInit() {
         doubleArm.resetPID();
     }
@@ -201,6 +169,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new Autonomous(claw, doubleArm, s_Swerve, autonomousChooser.getSelected());
+        return new Autonomous(claw, doubleArm, s_Swerve);
     }
 }
