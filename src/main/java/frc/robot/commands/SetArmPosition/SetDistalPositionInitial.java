@@ -2,28 +2,29 @@ package frc.robot.commands.setArmPosition;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DoubleArm;
+
 import static frc.robot.Constants.DoubleArmConstants.*;
 
-public class SetProximalPosition extends CommandBase {
-    
-    private DoubleArm doubleArm;
-    private double proximalPosition;
+public class SetDistalPositionInitial extends CommandBase { // small arm
 
-    public SetProximalPosition(DoubleArm doubleArm, double proximalPosition) {
+    private DoubleArm doubleArm;
+    private double targetDistal;
+
+    public SetDistalPositionInitial(DoubleArm doubleArm) {
         this.doubleArm = doubleArm;
         addRequirements(doubleArm);
-
-        this.proximalPosition = proximalPosition;
     }
 
     @Override
     public void initialize() {
-        doubleArm.setTargetAngles(new double[] {proximalPosition, doubleArm.getTargetArmAngles()[1]});
+        doubleArm.resetPID();
+        targetDistal = Math.min(Math.min(90, second_motor_max_angle), doubleArm.getTargetArmAngles()[0] + 180 - min_difference);
+        doubleArm.setTargetAngles(new double[] {doubleArm.getTargetArmAngles()[0], targetDistal});
     }
 
     @Override
     public void execute() {
-        doubleArm.pidPowerKeepMaxDistal();
+        doubleArm.pidPowerArm();;
     }
 
     @Override
@@ -35,7 +36,7 @@ public class SetProximalPosition extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return Math.abs(doubleArm.getCurrentArmAngles()[0] - proximalPosition) < first_motor_tolerance;
+        return Math.abs(doubleArm.getCurrentArmAngles()[1] - targetDistal) < second_motor_tolerance;
     }
-    
+
 }

@@ -8,7 +8,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 
 import static frc.robot.Constants.SwerveConstants.*;
-import static frc.robot.Constants.Buttons.*;
+import static frc.robot.Constants.GeneralConstants.*;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -41,7 +41,7 @@ public class TeleopSwerveAbsoluteDirecting extends CommandBase {
         /* Get Values, Deadband*/
         double translationVal = signedPower(translationSup.getAsDouble());
         double strafeVal = signedPower(strafeSup.getAsDouble());
-        double turnVal = signedPower(turnSup.getAsDouble());
+        double turnVal = signedPower(turnSup.getAsDouble()) * turn_sensitivity;
 
         double slowVal = 1;
 
@@ -57,18 +57,22 @@ public class TeleopSwerveAbsoluteDirecting extends CommandBase {
 
         if (turnVal == 0) {
             if (x_dir != 0 || y_dir != 0) {
+                double target_heading = s_Swerve.getYaw().getDegrees();
+
                 if (x_dir == 0) {
                     if (y_dir > 0) {
-                        s_Swerve.setTargetHeading(0);
+                        target_heading = 0;
                     } else {
-                        s_Swerve.setTargetHeading(180);
+                        target_heading = 180;
                     }
                 } else if (x_dir < 0) {
-                    s_Swerve.setTargetHeading(Math.atan(y_dir / x_dir) * 180.0 / Math.PI + 90);
+                    target_heading = Math.atan(y_dir / x_dir) * 180.0 / Math.PI + 90;
                 } else {
-                    s_Swerve.setTargetHeading(Math.atan(y_dir / x_dir) * 180.0 / Math.PI - 90);
+                    target_heading = Math.atan(y_dir / x_dir) * 180.0 / Math.PI - 90;
                 }
-            } else if (targetSup.getAsInt() % 90 == 0) {
+                turnVal = getCorrection(normalizeAngle(target_heading - s_Swerve.getYaw().getDegrees()), swerve_min_error, swerve_max_error, swerve_exponent, swerve_max_power * Math.sqrt(x_dir * x_dir + y_dir * y_dir));
+
+            } else if (targetSup.getAsInt() % 90 == 0) { // setTargetHeading on purpose
                 s_Swerve.setTargetHeading(targetSup.getAsInt());
             }
         }
@@ -76,7 +80,7 @@ public class TeleopSwerveAbsoluteDirecting extends CommandBase {
         /* Drive */
         s_Swerve.drive(
             new Translation2d(translationVal, strafeVal).times(Constants.BaseFalconSwerve.maxSpeed).times(slowVal), 
-            turnVal * Constants.BaseFalconSwerve.maxAngularVelocity * turn_sensitivity, 
+            turnVal * Constants.BaseFalconSwerve.maxAngularVelocity, 
             true, 
             true
         );

@@ -40,7 +40,7 @@ public final class Constants {
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-        public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
+        public static final NeutralMode driveNeutralMode = NeutralMode.Brake; // TODO Decide this later
 
         /* Change the values above if you want to but they're not necessary to be tuned */
 
@@ -151,7 +151,9 @@ public final class Constants {
         public static final int angle_trials = 25, 
                                 distance_trials = 10; // longer means slower but more accurate
 
-        public static final double offset = 0.1, // in inches; from center of robot
+        public static final double offset = 10.9008, // in inches; from center of robot
+                                   cone_offset = 22, // between center of april tags and center of poles; tags are in line with cube scoring stations
+                                   
                                    sideways_tolerance = 0.5, // in inches
                                    sideways_speed = 0.15, 
                                    rotation_speed = 0.15, // percentage of maxima
@@ -164,12 +166,14 @@ public final class Constants {
     }
 
     public static final class AutoBalanceConstants {
-        public static final double drive_speed = 0.16,
-                                   pitch_tolerance = 8, 
-                                   max_linear_acceleration = 0.4,
-                                   ratio = 1.38, 
-                                   min_time = 1.5, 
-                                   min_deriv = 1.5;
+        public static final double drive_speed = 0.1,
+                                   drive_speed_get_on = 0.2, 
+                                   pitch_tolerance = 7, 
+                                   max_linear_acceleration = 2.0,
+                                   ratio = 1.15, 
+                                   min_time = 0.5, 
+                                   mt2 = 2.2, 
+                                   min_deriv = 0.025;
     }
 
     public static final class ClawConstants {
@@ -207,7 +211,7 @@ public final class Constants {
     
         public static final boolean invert_first_motor = true, 
                                     invert_first_motor_follower = false, 
-                                    invert_second_motor = true, 
+                                    invert_second_motor = false, 
                                     invert_first_encoder = true, 
                                     invert_second_encoder = true, 
                                     first_motor_brake = true, 
@@ -227,45 +231,42 @@ public final class Constants {
         /* Variables */
         
         public static final double first_motor_sensitivity = 0.55,
-                                   first_motor_max_power = 0.6,
 
-                                   second_motor_sensitivity = 0.35,
-                                   second_motor_max_power = 0.4,
+                                   first_motor_max_power = 0.6, 
 
-                                   first_motor_max_acceleration = 0.6, // we can't change this as fast
-                                   second_motor_max_acceleration = 1.2, // we can change this very fast
+                                   first_motor_max_acceleration = 2.0,
+                                   whiplash_time_one = 0.5, 
 
-                                   first_motor_min_error = 0.5, 
-                                   second_motor_min_error = 0.5,
+                                   first_motor_min_angle = -115, 
+                                   first_motor_max_angle = 20, 
 
-                                   first_motor_max_error = 55.0, 
-                                   second_motor_max_error = 55.0,
+                                   first_motor_tolerance = 4, 
 
-                                   whiplash_time_one = 1.25, 
-                                   whiplash_time_two = 0.4, 
 
-                                   k_exponent = 1.15,  // 1.0 for a normal PID
 
-                                   tolerance = 3, // number of inches until we bing chilling
+                                   second_motor_sensitivity = 0.65,
 
-                                   first_arm_length = 32, 
-                                   second_arm_length = 29.368,
+                                   second_motor_max_power = 0.7, 
 
-                                   min_x = 4, 
+                                   second_motor_max_acceleration = 12.0,
+                                   whiplash_time_two = 0.5, 
+
+                                   second_motor_min_angle = -45, 
+                                   second_motor_max_angle = 90, 
+
+                                   second_motor_tolerance = 4, 
+
+
+                                   
+                                   min_difference = 20, 
+
+                                   first_arm_length = 32 - 4, // subtract 4 from length of arm to get pivot distance 
+                                   second_arm_length = 15 + 7.751984, // add 7.751984 to length of arm to get pivot distance
+
+                                   min_x = -2, 
                                    min_y = -42,
                                    max_x = 61.368, 
                                    max_y = 20, 
-
-                                   min_first_angle = -108, 
-                                   max_first_angle = 20, 
-                                   min_second_angle = -80, 
-                                   max_second_angle = 80, 
-                                   min_difference = 20, 
-
-                                   clipping_one = 1.2, 
-                                   clipping_two = 0.99,
-
-                                   switching_angle = 90, // if below this --> concave up, if above this --> concave down
 
                                    middle_x = 45, // above this, we go at a slower rate
                                    middle_y = 0, 
@@ -279,33 +280,23 @@ public final class Constants {
 
     public static final class SwerveConstants {
         
-        public static final double maximum_power = 0.6, 
-                                   maximum_error = 60, // degrees
-                                   exponent = 0.75, 
+        public static final double swerve_min_error = 2, 
+                                   swerve_max_error = 30, 
+                                   swerve_exponent = 0.7, 
+                                   swerve_max_power = 0.8,
                                    calibration_time = 0.5, // seconds
-                                   turn_sensitivity = 0.2, 
-                                   slow = 0.35,
-                                   yaw_tolerance = 2;
-
-            // best tuned so far: 0.6 as maximum_power, 50 as max_error, 0.5 as exponent
+                                   turn_sensitivity = 0.35, 
+                                   slow = 0.35;
     }
 
-    public static final class AutonomousNames {
-        public static final String[][] autos = {
-            {"Default", "Determine Path from Limelight"}, // first one is the default
-            {"Red Left", "Run Path for Tag 1"},
-            {"Red Center", "Run Path for Tag 2"},
-            {"Red Right", "Run Path for Tag 3"},
-            {"Blue Left", "Run Path for Tag 6"},
-            {"Blue Center", "Run Path for Tag 7"},
-            {"Blue Right", "Run Path for Tag 8"},
-            {"Place Cube", "Run Path for Tag"},
-            {"Test One", "Drive Forward One Meter"},
-            {"Test Two", "Strafe Right One Meter"},
-            {"Test Three", "Turn Clockwise 90 degrees"}
-        };
-    }
     public static final class Buttons {
+
+        /* D-pad */
+
+        public static final int dpad_up = 0, 
+                                dpad_right = 90, 
+                                dpad_down = 180, 
+                                dpad_left = 270;
 
         /* Which is which */
 
@@ -328,9 +319,8 @@ public final class Constants {
 
                                 zeroGyroButton = XboxController.Button.kY.value, 
                                 robotCentricButton = XboxController.Button.kLeftBumper.value,
-                                tagAlignerButton = XboxController.Button.kA.value,
-                                tagAlignerExitButton = XboxController.Button.kA.value, 
-                                tagAlignerNewButton = XboxController.Button.kX.value, 
+                                tagAlignerButton = XboxController.Button.kA.value, 
+                                makeXButton = XboxController.Button.kX.value, 
                                 autoBalanceButton = XboxController.Button.kB.value,
                                 terminateCommandsDriverButton = XboxController.Button.kBack.value;
 
@@ -343,17 +333,20 @@ public final class Constants {
                                 midGoalButton = XboxController.Button.kB.value, 
                                 lowGoalButton = XboxController.Button.kA.value, 
 
+                                intakeUpperValue = dpad_up, 
+                                intakeLowerValue = dpad_down, 
+
                                 intakeButton = XboxController.Button.kRightBumper.value, 
                                 outtakeButton = XboxController.Button.kLeftBumper.value, 
 
-                                idleButton = XboxController.Button.kX.value, 
-                                startPosButton = XboxController.Button.kStart.value,
+                                idleButton = XboxController.Button.kStart.value, 
 
                                 stopArmFromMovingButtonOne = XboxController.Axis.kRightTrigger.value,
                                 stopArmFromMovingButtonTwo = XboxController.Axis.kLeftTrigger.value,
                                 terminateCommandsOperatorButton = XboxController.Button.kBack.value;
-            
-        /* General Constants */
+    }
+
+    public static final class GeneralConstants {
 
         public static final double joystick_deadzone = 0.1,
                                    axis_exponent = 1.3;
@@ -364,24 +357,43 @@ public final class Constants {
             if (axis_value < 0) return 0 - Math.pow(0 - axis_value, axis_exponent);
             return Math.pow(axis_value, axis_exponent);
         }
+
+        public static final double getCorrection(double error, double min_error, double max_error, double exponent, double max_power) {
+            if (Math.abs(error) < min_error) return 0;
+            double multiplier = max_power;
+            if (error < 0) {
+                error = 0 - error;
+                multiplier = -max_power;
+            }
+            if (error > max_error) error = max_error;
+            error /= max_error;
+            return Math.pow(error, exponent) * multiplier;
+        }
+
+        /** Normalizes angle to between -180 and 180 */
+        public static double normalizeAngle(double degrees) {
+            if (degrees < 0) return ((degrees - 180) % 360 + 180);
+            return ((degrees + 180) % 360 - 180);
+        }
     }
 
     public static final class TuningConstants {
-        public static final double CANCoder0_zero = 277.38, 
-                                   CANCoder1_zero = 292.5, 
-                                   CANCoder2_zero = 318.78, 
-                                   CANCoder3_zero = 271.14, 
-                                   encoder_one_zero = -93.76, 
-                                   encoder_two_zero = -123.94;
+        public static final double CANCoder0_zero = 267.45, 
+                                   CANCoder1_zero = 305.77, 
+                                   CANCoder2_zero = 318.60, 
+                                   CANCoder3_zero = 229.30, 
+                                   encoder_one_zero = -93.1, 
+                                   encoder_two_zero = -304.6;
         
-        public static final double[] topPosition = {60.1, 8.9}, 
-                                     midPosition = {60.1, -9.2}, 
-                                     lowPosition = {42.3, -29.2}, 
-                                     intakePosition = {33.6, -39.6}, 
-                                     idlePosition = {6.1, -10.8}, 
-                                     startPosition = {4.8, -9}, 
-                                     
-                                     intermediatePosition = {15.93, -4.5};
+        /* The angles we want to go to - NOT the x and y */
+        public static final double[] topPositionAngles = {2.7, 19.0}, 
+                                     midPositionAngles = {-21.4, 0}, 
+                                     lowPositionAngles = {-64, 0}, 
+
+                                     intakeUpperAngles = {-65.3, 32.9}, 
+                                     intakeLowerAngles = {-82.3, -32.9}, 
+
+                                     idlePositionAngles = {-115, 42};
 
         public static final boolean fancy_drive = true, 
                                     show_drive_data = false, 
@@ -400,9 +412,21 @@ public final class Constants {
 
         public static final double max_linear_speed_autonomous = 5,
                                    ramp_up_time_linear = 2, // in seconds to reach max 
-                                   max_angular_speed_autonomous = 60, 
+                                   max_angular_speed_autonomous = 180, 
                                    ramp_up_time_angular = 2,
                                    translation_p_controller = 2, 
-                                   angle_p_controller = 2;
+                                   angle_p_controller = 4;
+        
+        /* Arm Constants */
+
+        public static final double p1 = 0.038, 
+                                   d1 = 0, 
+                                   i1 = 0, 
+                                   p2 = 0.028, 
+                                   d2 = 0, 
+                                   i2 = 0,
+                                   pS = 0.04, 
+                                   dS = 0.01, 
+                                   iS = 0;
     }
 }

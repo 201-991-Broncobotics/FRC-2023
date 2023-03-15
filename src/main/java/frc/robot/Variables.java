@@ -12,5 +12,7 @@ public class Variables {
 
     public static boolean continueWithAWA = true;
 
+    public static boolean go_to_startposition = false;
+
     public static String data = "";
 }

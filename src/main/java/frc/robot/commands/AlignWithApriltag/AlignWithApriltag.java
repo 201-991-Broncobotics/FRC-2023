@@ -11,7 +11,7 @@ public class AlignWithApriltag extends SequentialCommandGroup {
     public AlignWithApriltag(Swerve swerve, DoubleArm doubleArm) {
         addRequirements(swerve, doubleArm);
         addCommands(
-            new SetArmPosition(doubleArm, idlePosition), 
+            new SetArmPosition(doubleArm, idlePositionAngles), 
             new AlignWithApriltag_Subcommand_1(swerve), 
             new AlignWithApriltag_Subcommand_2(swerve), 
             new AlignWithApriltag_Subcommand_3(swerve), 

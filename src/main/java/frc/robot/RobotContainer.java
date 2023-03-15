@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -10,18 +11,19 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.*;
 import frc.robot.commands.alignWithApriltag.AlignWithApriltag;
-import frc.robot.commands.alignWithApriltag.AlignWithApriltagOld;
 import frc.robot.commands.autoBalance.AutoBalance;
 import frc.robot.commands.defaultCommands.*;
-import frc.robot.commands.intake.Intake;
+import frc.robot.commands.intake.*;
 import frc.robot.commands.outtake.Outtake;
 import frc.robot.commands.setArmPosition.*;
 import frc.robot.commands.utilCommands.*;
 import frc.robot.subsystems.*;
 
-import static frc.robot.Constants.AutonomousNames.*;
 import static frc.robot.Constants.Buttons.*;
+import static frc.robot.Constants.GeneralConstants.*;
 import static frc.robot.Constants.TuningConstants.*;
+
+import java.io.File;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,7 +40,7 @@ public class RobotContainer {
     private final Trigger zeroGyro = new JoystickButton(driver, zeroGyroButton);
     private final Trigger robotCentric = new JoystickButton(driver, robotCentricButton);
     private final Trigger tagAligner = new JoystickButton(driver, tagAlignerButton);
-    private final Trigger tagAlignerNew = new JoystickButton(driver, tagAlignerNewButton);
+    private final Trigger makeX = new JoystickButton(driver, makeXButton);
     private final Trigger autoBalance = new JoystickButton(driver, autoBalanceButton);
     private final Trigger terminateCommandsDriver = new JoystickButton(driver, terminateCommandsDriverButton);
 
@@ -48,7 +50,6 @@ public class RobotContainer {
     private final Trigger lowGoal = new JoystickButton(operator, lowGoalButton);
 
     private final Trigger idle = new JoystickButton(operator, idleButton);
-    private final Trigger startPos = new JoystickButton(operator, startPosButton);
 
     private final Trigger intake = new JoystickButton(operator, intakeButton);
     private final Trigger outtake = new JoystickButton(operator, outtakeButton);
@@ -66,6 +67,16 @@ public class RobotContainer {
     private final Trigger right_trigger = new Trigger(() -> operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > joystick_deadzone);
 
     you could also make a trigger for something more complicated, like if the double arm's x value is greater than 20 */
+
+    private final Trigger stopArmCommands = new Trigger(() -> (
+        (operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || 
+        (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone)
+    ));
+
+    private final Trigger intakeUpper = new Trigger(() -> (operator.getPOV() == intakeUpperValue));
+    private final Trigger intakeLower = new Trigger(() -> (operator.getPOV() == intakeLowerValue));
+
+    private final Trigger doneWithIntake = new Trigger(() -> (frc.robot.Variables.go_to_startposition));
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -108,8 +119,7 @@ public class RobotContainer {
             new TeleopDoubleArm(
                 doubleArm, 
                 () -> -operator.getRawAxis(motorOneAxis),
-                () -> -operator.getRawAxis(motorTwoAxis), 
-                () -> ((operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone))
+                () -> -operator.getRawAxis(motorTwoAxis)
             )
         );
 
@@ -132,33 +142,53 @@ public class RobotContainer {
 
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-        tagAligner.toggleOnTrue(new AlignWithApriltagOld(s_Swerve, () -> driver.getRawButton(tagAlignerExitButton)));
+        makeX.onTrue(new Brake(s_Swerve));
 
-        tagAlignerNew.toggleOnTrue(new AlignWithApriltag(s_Swerve, doubleArm));
+        tagAligner.toggleOnTrue(new AlignWithApriltag(s_Swerve, doubleArm));
+                        // new AlignWithApriltagOld(s_Swerve, () -> false)
 
         autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm));
 
         terminateCommandsDriver.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
         
         /* Operator Buttons */
-        topGoal.toggleOnTrue(new SetArmPosition(doubleArm, topPosition));
-        midGoal.toggleOnTrue(new SetArmPosition(doubleArm, midPosition));
-        lowGoal.toggleOnTrue(new SetArmPosition(doubleArm, lowPosition));
-        idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePosition));
-        startPos.toggleOnTrue(new SetArmPositionWithoutIntermediate(doubleArm, startPosition));
+        topGoal.toggleOnTrue(new SetArmPosition(doubleArm, topPositionAngles));
+        midGoal.toggleOnTrue(new SetArmPosition(doubleArm, midPositionAngles));
+        lowGoal.toggleOnTrue(new SetArmPosition(doubleArm, lowPositionAngles));
+        idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePositionAngles));
 
-        intake.toggleOnTrue(new Intake(claw, doubleArm));
+        intakeUpper.toggleOnTrue(new SetArmPosition(doubleArm, intakeUpperAngles));
+        intakeLower.toggleOnTrue(new SetArmPosition(doubleArm, intakeLowerAngles));
+
+        doneWithIntake.toggleOnTrue(new SetArmPositionAfterIntake(claw, doubleArm));
+
+        stopArmCommands.onTrue(new TerminateArmCommands(doubleArm));
+
+        intake.toggleOnTrue(new Intake(claw));
         outtake.toggleOnTrue(new Outtake(claw, doubleArm));
         
         terminateCommandsOperator.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
     }
 
-    private void addAutonomousChoices() {
-        autonomousChooser.setDefaultOption(autos[0][0], autos[0][1]);
-        for (int i = 1; i < autos.length; i++) {
-            autonomousChooser.addOption(autos[i][0], autos[i][1]);
+    private File FFFFFFF(File directory, String search) {
+        File[] t = directory.listFiles();
+        for (int i = 0; i < t.length; i++) {
+            if (t[i].getName().equals(search)) {
+                System.out.println("result " + t[i].getName());
+                return t[i];
+            }
         }
-        SmartDashboard.putData("Autonomous Choices", autonomousChooser);
+        return null;
+    }
+
+    public void addAutonomousChoices() {
+        File[] deployDirectoryFiles = FFFFFFF(Filesystem.getDeployDirectory(), "pathplanner").listFiles();
+
+        for (File path : deployDirectoryFiles) {
+            if (!path.getName().endsWith(".path")) continue;
+            autonomousChooser.addOption(path.getName().substring(0, path.getName().length() - 5), path.getName().substring(0, path.getName().length() - 5));
+        }
+        SmartDashboard.putData("PathSelector", autonomousChooser);
     }
 
     public void teleopInit() {

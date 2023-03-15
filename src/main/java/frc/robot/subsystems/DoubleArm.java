@@ -8,27 +8,22 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import java.lang.IllegalArgumentException;
+import frc.lib.util.PIDMotor;
 
 import static frc.robot.Constants.DoubleArmConstants.*;
+import static frc.robot.Constants.GeneralConstants.*;
+import static frc.robot.Constants.TuningConstants.*;
 
 public class DoubleArm extends SubsystemBase {
 
     private CANSparkMax first_motor, first_motor_follower, second_motor;
     private DutyCycleEncoder first_encoder, second_encoder;
-
-    private double[] target_positions = new double[2];
-    private double[] prev_angles = new double[2];
-
-    private double time;
-    private double time_one_last;
-    private double time_two_last;
+    private PIDMotor first, second;
 
     public DoubleArm() { // Initialize the motors, encoders, and target positions
         first_motor = new CANSparkMax(first_motor_ID, MotorType.kBrushless); // NEO Motors are brushless
         first_motor_follower = new CANSparkMax(first_motor_follower_ID, MotorType.kBrushless);
-        second_motor = new CANSparkMax(second_motor_ID, MotorType.kBrushless);
+        second_motor = new CANSparkMax(second_motor_ID, MotorType.kBrushed);
 
         first_motor.restoreFactoryDefaults();
         first_motor.setInverted(invert_first_motor);
@@ -80,131 +75,118 @@ public class DoubleArm extends SubsystemBase {
         
         // we want it so the encoder increases when the arm goes counterclockwise - may have to adjust them
 
-        target_positions = getCurrentArmAngles();
-        prev_angles = getCurrentArmAngles();
+        Timer.delay(1.0); // invert correctly
 
-        Timer.delay(1.0);
-
-        time = System.currentTimeMillis() / 1000.0;
-        time_one_last = 0;
-        time_two_last = 0;
+        first = new PIDMotor(first_motor, () -> getCurrentArmAngles()[0], whiplash_time_one, first_motor_min_angle, first_motor_max_angle, first_motor_max_power, first_motor_max_acceleration, p1, d1, i1);
+        second = new PIDMotor(second_motor, () -> getCurrentArmAngles()[1], whiplash_time_two, second_motor_min_angle, second_motor_max_angle, second_motor_max_power, second_motor_max_acceleration, p2, d2, i2);
     }
 
     public void powerArm(double firstPower, double secondPower) { // power the arms manually
 
         double[] current_angles = getCurrentArmAngles();
-        double delta_time = System.currentTimeMillis() / 1000.0 - time; // in seconds
-        time = System.currentTimeMillis() / 1000.0;
+        if (current_angles[1] > current_angles[0] + 180 - min_difference) {
+            second.setTarget(current_angles[0] + 180 - min_difference);
+            secondPower = Math.min(secondPower, 0);
+        } // all of zay others are gewd
 
-        if (firstPower != 0) {
-            target_positions[0] = current_angles[0];
-            time_one_last = time;
-        } else if (time - time_one_last < whiplash_time_one) {
-            target_positions[0] = current_angles[0];
-        } else {
-            firstPower = pidPower(
-                target_positions[0] - current_angles[0], 
-                first_motor_max_power, 
-                first_motor_min_error, 
-                first_motor_max_error
-            );
-            firstPower = Math.max(first_motor.get() - first_motor_max_acceleration * delta_time, Math.min(first_motor.get() + first_motor_max_acceleration * delta_time, firstPower));
-        }
+        if (!checkTargetAngles(current_angles)) { // out of bounds
 
-        if (secondPower != 0) {
-            target_positions[1] = current_angles[1];
-            time_two_last = time;
-        } else if (time - time_two_last < whiplash_time_two) {
-            target_positions[1] = current_angles[1];
-        } else {
-            secondPower = pidPower(
-                target_positions[1] - current_angles[1], 
-                second_motor_max_power, 
-                second_motor_min_error, 
-                second_motor_max_error
-            );
-            secondPower = Math.max(second_motor.get() - second_motor_max_acceleration * delta_time, Math.min(second_motor.get() + second_motor_max_acceleration * delta_time, secondPower));
-        }
+            if (getPositionFromAngles(current_angles)[1] > max_y) {
 
-        double[] next_angles = {
-            2 * current_angles[0] - prev_angles[0], 
-            2 * current_angles[1] - prev_angles[1]
-        };
+                firstPower = Math.min(firstPower, 0);
 
-        prev_angles = current_angles;
+                secondPower = Math.min(secondPower, 0);
 
-        if (firstPower < 0 && next_angles[0] < min_first_angle) {
-            firstPower = 0;
-        } else if (firstPower > 0 && next_angles[0] > max_first_angle) {
-            firstPower = 0;
-        } else if (firstPower < 0 && next_angles[0] + 180 - min_difference < next_angles[1]) {
-            secondPower = -0.1;
-        }
-
-        if (secondPower < 0 && next_angles[1] < min_second_angle) {
-            secondPower = 0;
-        } else if (secondPower > 0 && next_angles[1] > max_second_angle) {
-            secondPower = 0;
-        } else if (secondPower > 0 && next_angles[1] > next_angles[0] + 180 - min_difference) {
-            secondPower = 0;
-        }
-
-        if (!checkTargetAngles(next_angles)) { // out of bounds
-            if (getPositionFromAngles(next_angles)[1] > max_y) {
-                // it means that we should only power down
-                if (next_angles[1] > 0) {
-                    firstPower = Math.max(firstPower, 0);
-                    secondPower = Math.max(secondPower, 0 - 0.5 * second_motor_max_power);
+                double delta_y = max_y - first_arm_length * Math.sin(current_angles[0] * Math.PI / 180.0);
+                if (Math.abs(delta_y) < second_arm_length - 0.5) {
+                    second.setTarget(Math.asin(delta_y / second_arm_length) * 180.0 / Math.PI);
                 } else {
-                    firstPower = Math.max(firstPower, 0 - 0.5 * first_motor_max_power);
+                    second.setTarget(Math.min(90, second_motor_max_angle));
+                }
+
+            } else if (getPositionFromAngles(current_angles)[0] < min_x) {
+
+                firstPower = Math.max(firstPower, 0);
+                
+                if (current_angles[1] > 0) {
+                    secondPower = Math.min(secondPower, 0);
+                } else {
                     secondPower = Math.max(secondPower, 0);
                 }
-            } else if (getPositionFromAngles(next_angles)[0] < min_x) {
-                // only power first motor up, second down
-                firstPower = Math.min(firstPower, 0);
-                secondPower = Math.max(secondPower, 0);
+
             } else { // must be less than min_y because not possible to be greater than max_x
-                // power second one a bit to correct
-                secondPower = second_motor_max_power * 0.5; // idk
+                
+                secondPower = Math.max(secondPower, 0);
+                
+                double delta_y = min_y - first_arm_length * Math.sin(current_angles[0] * Math.PI / 180.0);
+                if (Math.abs(delta_y) < second_arm_length - 0.5) {
+                    second.setTarget(Math.asin(delta_y / second_arm_length) * 180.0 / Math.PI);
+                } else {
+                    second.setTarget(Math.max(-90, second_motor_min_angle));
+                }
             }
-            resetWhipControl();
         }
 
-        first_motor.set(firstPower);
-        second_motor.set(secondPower);
+        first.power(firstPower);
+        second.power(secondPower);
+    }
+    
+
+    public void pidPowerArm() {
+        first.pidPower();
+        second.pidPower();
+    }
+
+    public void pidPowerKeepMaxDistal() {
+        first.pidPower();
+
+        second.setTarget(Math.min(Math.min(second_motor_max_angle, 90), getCurrentArmAngles()[0] + 180 - min_difference));
+        second.pidPower();
     }
 
     public void brake() {
-        first_motor.set(0);
-        second_motor.set(0);
+        first.brake();
+        second.brake();
     }
-
-    public void resetWhipControl() {
-        time_one_last = 0;
-        time_two_last = 0;
-    }
-
     public void resetPID() {
-        target_positions[0] = getCurrentArmAngles()[0];
-        target_positions[1] = getCurrentArmAngles()[1];
-        brake();
+        first.brake();
+        second.brake();
     }
 
-    public void setTargetAngles(double[] target_angles) {
-        // Sets the 2 target angles if they both fit the requirements
-
-        target_angles[0] = Math.max(min_first_angle, Math.min(max_first_angle, target_angles[0]));
-        target_angles[1] = Math.max(min_second_angle, Math.min(Math.min(max_second_angle, target_angles[0] + 180 - min_difference), target_angles[1]));
-
-        if (checkTargetAngles(target_angles)) {
-            target_positions = target_angles;
-        } else {
-            SmartDashboard.putNumberArray("Position failed", target_angles);
-        }
+    public void setTargetAngles(double[] angles) {
+        first.setTarget(angles[0]);
+        second.setTarget(angles[1]);
     }
 
-    public void setTargetPosition(double[] target) {
-        setTargetAngles(getAnglesFromTarget(target));
+    public double[] getCurrentArmAngles() {
+        return new double[] {
+            normalizeAngle(first_encoder.getDistance() - first_encoder_zero), 
+            normalizeAngle(first_encoder.getDistance() - first_encoder_zero + second_encoder.getDistance() - second_encoder_zero)
+        };
+    }
+    
+    public double[] getCurrentXY() {
+        return new double[] {
+            first_arm_length * Math.cos(getCurrentArmAngles()[0] * Math.PI / 180.0) + 
+            second_arm_length * Math.cos(getCurrentArmAngles()[1] * Math.PI / 180.0), 
+            first_arm_length * Math.sin(getCurrentArmAngles()[0] * Math.PI / 180.0) + 
+            second_arm_length * Math.sin(getCurrentArmAngles()[1] * Math.PI / 180.0)
+        };
+    }
+
+    public double[] getTargetArmAngles() {
+        return new double[] {
+            first.getTarget(), 
+            second.getTarget()
+        };
+    }
+
+    public double getTotalError() {
+        double[] target_xy = getPositionFromAngles(getTargetArmAngles());
+        return Math.sqrt(
+            (getCurrentXY()[0] - target_xy[0]) * (getCurrentXY()[0] - target_xy[0]) + 
+            (getCurrentXY()[1] - target_xy[1]) * (getCurrentXY()[1] - target_xy[1])
+        );
     }
 
     public static boolean checkTargetAngles(double[] angles) {
@@ -224,89 +206,6 @@ public class DoubleArm extends SubsystemBase {
         };
     }
 
-    public static double[] getAnglesFromTarget(double[] target) {
-
-        double x = target[0];
-        double y = target[1];
-
-        x = Math.max(min_x, Math.min(max_x, x));
-        y = Math.max(min_y, Math.min(max_y, y));
-
-        if (Math.abs(x) < 0.01) x = 0.01; // shouldn't matter because min_x > 0
-
-        double radius = Math.sqrt(x * x + y * y);
-        if (radius < clipping_one * (first_arm_length - second_arm_length)) {
-            x *= clipping_one * (first_arm_length - second_arm_length) / radius;
-            y *= clipping_one * (first_arm_length - second_arm_length) / radius;
-            radius = clipping_one * (first_arm_length - second_arm_length);
-        } else if (radius > clipping_two * (first_arm_length + second_arm_length)) {
-            x *= clipping_two * (first_arm_length + second_arm_length) / radius;
-            y *= clipping_two * (first_arm_length + second_arm_length) / radius;
-            radius = clipping_two * (first_arm_length + second_arm_length);
-        } // clip radius to range
-
-        double angle = Math.atan(y / x) * 180.0 / Math.PI; 
-        if (x < 0) {
-            if (angle > 0) angle -= 180;
-            else angle += 180; // again, this should NOT happen
-        }
-
-        double first_angle = Math.acos((radius * radius + first_arm_length * first_arm_length - second_arm_length * second_arm_length) / (2.0 * first_arm_length * radius)) * 180.0 / Math.PI;
-        double second_angle = Math.acos((radius * radius + second_arm_length * second_arm_length - first_arm_length * first_arm_length) / (2.0 * second_arm_length * radius)) * 180.0 / Math.PI;
-
-        return new double[] {
-            angle + (angle < switching_angle ? 0 - first_angle : first_angle),
-            angle + (angle < switching_angle ? second_angle : 0 - second_angle)
-        };
-    }
-
-    public double[] getCurrentArmAngles() {
-        return new double[] {
-            first_encoder.getDistance() - first_encoder_zero, 
-            first_encoder.getDistance() - first_encoder_zero + second_encoder.getDistance() - second_encoder_zero
-        };
-    }
-    
-    public double[] getCurrentXY() {
-        return new double[] {
-            first_arm_length * Math.cos(getCurrentArmAngles()[0] * Math.PI / 180.0) + 
-            second_arm_length * Math.cos(getCurrentArmAngles()[1] * Math.PI / 180.0), 
-            first_arm_length * Math.sin(getCurrentArmAngles()[0] * Math.PI / 180.0) + 
-            second_arm_length * Math.sin(getCurrentArmAngles()[1] * Math.PI / 180.0)
-        };
-    }
-
-    public double[] getTargetArmAngles() {
-        return new double[] {
-            target_positions[0], 
-            target_positions[1]
-        };
-    }
-
-    public double getTotalError() {
-        double[] target_xy = getPositionFromAngles(target_positions);
-        return Math.sqrt(
-            (getCurrentXY()[0] - target_xy[0]) * (getCurrentXY()[0] - target_xy[0]) + 
-            (getCurrentXY()[1] - target_xy[1]) * (getCurrentXY()[1] - target_xy[1])
-        );
-    }
-
-    public double pidPower(double error, double maxPower, double minDegreesOff, double maxDegreesOff) {
-        int multiplier = 1;
-        if (error < 0) {
-            error = 0 - error;
-            multiplier = -1;
-        }
-
-        if (error < minDegreesOff) return 0;
-
-        error /= maxDegreesOff;
-        if (error > 1) error = 1;
-
-        return maxPower * multiplier * Math.pow(error, k_exponent);
-    }
-
-
     @Override
     public void periodic() { // Put data to smart dashboard
         SmartDashboard.putNumber("Encoder 1 Raw", first_encoder.getDistance());
@@ -318,14 +217,14 @@ public class DoubleArm extends SubsystemBase {
         SmartDashboard.putNumber("Current x", getCurrentXY()[0]);
         SmartDashboard.putNumber("Current y", getCurrentXY()[1]);
 
-        SmartDashboard.putNumber("Target 1st Angle", target_positions[0]);
-        SmartDashboard.putNumber("Target 2nd Angle", target_positions[1]);
+        SmartDashboard.putNumber("Target 1st Angle", getTargetArmAngles()[0]);
+        SmartDashboard.putNumber("Target 2nd Angle", getTargetArmAngles()[1]);
 
-        SmartDashboard.putNumber("Target x", getPositionFromAngles(target_positions)[0]);
-        SmartDashboard.putNumber("Target y", getPositionFromAngles(target_positions)[1]);
+        SmartDashboard.putNumber("Target x", getPositionFromAngles(getTargetArmAngles())[0]);
+        SmartDashboard.putNumber("Target y", getPositionFromAngles(getTargetArmAngles())[1]);
 
         SmartDashboard.putNumber("Error", getTotalError());
-
+        
         SmartDashboard.putNumber("Motor One Current", first_motor.getOutputCurrent());
         SmartDashboard.putNumber("Motor One Follower Current", first_motor_follower.getOutputCurrent());
         SmartDashboard.putNumber("Motor Two Current", second_motor.getOutputCurrent());
@@ -335,16 +234,5 @@ public class DoubleArm extends SubsystemBase {
         } else {
             frc.robot.Variables.speed_factor = speed_when_arm_extended;
         }
-
-        if (target_positions[0] > 20) {
-            brake();
-            System.out.println("Bad x and y" + getPositionFromAngles(target_positions)[0] + " " + getPositionFromAngles(target_positions)[1]);
-            System.out.println("Bad angles" + target_positions[0] + " " + target_positions[1]);
-            Timer.delay(0.5);
-            throw new IllegalArgumentException();
-        }
-        // target_positions[0] = Math.max(-120, Math.min(20, target_positions[0]));
-        // target_positions[1] = Math.max(-80, Math.min(80, target_positions[1]));
-        // target_xy = getPositionFromAngles(target_positions[0], target_positions[1]);
     }
 }

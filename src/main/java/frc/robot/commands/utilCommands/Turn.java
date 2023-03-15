@@ -35,7 +35,7 @@ public class Turn extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return Math.abs(swerve.getError()) < yaw_tolerance;
+        return Math.abs(swerve.getError()) < swerve_min_error;
     }
     
 }

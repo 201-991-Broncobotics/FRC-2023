@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import frc.lib.util.PIDCalculator;
 import frc.robot.Constants;
 import frc.robot.Variables;
 
@@ -20,7 +21,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.SwerveConstants.*;
 import static frc.robot.Constants.TuningConstants.*;
-import static frc.robot.Constants.AprilTagAlignmentConstants.*; // for max angular tolerance
+import static frc.robot.Constants.GeneralConstants.*;
+import static frc.robot.Constants.AprilTagAlignmentConstants.*;
 
 public class Swerve extends SubsystemBase {
     public static SwerveDrivePoseEstimator poseEstimator; 
@@ -28,7 +30,7 @@ public class Swerve extends SubsystemBase {
     public Pigeon2 gyro;
 
     private double last_time;
-    private double target_heading;
+    private PIDCalculator pid;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.BaseFalconSwerve.pigeonID);
@@ -47,14 +49,9 @@ public class Swerve extends SubsystemBase {
          */
         Timer.delay(1.0);
         resetModulesToAbsolute();
+        pid = new PIDCalculator(pS, dS, iS, swerve_max_power * Constants.BaseFalconSwerve.maxAngularVelocity, 0);
 
         poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, Rotation2d.fromDegrees(0), getModulePositions(), new Pose2d()); 
-    }
-
-    /** Normalizes angle to between -180 and 180 */
-    public static double normalizeAngle(double degrees) {
-        if (degrees < 0) return ((degrees - 180) % 360 + 180);
-        return ((degrees + 180) % 360 - 180);
     }
 
     /** Counterclockwise in degrees */
@@ -63,13 +60,30 @@ public class Swerve extends SubsystemBase {
     }
 
     public void setTargetHeading(double target) {
-        target_heading = normalizeAngle(target - getYaw().getDegrees()) + getYaw().getDegrees();
-        last_time = Timer.getFPGATimestamp() - (calibration_time + 1);
+        pid.reset(normalizeAngle(target - getYaw().getDegrees()) + getYaw().getDegrees());
+        last_time = -999;
     }
 
     public void brake() {
         changeHeading(0);
         drive(new Translation2d(), 0, true, false);
+    }
+
+    public void makeX() {
+        changeHeading(0);
+
+        SwerveModuleState[] swerveModuleStates = { // FL, FR, BL, BR
+            new SwerveModuleState(0.05, new Rotation2d(Math.PI / 4)), 
+            new SwerveModuleState(0.05, new Rotation2d(-Math.PI / 4)), 
+            new SwerveModuleState(0.05, new Rotation2d(3.0 * Math.PI / 4)), 
+            new SwerveModuleState(0.05, new Rotation2d(-3.0 * Math.PI / 4))
+        };
+        
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.BaseFalconSwerve.maxSpeed);
+
+        for (SwerveModule mod : mSwerveMods) {
+            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], true);
+        }
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -90,21 +104,15 @@ public class Swerve extends SubsystemBase {
         double current_heading = getYaw().getDegrees();
         if (rotation == 0) {
             if (Timer.getFPGATimestamp() - last_time < calibration_time) {
-                target_heading = current_heading;
-            } else if (translation.getNorm() != 0 || getError() > yaw_tolerance) {
-                if (Math.abs(target_heading - current_heading) > 180) {
-                    target_heading = current_heading + normalizeAngle(target_heading - current_heading);
+                pid.reset(current_heading);
+            } else {
+                if (Math.abs(pid.getTarget() - current_heading) > 180) {
+                    pid.reset(current_heading + normalizeAngle(pid.getTarget() - current_heading));
                 }
-                double error_in_percent = Math.max(Math.min((target_heading - current_heading) / maximum_error, 1), -1);
-                int multiplier = 1;
-                if (error_in_percent < 0) {
-                    error_in_percent = 0 - error_in_percent;
-                    multiplier = -1;
-                }
-                rotation = Math.pow(error_in_percent, exponent) * maximum_power * multiplier * Constants.BaseFalconSwerve.maxAngularVelocity;
+                rotation = pid.update(current_heading);
             }
         } else {
-            target_heading = current_heading;
+            pid.reset(current_heading);
             last_time = Timer.getFPGATimestamp();
         }
 
@@ -166,7 +174,7 @@ public class Swerve extends SubsystemBase {
 
     public void zeroGyro() {
         gyro.setYaw(0);
-        target_heading = 0;
+        pid.reset(0);
         last_time = Timer.getFPGATimestamp();
     }
 
@@ -175,7 +183,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getError() {
-        return normalizeAngle(target_heading - getYaw().getDegrees());
+        return normalizeAngle(pid.getTarget() - getYaw().getDegrees());
     }
 
     public double getPitch() {
@@ -196,7 +204,7 @@ public class Swerve extends SubsystemBase {
         if (vision_estimate[1] != 0 && ((Math.abs(getYaw().getDegrees() - vision_estimate[2]) + max_angular_tolerance) % 90 < 2 * max_angular_tolerance)) {
 
             Pose2d estimatedPose = new Pose2d(vision_estimate[0], vision_estimate[1], new Rotation2d(vision_estimate[2] * Math.PI / 180));  // don't put yaw as the angle because yaw might be off by a few degrees
-            addVisionEstimate(estimatedPose, Timer.getFPGATimestamp() - vision_estimate[3] * 1000.0);
+            poseEstimator.addVisionMeasurement(estimatedPose, Timer.getFPGATimestamp() - vision_estimate[3] * 1000.0);
             
         }
 
@@ -212,9 +220,5 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
-    }
-
-    public static void addVisionEstimate(Pose2d estimate, double time) {
-        poseEstimator.addVisionMeasurement(estimate, time);
     }
 }

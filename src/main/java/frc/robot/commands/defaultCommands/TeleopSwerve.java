@@ -10,7 +10,7 @@ import java.util.function.IntSupplier;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import static frc.robot.Constants.Buttons.*;
+import static frc.robot.Constants.GeneralConstants.*;
 
 public class TeleopSwerve extends CommandBase {    
     private Swerve s_Swerve;    
