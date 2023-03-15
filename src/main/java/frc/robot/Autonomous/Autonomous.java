@@ -8,45 +8,18 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
 import frc.robot.subsystems.Swerve;
 
-import static frc.robot.Constants.AutonomousNames.*;
-
 public class Autonomous extends SequentialCommandGroup {
     public Autonomous(Claw claw, DoubleArm doubleArm, Swerve swerve, String selectedAuto) {
         addRequirements(doubleArm, claw, swerve);
 
         Timer.delay(1.0); // just to get the limelight set up
 
-        int auto_number = -2;
-
-        if (selectedAuto.equals(autos[0][1])) {
-            auto_number = (int) SmartDashboard.getNumber("April Tag ID", -2);
-        } else if (selectedAuto.equals(autos[1][1])) {
-            auto_number = 1;
-        } else if (selectedAuto.equals(autos[2][1])) {
-            auto_number = 2;
-        } else if (selectedAuto.equals(autos[3][1])) {
-            auto_number = 3;
-        } else if (selectedAuto.equals(autos[4][1])) {
-            auto_number = 6;
-        } else if (selectedAuto.equals(autos[5][1])) {
-            auto_number = 7;
-        } else if (selectedAuto.equals(autos[6][1])) {
-            auto_number = 8;
-        } else if (selectedAuto.equals(autos[7][1])) {
-            auto_number = -2; // default path
-        } else if (selectedAuto.equals(autos[8][1])) {
-            auto_number = 9; // Drive Forward One Meter
-        } else if (selectedAuto.equals(autos[9][1])) {
-            auto_number = 10; // Strafe Right One Meter
-        } else if (selectedAuto.equals(autos[10][1])) {
-            auto_number = 11; // Turn Clockwise 90 degrees
-        } else if (selectedAuto.equals(autos[11][1])) {
-            auto_number = 12; // Test Path
-        }
-
-        auto_number = 11; // manual override
         SmartDashboard.putString("Selected Autonomous", selectedAuto);
 
+        addCommands(
+            new RunTrajectoryAdvanced(swerve, selectedAuto)
+        );
+        /*
         switch (auto_number) {
             case 1: // Red Right/Bottom
                 addCommands(
@@ -113,6 +86,6 @@ public class Autonomous extends SequentialCommandGroup {
                     new RunTrajectoryAdvanced(swerve, "DefaultPath")
                 );
                 break;
-        }
+        } */
     }
 }

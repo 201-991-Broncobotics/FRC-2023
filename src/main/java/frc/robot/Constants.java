@@ -166,11 +166,11 @@ public final class Constants {
     }
 
     public static final class AutoBalanceConstants {
-        public static final double drive_speed = 0.104,
+        public static final double drive_speed = 0.1,
                                    drive_speed_get_on = 0.2, 
-                                   pitch_tolerance = 8, 
-                                   max_linear_acceleration = 0.4,
-                                   ratio = 1.1, 
+                                   pitch_tolerance = 7, 
+                                   max_linear_acceleration = 2.0,
+                                   ratio = 1.15, 
                                    min_time = 0.5, 
                                    mt2 = 2.2, 
                                    min_deriv = 0.025;
@@ -297,22 +297,6 @@ public final class Constants {
                                    slow = 0.35;
     }
 
-    public static final class AutonomousNames {
-        public static final String[][] autos = {
-            {"Default", "Determine Path from Limelight"}, // first one is the default
-            {"Red Left", "Run Path for Tag 1"},
-            {"Red Center", "Run Path for Tag 2"},
-            {"Red Right", "Run Path for Tag 3"},
-            {"Blue Left", "Run Path for Tag 6"},
-            {"Blue Center", "Run Path for Tag 7"},
-            {"Blue Right", "Run Path for Tag 8"},
-            {"Place Cube", "Run Path for Tag"},
-            {"Test One", "Drive Forward One Meter"},
-            {"Test Two", "Strafe Right One Meter"},
-            {"Test Three", "Turn Clockwise 90 degrees"}, 
-            {"Test Path", "Run the Test Path"}
-        };
-    }
     public static final class Buttons {
 
         /* D-pad */
@@ -414,10 +398,10 @@ public final class Constants {
     }
 
     public static final class TuningConstants {
-        public static final double CANCoder0_zero = 275.27, 
-                                   CANCoder1_zero = 307.88, 
-                                   CANCoder2_zero = 315.00, 
-                                   CANCoder3_zero = 261.60, 
+        public static final double CANCoder0_zero = 267.45, 
+                                   CANCoder1_zero = 305.77, 
+                                   CANCoder2_zero = 318.60, 
+                                   CANCoder3_zero = 229.30, 
                                    encoder_one_zero = -93.1, 
                                    encoder_two_zero = -304.6;
         

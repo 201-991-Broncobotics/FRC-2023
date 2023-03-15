@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -18,10 +19,11 @@ import frc.robot.commands.setArmPosition.*;
 import frc.robot.commands.utilCommands.*;
 import frc.robot.subsystems.*;
 
-import static frc.robot.Constants.AutonomousNames.*;
 import static frc.robot.Constants.Buttons.*;
 import static frc.robot.Constants.GeneralConstants.*;
 import static frc.robot.Constants.TuningConstants.*;
+
+import java.io.File;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -168,12 +170,25 @@ public class RobotContainer {
         terminateCommandsOperator.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
     }
 
-    private void addAutonomousChoices() {
-        autonomousChooser.setDefaultOption(autos[0][0], autos[0][1]);
-        for (int i = 1; i < autos.length; i++) {
-            autonomousChooser.addOption(autos[i][0], autos[i][1]);
+    private File FFFFFFF(File directory, String search) {
+        File[] t = directory.listFiles();
+        for (int i = 0; i < t.length; i++) {
+            if (t[i].getName().equals(search)) {
+                System.out.println("result " + t[i].getName());
+                return t[i];
+            }
         }
-        SmartDashboard.putData("Auto Selector", autonomousChooser);
+        return null;
+    }
+
+    public void addAutonomousChoices() {
+        File[] deployDirectoryFiles = FFFFFFF(Filesystem.getDeployDirectory(), "pathplanner").listFiles();
+
+        for (File path : deployDirectoryFiles) {
+            if (!path.getName().endsWith(".path")) continue;
+            autonomousChooser.addOption(path.getName().substring(0, path.getName().length() - 5), path.getName().substring(0, path.getName().length() - 5));
+        }
+        SmartDashboard.putData("PathSelector", autonomousChooser);
     }
 
     public void teleopInit() {

@@ -38,9 +38,8 @@ public class RunTrajectoryAdvanced extends SequentialCommandGroup {
         );
 
         addCommands(
-            new InstantCommand(() -> swerve.changeHeading(0)),
-            new InstantCommand(() -> swerve.resetOdometry(trajectoryPath.getInitialPose())),
-            swerveControllerCommand,
+            new InstantCommand(() -> swerve.resetOdometry(trajectoryPath.getInitialHolonomicPose())),
+            swerveControllerCommand, 
             new InstantCommand(() -> swerve.changeHeading(0))
         );
     }
