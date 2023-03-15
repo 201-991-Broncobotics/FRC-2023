@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import frc.lib.util.PIDCalculator;
 import frc.robot.Constants;
 import frc.robot.Variables;
 
@@ -29,7 +30,7 @@ public class Swerve extends SubsystemBase {
     public Pigeon2 gyro;
 
     private double last_time;
-    private double target_heading;
+    private PIDCalculator pid;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.BaseFalconSwerve.pigeonID);
@@ -48,6 +49,7 @@ public class Swerve extends SubsystemBase {
          */
         Timer.delay(1.0);
         resetModulesToAbsolute();
+        pid = new PIDCalculator(pS, dS, iS, swerve_max_power * Constants.BaseFalconSwerve.maxAngularVelocity, 0);
 
         poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, Rotation2d.fromDegrees(0), getModulePositions(), new Pose2d()); 
     }
@@ -58,7 +60,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void setTargetHeading(double target) {
-        target_heading = normalizeAngle(target - getYaw().getDegrees()) + getYaw().getDegrees();
+        pid.reset(normalizeAngle(target - getYaw().getDegrees()) + getYaw().getDegrees());
         last_time = -999;
     }
 
@@ -102,21 +104,15 @@ public class Swerve extends SubsystemBase {
         double current_heading = getYaw().getDegrees();
         if (rotation == 0) {
             if (Timer.getFPGATimestamp() - last_time < calibration_time) {
-                target_heading = current_heading;
+                pid.reset(current_heading);
             } else {
-                if (Math.abs(target_heading - current_heading) > 180) {
-                    target_heading = current_heading + normalizeAngle(target_heading - current_heading);
+                if (Math.abs(pid.getTarget() - current_heading) > 180) {
+                    pid.reset(current_heading + normalizeAngle(pid.getTarget() - current_heading));
                 }
-                rotation = getCorrection(
-                    target_heading - current_heading, 
-                    swerve_min_error, 
-                    swerve_max_error, 
-                    swerve_exponent, 
-                    swerve_max_power * Constants.BaseFalconSwerve.maxAngularVelocity
-                );
+                rotation = pid.update(current_heading);
             }
         } else {
-            target_heading = current_heading;
+            pid.reset(current_heading);
             last_time = Timer.getFPGATimestamp();
         }
 
@@ -178,7 +174,7 @@ public class Swerve extends SubsystemBase {
 
     public void zeroGyro() {
         gyro.setYaw(0);
-        target_heading = 0;
+        pid.reset(0);
         last_time = Timer.getFPGATimestamp();
     }
 
@@ -187,7 +183,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getError() {
-        return normalizeAngle(target_heading - getYaw().getDegrees());
+        return normalizeAngle(pid.getTarget() - getYaw().getDegrees());
     }
 
     public double getPitch() {

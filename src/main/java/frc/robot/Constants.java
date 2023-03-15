@@ -444,6 +444,9 @@ public final class Constants {
                                    i1 = 0, 
                                    p2 = 0.028, 
                                    d2 = 0, 
-                                   i2 = 0;
+                                   i2 = 0,
+                                   pS = 0.04, 
+                                   dS = 0.01, 
+                                   iS = 0;
     }
 }
