@@ -232,11 +232,7 @@ public final class Constants {
         
         public static final double first_motor_sensitivity = 0.55,
 
-                                   first_motor_min_error = 0.5, 
-                                   first_motor_max_error = 17.5, 
-                                   first_motor_exponent = 1.35, 
-                                   first_motor_max_power_up = 0.6,
-                                   first_motor_max_power_down = 0.6,
+                                   first_motor_max_power = 0.6, 
 
                                    first_motor_max_acceleration = 2.0,
                                    whiplash_time_one = 0.5, 
@@ -250,11 +246,7 @@ public final class Constants {
 
                                    second_motor_sensitivity = 0.65,
 
-                                   second_motor_min_error = 0.5,
-                                   second_motor_max_error = 8.5,
-                                   second_motor_exponent = 2.5, 
-                                   second_motor_max_power_up = 0.7,
-                                   second_motor_max_power_down = 1.0,
+                                   second_motor_max_power = 0.7, 
 
                                    second_motor_max_acceleration = 12.0,
                                    whiplash_time_two = 0.5, 
@@ -372,18 +364,6 @@ public final class Constants {
             if (error < 0) {
                 error = 0 - error;
                 multiplier = -max_power;
-            }
-            if (error > max_error) error = max_error;
-            error /= max_error;
-            return Math.pow(error, exponent) * multiplier;
-        }
-
-        public static final double getCorrection(double error, double min_error, double max_error, double exponent, double max_power_up, double max_power_down) {
-            if (Math.abs(error) < min_error) return 0;
-            double multiplier = max_power_up;
-            if (error < 0) {
-                error = 0 - error;
-                multiplier = -max_power_down;
             }
             if (error > max_error) error = max_error;
             error /= max_error;
