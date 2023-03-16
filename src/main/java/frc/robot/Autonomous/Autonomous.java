@@ -145,6 +145,8 @@ public class Autonomous extends SequentialCommandGroup {
                 PathPlannerTrajectory convertedTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(
                     temporaryPathGroup.get(0), alliance
                 );
+                System.out.println("" + convertedTrajectory.getInitialHolonomicPose().getTranslation().getX() + " " + convertedTrajectory.getInitialHolonomicPose().getTranslation().getY());
+                if (i == 0) throw new IllegalArgumentException(); // TODO: delete these two lines of code after testing
                 paths[0] = new SequentialCommandGroup(
                     new InstantCommand(
                         () -> swerve.resetOdometry(convertedTrajectory.getInitialHolonomicPose())
