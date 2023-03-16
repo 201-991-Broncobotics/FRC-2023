@@ -40,7 +40,7 @@ public final class Constants {
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-        public static final NeutralMode driveNeutralMode = NeutralMode.Brake; // TODO Decide this later
+        public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
 
         /* Change the values above if you want to but they're not necessary to be tuned */
 

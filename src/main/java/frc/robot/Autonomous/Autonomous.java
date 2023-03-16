@@ -65,7 +65,7 @@ public class Autonomous extends SequentialCommandGroup {
                     numElements = "";
                     break;
                 case 1:
-                    numElements = "Fast";
+                    numElements = "Double";
                     break;
             }
             switch ((int) temp[3]) {
@@ -79,7 +79,7 @@ public class Autonomous extends SequentialCommandGroup {
         }
 
         String selectedAuto = location + numElements + autoBalance;
-            // form of commands: [Short/Medium/Long] [Fast] []
+            // form of commands: [Short/Medium/Long] [/Double] [/Balance]
 
         System.out.println("Auto Selector gave : " + allianceString + " side and " + selectedAuto);
 
@@ -87,7 +87,7 @@ public class Autonomous extends SequentialCommandGroup {
 
         Command[] drivecommands = getTrajectoryCommands(swerve, selectedAuto, alliance);
 
-        if (numElements.equals("Fast")) { // Go forward, drop element, go to intake, pick up element, go back, drop element, go to finish position; 3 stop points
+        if (numElements.equals("Double")) { // Go forward, drop element, go to intake, pick up element, go back, drop element, go to finish position; 3 stop points
             if (autoBalance.equals("Balance")) {
                 addCommands(
                     new Wait(waitTime), 
