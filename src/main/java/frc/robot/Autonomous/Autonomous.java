@@ -16,16 +16,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.autoBalance.AutoBalance;
-import frc.robot.commands.outtake.Outtake;
-import frc.robot.commands.setArmPosition.SetArmPosition;
-import frc.robot.commands.utilCommands.Brake;
 import frc.robot.commands.utilCommands.Wait;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
 import frc.robot.subsystems.Swerve;
-import static frc.robot.Constants.AutoConstants.*;
-import static frc.robot.Constants.TuningConstants.*;
 import frc.robot.Constants;
+
+import static frc.robot.Constants.AutoConstants.*;
 
 public class Autonomous extends SequentialCommandGroup {
 
@@ -33,74 +30,106 @@ public class Autonomous extends SequentialCommandGroup {
 
     public Autonomous(Claw claw, DoubleArm doubleArm, Swerve swerve) {
         addRequirements(doubleArm, claw, swerve);
-        eventMap.putIfAbsent("autoBalance", new AutoBalance(swerve, doubleArm)); 
-        eventMap.putIfAbsent("event", new SetArmPosition(doubleArm, new double[] {0, 0}));
 
         Timer.delay(1.0); // just to get the limelight set up
 
         DriverStation.Alliance alliance = DriverStation.Alliance.Blue; // default
 
-        String location = "null";
-        int number_of_elements = -1;
-        boolean autobalance = false;
-        
-        String alliance_str = "blue";
+        String location = "Short", numElements = "", autoBalance = "Balance", allianceString = "Blue";
 
         double[] temp = SmartDashboard.getNumberArray("Auto Data", new double[] {-1});
-        if (temp.length != -1) {
+        if (temp.length != 1) {
             switch ((int) temp[0]) {
                 case 0:
+                    allianceString = "Blue";
                     alliance = DriverStation.Alliance.Blue;
-                    alliance_str = "blue";
                     break;
                 case 1:
+                    allianceString = "Red";
                     alliance = DriverStation.Alliance.Red;
-                    alliance_str = "red";
                     break;
             }
             switch ((int) temp[1]) {
                 case 0:
-                    location = "short";
+                    location = "Short";
                     break;
                 case 1:
-                    location = "medium";
+                    location = "Medium";
                     break;
                 case 2:
-                    location = "long";
+                    location = "Long";
                     break;
             }
             switch ((int) temp[2]) {
                 case 0:
-                    number_of_elements = 1;
+                    numElements = "";
                     break;
                 case 1:
-                    number_of_elements = 2;
+                    numElements = "Fast";
                     break;
             }
             switch ((int) temp[3]) {
                 case 0:
-                    autobalance = true;
+                    autoBalance = "Balance";
                     break;
                 case 1:
-                    autobalance = false;
+                    autoBalance = "";
                     break;
             }
         }
 
-        System.out.println("Auto Selector gave : " + alliance_str + " " + location + " " + number_of_elements + " " + autobalance);
+        String selectedAuto = location + numElements + autoBalance;
+            // form of commands: [Short/Medium/Long] [Fast] []
 
-        String selectedAuto = "LongCone";
+        System.out.println("Auto Selector gave : " + allianceString + " side and " + selectedAuto);
+
+        double waitTime = temp[4];
 
         Command[] drivecommands = getTrajectoryCommands(swerve, selectedAuto, alliance);
-        addCommands(
-            drivecommands[0], // we have n + 1 drivecommands, where n is the number of stop points not counting start/ends
-            new SetArmPosition(doubleArm, topPositionAngles), 
-            new Brake(swerve), 
-            new Wait(0.2), 
-            new Outtake(claw, doubleArm),
-            drivecommands[1], 
-            new AutoBalance(swerve, doubleArm)
-        );
+
+        if (numElements.equals("Fast")) { // Go forward, drop element, go to intake, pick up element, go back, drop element, go to finish position; 3 stop points
+            if (autoBalance.equals("Balance")) {
+                addCommands(
+                    new Wait(waitTime), 
+                    drivecommands[0],
+                    new AutonomousOuttake(swerve, doubleArm, claw),
+                    drivecommands[1], 
+                    new AutonomousIntake(swerve, doubleArm, claw), 
+                    drivecommands[2], 
+                    new AutonomousOuttake(swerve, doubleArm, claw),
+                    drivecommands[3], 
+                    new AutoBalance(swerve, doubleArm)
+                );
+            } else {
+                addCommands(
+                    new Wait(waitTime), 
+                    drivecommands[0],
+                    new AutonomousOuttake(swerve, doubleArm, claw),
+                    drivecommands[1], 
+                    new AutonomousIntake(swerve, doubleArm, claw), 
+                    drivecommands[2], 
+                    new AutonomousOuttake(swerve, doubleArm, claw),
+                    drivecommands[3]
+                ); // Literally the same but without an autobalance
+            }
+        } else { // Go forward, drop element, go to finish position; 1 stop point
+            if (autoBalance.equals("Balance")) {
+                addCommands(
+                    new Wait(waitTime), 
+                    drivecommands[0],
+                    new AutonomousOuttake(swerve, doubleArm, claw),
+                    drivecommands[1], 
+                    new AutoBalance(swerve, doubleArm)
+                );
+            } else {
+                addCommands(
+                    new Wait(waitTime), 
+                    drivecommands[0],
+                    new AutonomousOuttake(swerve, doubleArm, claw),
+                    drivecommands[1]
+                );
+            }
+        }
     }
 
     private static Command[] getTrajectoryCommands(Swerve swerve, String fileName, DriverStation.Alliance alliance) {
@@ -146,5 +175,4 @@ public class Autonomous extends SequentialCommandGroup {
         }
         return paths;
     }
-
 }

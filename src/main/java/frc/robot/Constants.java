@@ -425,8 +425,9 @@ public final class Constants {
                                    p2 = 0.028, 
                                    d2 = 0, 
                                    i2 = 0,
-                                   pS = 0.08, 
+                                   pS = 0.065, 
                                    dS = 0, 
-                                   iS = 0;
+                                   iS = 0,
+                                   pT = 2;
     }
 }
