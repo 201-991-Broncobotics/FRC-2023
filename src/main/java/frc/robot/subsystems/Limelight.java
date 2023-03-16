@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Limelight { // NOT a subsystem
@@ -22,6 +24,14 @@ public class Limelight { // NOT a subsystem
         () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDoubleArray(new double[6])[0], 
         () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDoubleArray(new double[6])[2]
     }; // Where the camera is, relative to april tag
+    
+    /** x, y, yaw (degrees), latency (seconds) */
+    private static DoubleSupplier[] botpose = new DoubleSupplier[] {
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6])[0], // x
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6])[1], // y
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6])[5], // yaw
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6])[6] / 1000.0 // latency
+    }; // Where the robot is, relative to april tag
 
     /*
      * First value should match what we receive from LeYaw
@@ -58,13 +68,16 @@ public class Limelight { // NOT a subsystem
         SmartDashboard.putNumber("Robot z", vals[3]);
     }
 
-    public static double[] getRobotPosition() {
-        double x = 0;
-        double y = 0;
-        double angle = 0;
-        // maybe we augment it with yaw but idk
-        double latency = tl.getAsDouble();
-        return new double[] {x, y, angle, latency};
+    public static Pose2d getRobotPosition() {
+        double x = botpose[0].getAsDouble();
+        double y = botpose[1].getAsDouble();
+        // in degrees
+        double angle = botpose[2].getAsDouble();
+        return new Pose2d(x, y, Rotation2d.fromDegrees(angle)); 
+    }
+
+    public static double getLatency() {
+        return botpose[3].getAsDouble(); 
     }
 
     public static void setPipeline(int number) {

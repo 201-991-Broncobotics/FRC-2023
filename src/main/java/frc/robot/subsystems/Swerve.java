@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.SwerveConstants.*;
 import static frc.robot.Constants.TuningConstants.*;
 import static frc.robot.Constants.GeneralConstants.*;
-// import static frc.robot.Constants.AprilTagAlignmentConstants.*;
+import static frc.robot.Constants.AprilTagAlignmentConstants.*;
 
 public class Swerve extends SubsystemBase {
     public static SwerveDrivePoseEstimator poseEstimator; 
@@ -51,7 +52,8 @@ public class Swerve extends SubsystemBase {
         Timer.delay(1.0);
         resetModulesToAbsolute();
 
-        poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, Rotation2d.fromDegrees(0), getModulePositions(), new Pose2d()); 
+        poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, Rotation2d.fromDegrees(180), getModulePositions(), new Pose2d(),VecBuilder.fill(0.1, 0.1, 0.1),
+        VecBuilder.fill(0.4, 0.4, 0.4)); 
     }
 
     /** Counterclockwise in degrees */
@@ -206,13 +208,12 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         poseEstimator.update(getYaw(), getModulePositions());
 
-        /* double[] vision_estimate = Limelight.getRobotPosition();
-        if (vision_estimate[1] != 0 && ((Math.abs(getYaw().getDegrees() - vision_estimate[2]) + max_angular_tolerance) % 90 < 2 * max_angular_tolerance)) {
+        Pose2d vision_estimate = Limelight.getRobotPosition();
+        if (vision_estimate.getTranslation().getNorm() > 0.1 && ((Math.abs(getYaw().getDegrees() - vision_estimate.getRotation().getDegrees()) + max_angular_tolerance) % 90 < 2 * max_angular_tolerance)) {
 
-            Pose2d estimatedPose = new Pose2d(vision_estimate[0], vision_estimate[1], new Rotation2d(vision_estimate[2] * Math.PI / 180));  // don't put yaw as the angle because yaw might be off by a few degrees
-            poseEstimator.addVisionMeasurement(estimatedPose, Timer.getFPGATimestamp() - vision_estimate[3] * 1000.0);
+            poseEstimator.addVisionMeasurement(vision_estimate, Timer.getFPGATimestamp() - Limelight.getLatency());
             
-        } */
+        }
 
         SmartDashboard.putNumber("Gyro ", getYaw().getDegrees());
         SmartDashboard.putNumber("Pitch ", getPitch());
@@ -220,6 +221,9 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("Estimated Pose X", poseEstimator.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Estimated Pose Y", poseEstimator.getEstimatedPosition().getY());
         SmartDashboard.putNumber("Estimated Pose Heading", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+
+        SmartDashboard.putNumber("Megatag x", vision_estimate.getTranslation().getX());
+        SmartDashboard.putNumber("Megatag y", vision_estimate.getTranslation().getY());
 
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
