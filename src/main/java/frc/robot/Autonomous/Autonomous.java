@@ -16,11 +16,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.autoBalance.AutoBalance;
+import frc.robot.commands.outtake.Outtake;
 import frc.robot.commands.setArmPosition.SetArmPosition;
+import frc.robot.commands.utilCommands.Brake;
+import frc.robot.commands.utilCommands.Wait;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
 import frc.robot.subsystems.Swerve;
 import static frc.robot.Constants.AutoConstants.*;
+import static frc.robot.Constants.TuningConstants.*;
 import frc.robot.Constants;
 
 public class Autonomous extends SequentialCommandGroup {
@@ -85,13 +89,17 @@ public class Autonomous extends SequentialCommandGroup {
 
         System.out.println("Auto Selector gave : " + alliance_str + " " + location + " " + number_of_elements + " " + autobalance);
 
-        String selectedAuto = "TestEvents";
+        String selectedAuto = "LongCone";
 
-        Command[] drivecommands = getTrajectoryCommands(swerve, "TestEvents", alliance);
+        Command[] drivecommands = getTrajectoryCommands(swerve, selectedAuto, alliance);
         addCommands(
-            drivecommands[0], 
-            new SetArmPosition(doubleArm, new double[] {-60, 60}), 
-            drivecommands[1]
+            drivecommands[0], // we have n + 1 drivecommands, where n is the number of stop points not counting start/ends
+            new SetArmPosition(doubleArm, topPositionAngles), 
+            new Brake(swerve), 
+            new Wait(0.2), 
+            new Outtake(claw, doubleArm),
+            drivecommands[1], 
+            new AutoBalance(swerve, doubleArm)
         );
     }
 

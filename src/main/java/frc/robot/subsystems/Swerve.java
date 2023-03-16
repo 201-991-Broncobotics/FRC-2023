@@ -33,10 +33,10 @@ public class Swerve extends SubsystemBase {
     private PIDCalculator pid;
 
     public Swerve() {
-        pid = new PIDCalculator(pS, dS, iS, swerve_max_power * Constants.BaseFalconSwerve.maxAngularVelocity, 0);
+        pid = new PIDCalculator(pS, dS, iS, swerve_max_power * Constants.BaseFalconSwerve.maxAngularVelocity, 180);
         gyro = new Pigeon2(Constants.BaseFalconSwerve.pigeonID);
         gyro.configFactoryDefault();
-        zeroGyro();
+        zeroGyro(180);
 
         mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, Constants.BaseFalconSwerve.Mod0.constants),
@@ -170,6 +170,12 @@ public class Swerve extends SubsystemBase {
             positions[mod.moduleNumber] = mod.getPosition();
         }
         return positions;
+    }
+
+    public void zeroGyro(double yaw) {
+        gyro.setYaw(yaw);
+        pid.reset(yaw);
+        last_time = Timer.getFPGATimestamp();
     }
 
     public void zeroGyro() {
