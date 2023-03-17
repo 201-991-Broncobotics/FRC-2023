@@ -121,6 +121,9 @@ public class Swerve extends SubsystemBase {
         translation = translation.times(frc.robot.Variables.speed_factor);
         rotation *= frc.robot.Variables.speed_factor;
 
+        if (translation.getNorm() < min_translation * Constants.BaseFalconSwerve.maxSpeed) translation = new Translation2d();
+        if (Math.abs(rotation) < min_rotation * Constants.BaseFalconSwerve.maxAngularVelocity) rotation = 0;
+
         SwerveModuleState[] swerveModuleStates =
             Constants.BaseFalconSwerve.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(

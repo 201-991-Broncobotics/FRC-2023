@@ -286,7 +286,9 @@ public final class Constants {
                                    swerve_max_power = 0.8,
                                    calibration_time = 0.5, // seconds
                                    turn_sensitivity = 0.35, 
-                                   slow = 0.35;
+                                   min_translation = 0.05, 
+                                   min_rotation = 0.05, 
+                                   slow = 0.2;
     }
 
     public static final class Buttons {
