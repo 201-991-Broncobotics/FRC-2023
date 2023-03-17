@@ -300,8 +300,7 @@ public final class Constants {
 
         /* Which is which */
 
-        public static final int driver_joystick = 2, 
-                                driver_usb_port = 1, 
+        public static final int driver_usb_port = 1, 
                                 operator_usb_port = 0;
 
         /* Driver Buttons */
@@ -330,9 +329,14 @@ public final class Constants {
 
                                 joystickTranslationAxis = 1, // backward is positive
                                 joystickStrafeAxis = 0, // right is positive
-                                joystickRotationAxis = 5, // right is positive; could also do 6
-                                joystickSpeedAxis = 0;
-                                // .getPOV() is the game for joystick; T.Flight Hotas One
+                                joystickRotationAxisOne = 5, // right is positive; could also do 6
+                                joystickRotationAxisTwo = 6, 
+                                joystickSlowButton = 0,
+                                joystickZeroGyroButton = 0, 
+                                joystickMakeXButton = 0, 
+                                joystickTerminateCommandsAxis = 0, // if we push the slider forward it cancels commands
+                                joystickResetArmEncodersButton = 0; // make this like some really obscure button that would literally only be pressed on purpose
+                                // .getPOV() is the same for joystick; T.Flight Hotas One
 
         /* Operator Buttons */
 
@@ -407,7 +411,7 @@ public final class Constants {
 
         public static final boolean fancy_drive = true, 
                                     show_drive_data = false, 
-                                    test_autonomous = true; // runs TestPath - should be somethings simple like turning or driving straight
+                                    genericHID_drive = false;
         
         /* Swerve Drive Constants */
 
@@ -415,15 +419,15 @@ public final class Constants {
                                    drive_static_voltage = 0.32, 
                                    drive_equilibrium_voltage = 1.51, 
                                    drive_acceleration_voltage = 0.27, // SYSID values: KS, KV, KA; they are automatically divided by 12 later
-                                   max_linear_speed = 10, // feet per second
-                                   max_angular_speed = 180; // degrees per second
+                                   max_linear_speed = 12, // feet per second; theoretical max is 13.5
+                                   max_angular_speed = 360; // degrees per second; theoretical max is theoretical maximum is max_linear_speed * 42.7402910527 which is roughly 500
 
         /* Auto Constants */
 
-        public static final double max_linear_speed_autonomous = 5,
-                                   ramp_up_time_linear = 2, // in seconds to reach max 
-                                   max_angular_speed_autonomous = 180, 
-                                   ramp_up_time_angular = 2,
+        public static final double max_linear_speed_autonomous = 12,
+                                   ramp_up_time_linear = 1.5, // in seconds to reach max 
+                                   max_angular_speed_autonomous = 360, 
+                                   ramp_up_time_angular = 1.5,
                                    translation_p_controller = 2, 
                                    angle_p_controller = 4;
         

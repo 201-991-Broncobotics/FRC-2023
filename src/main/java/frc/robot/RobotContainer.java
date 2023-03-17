@@ -18,6 +18,7 @@ import frc.robot.subsystems.*;
 
 import static frc.robot.Constants.Buttons.*;
 import static frc.robot.Constants.GeneralConstants.*;
+import static frc.robot.Constants.SwerveConstants.*;
 import static frc.robot.Constants.TuningConstants.*;
 
 /**
@@ -28,16 +29,19 @@ import static frc.robot.Constants.TuningConstants.*;
  */
 public class RobotContainer {
     /* Controllers */
-    private final XboxController driver = new XboxController(driver_usb_port);
+    private final XboxController driver = new XboxController(genericHID_drive ? 2 : driver_usb_port);
     private final XboxController operator = new XboxController(operator_usb_port);
+    private final GenericHID driver_joystick = new GenericHID(genericHID_drive ? driver_usb_port : 2);
+
+    /* Both Controllers */
+    private final Trigger terminateCommands = new JoystickButton(driver, terminateCommandsDriverButton).or(new JoystickButton(operator, terminateCommandsOperatorButton)).or(new Trigger(() -> Math.abs(driver_joystick.getRawAxis(joystickTerminateCommandsAxis)) > joystick_deadzone));
 
     /* Driver Buttons */
-    private final Trigger zeroGyro = new JoystickButton(driver, zeroGyroButton);
+    private final Trigger zeroGyro = new JoystickButton(driver, zeroGyroButton).or(new JoystickButton(driver_joystick, joystickZeroGyroButton));
     private final Trigger robotCentric = new JoystickButton(driver, robotCentricButton);
     // private final Trigger tagAligner = new JoystickButton(driver, tagAlignerButton);
-    private final Trigger makeX = new JoystickButton(driver, makeXButton);
+    private final Trigger makeX = new JoystickButton(driver, makeXButton).or(new JoystickButton(driver_joystick, joystickMakeXButton));
     // private final Trigger autoBalance = new JoystickButton(driver, autoBalanceButton);
-    private final Trigger terminateCommandsDriver = new JoystickButton(driver, terminateCommandsDriverButton);
 
     /* Operator Buttons */
     private final Trigger topGoal = new JoystickButton(operator, topGoalButton);
@@ -48,8 +52,6 @@ public class RobotContainer {
 
     private final Trigger intake = new JoystickButton(operator, intakeButton);
     private final Trigger outtake = new JoystickButton(operator, outtakeButton);
-    
-    private final Trigger terminateCommandsOperator = new JoystickButton(operator, terminateCommandsOperatorButton);
 
     /* Custom Buttons - this is how you make Triggers based on conditions
     private final Trigger customTrigger = new Trigger(BooleanSupplier condition);
@@ -71,7 +73,7 @@ public class RobotContainer {
     private final Trigger resetArmEncoders = new Trigger(() -> (
         (driver.getRawButton(tagAlignerButton)) &&
         (driver.getRawButton(autoBalanceButton))
-    ));
+    )).or(new Trigger(() -> driver_joystick.getRawButton(joystickResetArmEncodersButton)));
 
     private final Trigger intakeUpper = new Trigger(() -> (operator.getPOV() == intakeUpperValue));
     private final Trigger intakeLower = new Trigger(() -> (operator.getPOV() == intakeLowerValue));
@@ -86,7 +88,26 @@ public class RobotContainer {
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
 
-        if (fancy_drive) {
+        if (genericHID_drive) {
+            s_Swerve.setDefaultCommand(
+                new TeleopSwerve(
+                    s_Swerve, 
+                    () -> -driver_joystick.getRawAxis(joystickTranslationAxis), 
+                    () -> -driver_joystick.getRawAxis(joystickStrafeAxis), 
+                    () -> -(driver_joystick.getRawAxis(joystickRotationAxisOne) + driver_joystick.getRawAxis(joystickRotationAxisTwo)), 
+                    () -> false, 
+                    () -> -driver_joystick.getPOV(), 
+                    () -> {
+                        if (driver_joystick.getRawButton(joystickSlowButton)) {
+                            return slow;
+                        } else {
+                            return 1.0;
+                        }
+                    }
+                     // what we multiply translation speed by; rotation speed is NOT affected
+                )
+            );
+        } else if (fancy_drive) {
             s_Swerve.setDefaultCommand(
                 new TeleopSwerveAbsoluteDirecting(
                     s_Swerve, 
@@ -145,7 +166,7 @@ public class RobotContainer {
 
         resetArmEncoders.toggleOnTrue(new InstantCommand(() -> doubleArm.stopUsingEncoders()));
 
-        terminateCommandsDriver.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
+        terminateCommands.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
         
         /* Operator Buttons */
         topGoal.toggleOnTrue(new SetArmPosition(doubleArm, topPositionAngles));
@@ -161,9 +182,7 @@ public class RobotContainer {
         stopArmCommands.onTrue(new TerminateArmCommands(doubleArm));
 
         intake.toggleOnTrue(new Intake(claw));
-        outtake.toggleOnTrue(new Outtake(s_Swerve, claw, doubleArm));
-        
-        terminateCommandsOperator.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
+        outtake.toggleOnTrue(new Outtake(claw, s_Swerve));
     }
 
     public void teleopInit() {
