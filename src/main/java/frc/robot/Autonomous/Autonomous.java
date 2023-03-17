@@ -108,8 +108,7 @@ public class Autonomous extends SequentialCommandGroup {
             System.out.println("Auto selector not connected");
             return;
         }
-
-        System.out.println("contains key " + autonomousCommands.containsKey(selectedAuto));
+        
         Command[] drivecommands = autonomousCommands.get(selectedAuto); // getTrajectoryCommands(swerve, selectedAuto, alliance);
 
         if (numElements.equals("Double")) { // Go forward, drop element, go to intake, pick up element, go back, drop element, go to finish position; 3 stop points

@@ -52,7 +52,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void passive() {
-        claw_motor.set(-0.05);
+        claw_motor.set(0); // -0.05);
 
         /*
         if (Math.abs(claw_motor.getEncoder().getVelocity()) > 1000 || !(hasElement)) {
