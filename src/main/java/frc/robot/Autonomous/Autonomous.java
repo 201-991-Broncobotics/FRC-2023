@@ -16,12 +16,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.autoBalance.AutoBalance;
+import frc.robot.commands.setArmPosition.SetArmPosition;
 import frc.robot.commands.utilCommands.*;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
 import frc.robot.subsystems.Swerve;
 import frc.robot.Constants;
 
+import static frc.robot.Constants.TuningConstants.*;
 import static frc.robot.Constants.AutoConstants.*;
 
 public class Autonomous extends SequentialCommandGroup {
@@ -94,7 +96,8 @@ public class Autonomous extends SequentialCommandGroup {
                     drivecommands[0],
                     new AutonomousOuttake(swerve, doubleArm, claw),
                     drivecommands[1], 
-                    new AutonomousIntake(swerve, doubleArm, claw), 
+                    new SetArmPosition(doubleArm, intakeLowerAngles), // I don't think it works if we put it inside autonomousintake
+                    new AutonomousIntake(swerve, claw), 
                     drivecommands[2], 
                     new AutonomousOuttake(swerve, doubleArm, claw),
                     drivecommands[3], 
@@ -106,7 +109,8 @@ public class Autonomous extends SequentialCommandGroup {
                     drivecommands[0],
                     new AutonomousOuttake(swerve, doubleArm, claw),
                     drivecommands[1], 
-                    new AutonomousIntake(swerve, doubleArm, claw), 
+                    new SetArmPosition(doubleArm, intakeLowerAngles),
+                    new AutonomousIntake(swerve, claw), 
                     drivecommands[2], 
                     new AutonomousOuttake(swerve, doubleArm, claw),
                     drivecommands[3]
