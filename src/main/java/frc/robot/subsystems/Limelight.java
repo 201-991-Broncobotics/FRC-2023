@@ -25,10 +25,14 @@ public class Limelight { // NOT a subsystem
     
     /** x, y (meters), yaw (degrees), latency (seconds) */
     private static DoubleSupplier[] botpose = new DoubleSupplier[] {
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6])[0], // x
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6])[1], // y
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6])[5], // yaw
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6])[6] / 1000.0 // latency
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[7])[0], // x
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[7])[1], // y
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[7])[5], // yaw
+        () -> (
+                (
+                    NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0) + 
+                    NetworkTableInstance.getDefault().getTable("limelight").getEntry("cl").getDouble(0)
+                ) / 1000.0) // latency
     }; // Where the robot is, relative to april tag
 
     /*
@@ -71,6 +75,11 @@ public class Limelight { // NOT a subsystem
         double y = botpose[1].getAsDouble();
         // in degrees
         double angle = botpose[2].getAsDouble();
+        
+        SmartDashboard.putNumber("Megatag x", x);
+        SmartDashboard.putNumber("Megatag y", y);
+        SmartDashboard.putNumber("Latency", botpose[3].getAsDouble());
+
         return new Pose2d(x, y, Rotation2d.fromDegrees(angle)); 
     }
 

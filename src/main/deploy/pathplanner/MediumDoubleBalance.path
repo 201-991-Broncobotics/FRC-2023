@@ -95,5 +95,13 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 1.17818181818185,
+      "names": [
+        "event",
+        "balance"
+      ]
+    }
+  ]
 }

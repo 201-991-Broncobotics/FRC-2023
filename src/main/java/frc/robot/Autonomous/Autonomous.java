@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.autoBalance.AutoBalance;
-import frc.robot.commands.utilCommands.Wait;
+import frc.robot.commands.utilCommands.*;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
 import frc.robot.subsystems.Swerve;
@@ -145,8 +145,6 @@ public class Autonomous extends SequentialCommandGroup {
                 PathPlannerTrajectory convertedTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(
                     temporaryPathGroup.get(0), alliance
                 );
-                System.out.println("" + convertedTrajectory.getInitialHolonomicPose().getTranslation().getX() + " " + convertedTrajectory.getInitialHolonomicPose().getTranslation().getY());
-                if (i == 0) throw new IllegalArgumentException(); // TODO: delete these two lines of code after testing
                 paths[0] = new SequentialCommandGroup(
                     new InstantCommand(
                         () -> swerve.resetOdometry(convertedTrajectory.getInitialHolonomicPose())

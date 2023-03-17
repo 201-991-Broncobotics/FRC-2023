@@ -3,6 +3,7 @@ package frc.robot.commands.utilCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 
 import static frc.robot.Constants.TuningConstants.*;
@@ -31,7 +32,8 @@ public class Drive extends CommandBase {
         // we might do a PID thing...
         double conv_power = Math.min(Math.abs(power), (distance - swerve.getPose().relativeTo(starting_pose).getTranslation().getNorm()) * pT);
         if (power < 0) conv_power = -conv_power;
-        swerve.drive(new Translation2d(conv_power, 0), 0, false, true);
+        conv_power = power; // we could test without this line soon
+        swerve.drive(new Translation2d(conv_power, 0).times(Constants.BaseFalconSwerve.maxSpeed), 0, false, true);
     }
 
     @Override
@@ -41,7 +43,7 @@ public class Drive extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return (swerve.getPose().relativeTo(starting_pose).getTranslation().getNorm() > distance);
+        return (swerve.getPose().relativeTo(starting_pose).getTranslation().getNorm() > distance - dT);
     }
     
 }

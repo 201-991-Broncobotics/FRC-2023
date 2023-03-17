@@ -15,7 +15,7 @@ public class Outtake extends SequentialCommandGroup {
         addRequirements(claw, doubleArm);
         addCommands(
             new Outtake_Subcommand(claw), 
-            new Drive(swerve, 0.5, -0.4), 
+            new Drive(swerve, 0.5, -0.6), 
             new SetArmPosition(doubleArm, idlePositionAngles)
         );
     }

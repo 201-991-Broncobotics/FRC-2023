@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.*;
-import frc.robot.commands.alignWithApriltag.AlignWithApriltag;
-import frc.robot.commands.autoBalance.AutoBalance;
+// import frc.robot.commands.alignWithApriltag.AlignWithApriltag;
+// import frc.robot.commands.autoBalance.AutoBalance;
 import frc.robot.commands.defaultCommands.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.outtake.Outtake;
@@ -34,9 +34,9 @@ public class RobotContainer {
     /* Driver Buttons */
     private final Trigger zeroGyro = new JoystickButton(driver, zeroGyroButton);
     private final Trigger robotCentric = new JoystickButton(driver, robotCentricButton);
-    private final Trigger tagAligner = new JoystickButton(driver, tagAlignerButton);
+    // private final Trigger tagAligner = new JoystickButton(driver, tagAlignerButton);
     private final Trigger makeX = new JoystickButton(driver, makeXButton);
-    private final Trigger autoBalance = new JoystickButton(driver, autoBalanceButton);
+    // private final Trigger autoBalance = new JoystickButton(driver, autoBalanceButton);
     private final Trigger terminateCommandsDriver = new JoystickButton(driver, terminateCommandsDriverButton);
 
     /* Operator Buttons */
@@ -66,6 +66,11 @@ public class RobotContainer {
     private final Trigger stopArmCommands = new Trigger(() -> (
         (operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || 
         (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone)
+    ));
+
+    private final Trigger resetArmEncoders = new Trigger(() -> (
+        (driver.getRawButton(tagAlignerButton)) &&
+        (driver.getRawButton(autoBalanceButton))
     ));
 
     private final Trigger intakeUpper = new Trigger(() -> (operator.getPOV() == intakeUpperValue));
@@ -133,10 +138,12 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         makeX.onTrue(new Brake(s_Swerve));
 
-        tagAligner.toggleOnTrue(new AlignWithApriltag(s_Swerve, doubleArm));
+        // tagAligner.toggleOnTrue(new AlignWithApriltag(s_Swerve, doubleArm));
                         // new AlignWithApriltagOld(s_Swerve, () -> false)
 
-        autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm));
+        // autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm));
+
+        resetArmEncoders.toggleOnTrue(new InstantCommand(() -> doubleArm.stopUsingEncoders()));
 
         terminateCommandsDriver.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
         
@@ -160,6 +167,7 @@ public class RobotContainer {
     }
 
     public void teleopInit() {
+        doubleArm.teleOpInit();
         doubleArm.resetPID();
     }
 

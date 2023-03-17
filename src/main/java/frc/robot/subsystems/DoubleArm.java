@@ -19,6 +19,7 @@ public class DoubleArm extends SubsystemBase {
     private CANSparkMax first_motor, first_motor_follower, second_motor;
     private DutyCycleEncoder first_encoder, second_encoder;
     private PIDMotor first, second;
+    private boolean useEncoders = true;
 
     public DoubleArm() { // Initialize the motors, encoders, and target positions
         first_motor = new CANSparkMax(first_motor_ID, MotorType.kBrushless); // NEO Motors are brushless
@@ -81,48 +82,56 @@ public class DoubleArm extends SubsystemBase {
         second = new PIDMotor(second_motor, () -> getCurrentArmAngles()[1], whiplash_time_two, second_motor_min_angle, second_motor_max_angle, second_motor_max_power, second_motor_max_acceleration, p2, d2, i2);
     }
 
+    public void teleOpInit() {
+        useEncoders = true;
+        first.resetTarget();
+        second.resetTarget();
+    }
+
     public void powerArm(double firstPower, double secondPower) { // power the arms manually
 
-        double[] current_angles = getCurrentArmAngles();
-        if (current_angles[1] > current_angles[0] + 180 - min_difference) {
-            second.setTarget(current_angles[0] + 180 - min_difference);
-            secondPower = Math.min(secondPower, 0);
-        } // all of zay others are gewd
-
-        if (!checkTargetAngles(current_angles)) { // out of bounds
-
-            if (getPositionFromAngles(current_angles)[1] > max_y) {
-
-                firstPower = Math.min(firstPower, 0);
-
+        if (useEncoders) {
+            double[] current_angles = getCurrentArmAngles();
+            if (current_angles[1] > current_angles[0] + 180 - min_difference) {
+                second.setTarget(current_angles[0] + 180 - min_difference);
                 secondPower = Math.min(secondPower, 0);
+            } // all of zay others are gewd
 
-                double delta_y = max_y - first_arm_length * Math.sin(current_angles[0] * Math.PI / 180.0);
-                if (Math.abs(delta_y) < second_arm_length - 0.5) {
-                    second.setTarget(Math.asin(delta_y / second_arm_length) * 180.0 / Math.PI);
-                } else {
-                    second.setTarget(Math.min(90, second_motor_max_angle));
-                }
+            if (!checkTargetAngles(current_angles)) { // out of bounds
 
-            } else if (getPositionFromAngles(current_angles)[0] < min_x) {
+                if (getPositionFromAngles(current_angles)[1] > max_y) {
 
-                firstPower = Math.max(firstPower, 0);
-                
-                if (current_angles[1] > 0) {
+                    firstPower = Math.min(firstPower, 0);
+
                     secondPower = Math.min(secondPower, 0);
-                } else {
-                    secondPower = Math.max(secondPower, 0);
-                }
 
-            } else { // must be less than min_y because not possible to be greater than max_x
-                
-                secondPower = Math.max(secondPower, 0);
-                
-                double delta_y = min_y - first_arm_length * Math.sin(current_angles[0] * Math.PI / 180.0);
-                if (Math.abs(delta_y) < second_arm_length - 0.5) {
-                    second.setTarget(Math.asin(delta_y / second_arm_length) * 180.0 / Math.PI);
-                } else {
-                    second.setTarget(Math.max(-90, second_motor_min_angle));
+                    double delta_y = max_y - first_arm_length * Math.sin(current_angles[0] * Math.PI / 180.0);
+                    if (Math.abs(delta_y) < second_arm_length - 0.5) {
+                        second.setTarget(Math.asin(delta_y / second_arm_length) * 180.0 / Math.PI);
+                    } else {
+                        second.setTarget(Math.min(90, second_motor_max_angle));
+                    }
+
+                } else if (getPositionFromAngles(current_angles)[0] < min_x) {
+
+                    firstPower = Math.max(firstPower, 0);
+                    
+                    if (current_angles[1] > 0) {
+                        secondPower = Math.min(secondPower, 0);
+                    } else {
+                        secondPower = Math.max(secondPower, 0);
+                    }
+
+                } else { // must be less than min_y because not possible to be greater than max_x
+                    
+                    secondPower = Math.max(secondPower, 0);
+                    
+                    double delta_y = min_y - first_arm_length * Math.sin(current_angles[0] * Math.PI / 180.0);
+                    if (Math.abs(delta_y) < second_arm_length - 0.5) {
+                        second.setTarget(Math.asin(delta_y / second_arm_length) * 180.0 / Math.PI);
+                    } else {
+                        second.setTarget(Math.max(-90, second_motor_min_angle));
+                    }
                 }
             }
         }
@@ -130,7 +139,6 @@ public class DoubleArm extends SubsystemBase {
         first.power(firstPower);
         second.power(secondPower);
     }
-    
 
     public void pidPowerArm() {
         first.pidPower();
@@ -148,9 +156,20 @@ public class DoubleArm extends SubsystemBase {
         first.brake();
         second.brake();
     }
+
     public void resetPID() {
         first.brake();
         second.brake();
+    }
+
+    public void stopUsingEncoders() {
+        useEncoders = false;
+        first.disableLimiting();
+        second.disableLimiting();
+    }
+
+    public boolean getUsingEncoders() {
+        return useEncoders;
     }
 
     public void setTargetAngles(double[] angles) {
@@ -229,7 +248,7 @@ public class DoubleArm extends SubsystemBase {
         SmartDashboard.putNumber("Motor One Follower Current", first_motor_follower.getOutputCurrent());
         SmartDashboard.putNumber("Motor Two Current", second_motor.getOutputCurrent());
 
-        if ((getCurrentXY()[0] < middle_x) && (getCurrentXY()[1] < middle_y)) {
+        if (((getCurrentXY()[0] < middle_x) && (getCurrentXY()[1] < middle_y)) || (!useEncoders)) {
             frc.robot.Variables.speed_factor = 1;
         } else {
             frc.robot.Variables.speed_factor = speed_when_arm_extended;

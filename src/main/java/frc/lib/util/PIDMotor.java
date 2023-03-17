@@ -10,7 +10,8 @@ public class PIDMotor {
     private final CANSparkMax motor;
     private final DoubleSupplier positionSup;
     private final PIDCalculator pidCalculator;
-    private final double calibrationTime, minPosition, maxPosition, maxAcceleration;
+    private final double calibrationTime, maxAcceleration;
+    private double minPosition, maxPosition;
 
     private double previousTime, time, lmtPosition;
 
@@ -45,7 +46,6 @@ public class PIDMotor {
             pidCalculator.reset(maxPosition);
             lmtPosition = maxPosition;
         }
-        
 
         if (power != 0) {
             pidCalculator.reset(currentPosition);
@@ -60,6 +60,13 @@ public class PIDMotor {
         power = Math.max(motor.get() - maxAcceleration * deltaTime, Math.min(motor.get() + maxAcceleration * deltaTime, power));
 
         motor.set(power);
+    }
+
+    public void resetTarget() {
+        previousTime = -1000;
+        pidCalculator.reset(positionSup.getAsDouble());
+        motor.set(0);
+        lmtPosition = positionSup.getAsDouble();
     }
 
     public void setTarget(double targetPosition) {
@@ -87,5 +94,10 @@ public class PIDMotor {
 
     public double getTarget() {
         return pidCalculator.getTarget();
+    }
+
+    public void disableLimiting() {
+        minPosition = Double.NEGATIVE_INFINITY;
+        maxPosition = Double.POSITIVE_INFINITY;
     }
 }

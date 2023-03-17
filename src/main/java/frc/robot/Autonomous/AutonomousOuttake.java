@@ -17,7 +17,7 @@ public class AutonomousOuttake extends SequentialCommandGroup {
         addRequirements(swerve, doubleArm, claw);
         addCommands(
             new SetArmPosition(doubleArm, topPositionAngles), 
-            new Drive(swerve, 0.5, 0.4), 
+            new Drive(swerve, 0.2, 0.4), 
             new Brake(swerve), 
             new Wait(0.2), 
             new Outtake(swerve, claw, doubleArm)

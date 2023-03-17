@@ -300,7 +300,8 @@ public final class Constants {
 
         /* Which is which */
 
-        public static final int driver_usb_port = 1, 
+        public static final int driver_joystick = 2, 
+                                driver_usb_port = 1, 
                                 operator_usb_port = 0;
 
         /* Driver Buttons */
@@ -378,12 +379,12 @@ public final class Constants {
     }
 
     public static final class TuningConstants {
-        public static final double CANCoder0_zero = 267.45, 
-                                   CANCoder1_zero = 305.77, 
-                                   CANCoder2_zero = 318.60, 
-                                   CANCoder3_zero = 229.30, 
-                                   encoder_one_zero = -93.1, 
-                                   encoder_two_zero = -304.6;
+        public static final double CANCoder0_zero = 265.65, 
+                                   CANCoder1_zero = 306.12, 
+                                   CANCoder2_zero = 315.08, 
+                                   CANCoder3_zero = 217.70, 
+                                   encoder_one_zero = -452.73, 
+                                   encoder_two_zero = -305.55;
         
         /* The angles we want to go to - NOT the x and y */
         public static final double[] topPositionAngles = {2.7, 19.0}, 
@@ -391,7 +392,7 @@ public final class Constants {
                                      lowPositionAngles = {-64, 0}, 
 
                                      intakeUpperAngles = {-65.3, 32.9}, 
-                                     intakeLowerAngles = {-82.3, -32.9}, 
+                                     intakeLowerAngles = {-82.3, -25}, 
 
                                      idlePositionAngles = {-115, 42};
 
@@ -422,12 +423,13 @@ public final class Constants {
         public static final double p1 = 0.038, 
                                    d1 = 0, 
                                    i1 = 0, 
-                                   p2 = 0.028, 
+                                   p2 = 0.031, 
                                    d2 = 0, 
-                                   i2 = 0,
+                                   i2 = 0, 
                                    pS = 0.065, 
                                    dS = 0, 
                                    iS = 0,
-                                   pT = 2;
+                                   pT = 0.4,
+                                   dT = 0.2;
     }
 }

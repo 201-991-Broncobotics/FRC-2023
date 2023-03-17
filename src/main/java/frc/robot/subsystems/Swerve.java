@@ -211,7 +211,7 @@ public class Swerve extends SubsystemBase {
         Pose2d vision_estimate = Limelight.getRobotPosition();
         if (vision_estimate.getTranslation().getNorm() > 0.1 && ((Math.abs(getYaw().getDegrees() - vision_estimate.getRotation().getDegrees()) + max_angular_tolerance) % 90 < 2 * max_angular_tolerance)) {
 
-            poseEstimator.addVisionMeasurement(vision_estimate, Timer.getFPGATimestamp() - Limelight.getLatency());
+            // poseEstimator.addVisionMeasurement(vision_estimate, Timer.getFPGATimestamp() - Limelight.getLatency());
             
         }
 
@@ -221,9 +221,6 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("Estimated Pose X", poseEstimator.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Estimated Pose Y", poseEstimator.getEstimatedPosition().getY());
         SmartDashboard.putNumber("Estimated Pose Heading", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
-
-        SmartDashboard.putNumber("Megatag x", vision_estimate.getTranslation().getX());
-        SmartDashboard.putNumber("Megatag y", vision_estimate.getTranslation().getY());
 
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
