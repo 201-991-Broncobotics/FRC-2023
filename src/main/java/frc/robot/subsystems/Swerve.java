@@ -218,9 +218,9 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("Gyro ", getYaw().getDegrees());
         SmartDashboard.putNumber("Pitch ", getPitch());
 
-        SmartDashboard.putNumber("Estimated Pose X", poseEstimator.getEstimatedPosition().getX());
-        SmartDashboard.putNumber("Estimated Pose Y", poseEstimator.getEstimatedPosition().getY());
-        SmartDashboard.putNumber("Estimated Pose Heading", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+        SmartDashboard.putNumber("Estimated Pose X", vision_estimate.getTranslation().getX());
+        SmartDashboard.putNumber("Estimated Pose Y", vision_estimate.getTranslation().getY());
+        SmartDashboard.putNumber("Estimated Pose Heading", vision_estimate.getRotation().getDegrees());
 
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());

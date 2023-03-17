@@ -308,22 +308,31 @@ public final class Constants {
 
         public static final int translationAxis = XboxController.Axis.kLeftY.value, 
                                 strafeAxis = XboxController.Axis.kLeftX.value,
+
                                 rotationAxis = XboxController.Axis.kRightX.value,
-                                slowAxis = XboxController.Axis.kRightTrigger.value, 
 
                                 directionXAxis = XboxController.Axis.kRightX.value, 
                                 directionYAxis = XboxController.Axis.kRightY.value, 
                                 turnRightAxis = XboxController.Axis.kRightTrigger.value, 
                                 turnLeftAxis = XboxController.Axis.kLeftTrigger.value, 
+                                
+                                slowAxis = XboxController.Axis.kRightTrigger.value, 
                                 slowButtonOne = XboxController.Button.kRightBumper.value, 
                                 slowButtonTwo = XboxController.Button.kLeftBumper.value, 
 
-                                zeroGyroButton = XboxController.Button.kY.value, 
                                 robotCentricButton = XboxController.Button.kLeftBumper.value,
+
+                                zeroGyroButton = XboxController.Button.kY.value, 
                                 tagAlignerButton = XboxController.Button.kA.value, 
                                 makeXButton = XboxController.Button.kX.value, 
                                 autoBalanceButton = XboxController.Button.kB.value,
-                                terminateCommandsDriverButton = XboxController.Button.kBack.value;
+                                terminateCommandsDriverButton = XboxController.Button.kBack.value,
+
+                                joystickTranslationAxis = 1, // backward is positive
+                                joystickStrafeAxis = 0, // right is positive
+                                joystickRotationAxis = 5, // right is positive; could also do 6
+                                joystickSpeedAxis = 0;
+                                // .getPOV() is the game for joystick; T.Flight Hotas One
 
         /* Operator Buttons */
 
@@ -391,7 +400,7 @@ public final class Constants {
                                      midPositionAngles = {-21.4, 0}, 
                                      lowPositionAngles = {-64, 0}, 
 
-                                     intakeUpperAngles = {-65.3, 32.9}, 
+                                     intakeUpperAngles = {-106.5, 40.6}, 
                                      intakeLowerAngles = {-82.3, -25}, 
 
                                      idlePositionAngles = {-115, 42};
@@ -426,7 +435,7 @@ public final class Constants {
                                    p2 = 0.031, 
                                    d2 = 0, 
                                    i2 = 0, 
-                                   pS = 0.065, 
+                                   pS = 0.05, 
                                    dS = 0, 
                                    iS = 0,
                                    pT = 0.4,
