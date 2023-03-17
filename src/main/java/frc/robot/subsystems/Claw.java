@@ -31,14 +31,20 @@ public class Claw extends SubsystemBase {
     }
 
     public void intake() {
+        SmartDashboard.putString("claw state", "intake"); 
+        
         claw_motor.set(intake_power);
     }
 
     public void outtake() {
+        SmartDashboard.putString("claw state", "outtake"); 
+
         claw_motor.set(outtake_power);
     }
 
     public void stop() {
+        SmartDashboard.putString("claw state", "stopped"); 
+
         claw_motor.set(0);
     }
 

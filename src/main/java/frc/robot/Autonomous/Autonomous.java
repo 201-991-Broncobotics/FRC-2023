@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.autoBalance.AutoBalance;
 import frc.robot.commands.setArmPosition.SetArmPosition;
@@ -29,16 +30,20 @@ public class Autonomous extends SequentialCommandGroup {
 
     public static HashMap<String, Command[]> autonomousCommands = new HashMap<String, Command[]>(); 
 
+    public static boolean getCacheEmpty() {
+        return autonomousCommands.size() == 0;
+    }
+
     public static void cacheCommandGroups(Swerve swerve) {
         double t = System.currentTimeMillis();
-        autonomousCommands.clear();
+        System.out.println("Started");
         for (String i : new String[] {
             "Short", "ShortDouble", "ShortBalance", "ShortDoubleBalance", 
             "Medium", "MediumDouble", "MediumBalance", "MediumDoubleBalance", 
             "Long", "LongDouble", "LongBalance", "LongDoubleBalance"}
         ) {
-            autonomousCommands.put("Blue" + i, getTrajectoryCommands(swerve, i, DriverStation.Alliance.Blue));
-            autonomousCommands.put("Red" + i, getTrajectoryCommands(swerve, i, DriverStation.Alliance.Red));
+            autonomousCommands.putIfAbsent("Blue" + i, getTrajectoryCommands(swerve, i, DriverStation.Alliance.Blue));
+            autonomousCommands.putIfAbsent("Red" + i, getTrajectoryCommands(swerve, i, DriverStation.Alliance.Red));
         }
         System.out.println("total time " + (System.currentTimeMillis() - t) / 1000.0);
     }
@@ -96,8 +101,15 @@ public class Autonomous extends SequentialCommandGroup {
 
         System.out.println("Auto Selector gave : " + allianceString + " side and " + selectedAuto);
 
-        double waitTime = temp[4];
+        double waitTime;
+        try {
+            waitTime = temp[4];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Auto selector not connected");
+            return;
+        }
 
+        System.out.println("contains key " + autonomousCommands.containsKey(selectedAuto));
         Command[] drivecommands = autonomousCommands.get(selectedAuto); // getTrajectoryCommands(swerve, selectedAuto, alliance);
 
         if (numElements.equals("Double")) { // Go forward, drop element, go to intake, pick up element, go back, drop element, go to finish position; 3 stop points
@@ -131,17 +143,29 @@ public class Autonomous extends SequentialCommandGroup {
             if (autoBalance.equals("Balance")) {
                 addCommands(
                     new Wait(waitTime), 
-                    drivecommands[0],
+                    new ParallelCommandGroup(
+                        drivecommands[0],
+                        new SetArmPosition(doubleArm, topPositionAngles)
+                    ), 
                     new AutonomousOuttake(swerve, doubleArm, claw),
-                    drivecommands[1], 
+                    new ParallelCommandGroup(
+                        drivecommands[1], 
+                        new SetArmPosition(doubleArm, idlePositionAngles)
+                    ),
                     new AutoBalance(swerve, doubleArm)
                 );
             } else {
                 addCommands(
                     new Wait(waitTime), 
-                    drivecommands[0],
+                    new ParallelCommandGroup(
+                        drivecommands[0],
+                        new SetArmPosition(doubleArm, topPositionAngles)
+                    ), 
                     new AutonomousOuttake(swerve, doubleArm, claw),
-                    drivecommands[1]
+                    new ParallelCommandGroup(
+                        drivecommands[1], 
+                        new SetArmPosition(doubleArm, idlePositionAngles)
+                    )
                 );
             }
         }

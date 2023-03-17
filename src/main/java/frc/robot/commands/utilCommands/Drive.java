@@ -2,6 +2,7 @@ package frc.robot.commands.utilCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
@@ -13,6 +14,7 @@ public class Drive extends CommandBase {
     private Swerve swerve;
     private final double power, distance;
     private Pose2d starting_pose;
+    private double end_time;
 
     public Drive(Swerve swerve, double distance, double power) {
         this.swerve = swerve;
@@ -25,6 +27,7 @@ public class Drive extends CommandBase {
     public void initialize() {
         swerve.changeHeading(0);
         starting_pose = swerve.getPose();
+        end_time = Timer.getFPGATimestamp() + 1;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class Drive extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return (swerve.getPose().relativeTo(starting_pose).getTranslation().getNorm() > distance - dT);
+        return ((swerve.getPose().relativeTo(starting_pose).getTranslation().getNorm() > distance - dT) || (Timer.getFPGATimestamp() > end_time));
     }
     
 }

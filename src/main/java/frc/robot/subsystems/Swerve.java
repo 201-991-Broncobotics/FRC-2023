@@ -52,7 +52,7 @@ public class Swerve extends SubsystemBase {
         Timer.delay(1.0);
         resetModulesToAbsolute();
 
-        poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, Rotation2d.fromDegrees(180), getModulePositions(), new Pose2d(),VecBuilder.fill(0.1, 0.1, 0.1),
+        poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, Rotation2d.fromDegrees(180), getModulePositions(), new Pose2d(), VecBuilder.fill(0.1, 0.1, 0.1),
         VecBuilder.fill(0.4, 0.4, 0.4)); 
     }
 
@@ -214,17 +214,33 @@ public class Swerve extends SubsystemBase {
         Pose2d vision_estimate = Limelight.getRobotPosition();
         if (vision_estimate.getTranslation().getNorm() > 0.1 && ((Math.abs(getYaw().getDegrees() - vision_estimate.getRotation().getDegrees()) + max_angular_tolerance) % 90 < 2 * max_angular_tolerance)) {
 
-            // poseEstimator.addVisionMeasurement(vision_estimate, Timer.getFPGATimestamp() - Limelight.getLatency());
+            // TODO: test if this works for red
+            poseEstimator.addVisionMeasurement(vision_estimate, Timer.getFPGATimestamp() - Limelight.getLatency());
             
         }
 
+        // (2, 1) for tag 8, angle -180
         SmartDashboard.putNumber("Gyro ", getYaw().getDegrees());
         SmartDashboard.putNumber("Pitch ", getPitch());
 
-        SmartDashboard.putNumber("Estimated Pose X", vision_estimate.getTranslation().getX());
-        SmartDashboard.putNumber("Estimated Pose Y", vision_estimate.getTranslation().getY());
-        SmartDashboard.putNumber("Estimated Pose Heading", vision_estimate.getRotation().getDegrees());
+        double ox =  poseEstimator.getEstimatedPosition().getTranslation().getX(), 
+            oy = poseEstimator.getEstimatedPosition().getTranslation().getY(), 
+            od = poseEstimator.getEstimatedPosition().getRotation().getDegrees(); 
 
+        SmartDashboard.putNumber("Odometry Pose X", ox);
+        SmartDashboard.putNumber("Odometry Pose Y", oy);
+        SmartDashboard.putNumber("Odometry Pose Heading", od);
+
+        double vx = vision_estimate.getTranslation().getX();
+        double vy = vision_estimate.getTranslation().getY();
+        double vd = vision_estimate.getRotation().getDegrees();
+
+        SmartDashboard.putNumber("Vision Pose X", vx);
+        SmartDashboard.putNumber("Vision Pose Y", vy);
+        SmartDashboard.putNumber("Vision Pose Heading", vd);
+        
+        // TODO: Make a visualizer in pygame
+        
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());

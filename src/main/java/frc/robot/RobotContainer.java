@@ -201,4 +201,8 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return new Autonomous(claw, doubleArm, s_Swerve);
     }
+
+    public Swerve getSwerve() {
+        return s_Swerve;
+    }
 }

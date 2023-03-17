@@ -25,9 +25,9 @@ public class Limelight { // NOT a subsystem
     
     /** x, y (meters), yaw (degrees), latency (seconds) */
     private static DoubleSupplier[] botpose = new DoubleSupplier[] {
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[7])[0], // x
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[7])[1], // y
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[7])[5], // yaw
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpiblue").getDoubleArray(new double[7])[0], // x
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpiblue").getDoubleArray(new double[7])[1], // y
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpiblue").getDoubleArray(new double[7])[5], // yaw
         () -> (
                 (
                     NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0) + 
@@ -73,11 +73,8 @@ public class Limelight { // NOT a subsystem
     public static Pose2d getRobotPosition() {
         double x = botpose[0].getAsDouble();
         double y = botpose[1].getAsDouble();
-        // in degrees
         double angle = botpose[2].getAsDouble();
-        
-        SmartDashboard.putNumber("Megatag x", x);
-        SmartDashboard.putNumber("Megatag y", y);
+
         SmartDashboard.putNumber("Latency", botpose[3].getAsDouble());
 
         return new Pose2d(x, y, Rotation2d.fromDegrees(angle)); 
