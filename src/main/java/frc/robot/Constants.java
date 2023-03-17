@@ -288,7 +288,8 @@ public final class Constants {
                                    turn_sensitivity = 0.35, 
                                    min_translation = 0.05, 
                                    min_rotation = 0.05, 
-                                   slow = 0.2;
+                                   slow = 0.2,
+                                   turning_sensitivity = 0.65;
     }
 
     public static final class Buttons {
@@ -302,7 +303,8 @@ public final class Constants {
 
         /* Which is which */
 
-        public static final int driver_usb_port = 1, 
+        public static final int joystick_usb_port = 2, 
+                                driver_usb_port = 1, 
                                 operator_usb_port = 0;
 
         /* Driver Buttons */
@@ -331,13 +333,12 @@ public final class Constants {
 
                                 joystickTranslationAxis = 1, // backward is positive
                                 joystickStrafeAxis = 0, // right is positive
-                                joystickRotationAxisOne = 5, // right is positive; could also do 6
-                                joystickRotationAxisTwo = 6, 
-                                joystickSlowButton = 0,
-                                joystickZeroGyroButton = 0, 
-                                joystickMakeXButton = 0, 
-                                joystickTerminateCommandsAxis = 0, // if we push the slider forward it cancels commands
-                                joystickResetArmEncodersButton = 0; // make this like some really obscure button that would literally only be pressed on purpose
+                                joystickRotationAxis = 5, // right is positive
+                                joystickSlowButton = 1,
+                                joystickZeroGyroButton = 3, 
+                                joystickMakeXButton = 2, 
+                                joystickTerminateCommandsButton = 4, // if we push the slider forward it cancels commands
+                                joystickResetArmEncodersButton = 12; // make this like some really obscure button that would literally only be pressed on purpose
                                 // .getPOV() is the same for joystick; T.Flight Hotas One
 
         /* Operator Buttons */
@@ -394,10 +395,10 @@ public final class Constants {
     }
 
     public static final class TuningConstants {
-        public static final double CANCoder0_zero = 265.65, 
-                                   CANCoder1_zero = 306.12, 
-                                   CANCoder2_zero = 315.08, 
-                                   CANCoder3_zero = 217.70, 
+        public static final double CANCoder0_zero = 260.59, 
+                                   CANCoder1_zero = 299.88, 
+                                   CANCoder2_zero = 318.51, 
+                                   CANCoder3_zero = 211.64, 
                                    encoder_one_zero = -452.73, 
                                    encoder_two_zero = -305.55;
         
@@ -413,7 +414,7 @@ public final class Constants {
 
         public static final boolean fancy_drive = true, 
                                     show_drive_data = false, 
-                                    genericHID_drive = false;
+                                    genericHID_drive = true;
         
         /* Swerve Drive Constants */
 
@@ -435,13 +436,13 @@ public final class Constants {
         
         /* Arm Constants */
 
-        public static final double p1 = 0.038, 
+        public static final double p1 = 0.04, 
                                    d1 = 0, 
                                    i1 = 0, 
-                                   p2 = 0.031, 
+                                   p2 = 0.029, 
                                    d2 = 0, 
                                    i2 = 0, 
-                                   pS = 0.05, 
+                                   pS = 0.035, 
                                    dS = 0, 
                                    iS = 0,
                                    pT = 0.4,

@@ -33,6 +33,7 @@ public class Intake extends CommandBase {
         claw.stop();
         if (!interrupted) {
             frc.robot.Variables.go_to_startposition = true;
+            claw.hasElementNow();
         }
     }
     

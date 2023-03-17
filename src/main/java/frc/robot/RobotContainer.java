@@ -29,12 +29,12 @@ import static frc.robot.Constants.TuningConstants.*;
  */
 public class RobotContainer {
     /* Controllers */
-    private final XboxController driver = new XboxController(genericHID_drive ? 2 : driver_usb_port);
+    private final XboxController driver = new XboxController(driver_usb_port);
     private final XboxController operator = new XboxController(operator_usb_port);
-    private final GenericHID driver_joystick = new GenericHID(genericHID_drive ? driver_usb_port : 2);
+    private final GenericHID driver_joystick = new GenericHID(joystick_usb_port);
 
     /* Both Controllers */
-    private final Trigger terminateCommands = new JoystickButton(driver, terminateCommandsDriverButton).or(new JoystickButton(operator, terminateCommandsOperatorButton)).or(new Trigger(() -> Math.abs(driver_joystick.getRawAxis(joystickTerminateCommandsAxis)) > joystick_deadzone));
+    private final Trigger terminateCommands = new JoystickButton(driver, terminateCommandsDriverButton).or(new JoystickButton(operator, terminateCommandsOperatorButton)).or(new JoystickButton(driver_joystick, joystickTerminateCommandsButton));
 
     /* Driver Buttons */
     private final Trigger zeroGyro = new JoystickButton(driver, zeroGyroButton).or(new JoystickButton(driver_joystick, joystickZeroGyroButton));
@@ -94,7 +94,7 @@ public class RobotContainer {
                     s_Swerve, 
                     () -> -driver_joystick.getRawAxis(joystickTranslationAxis), 
                     () -> -driver_joystick.getRawAxis(joystickStrafeAxis), 
-                    () -> -(driver_joystick.getRawAxis(joystickRotationAxisOne) + driver_joystick.getRawAxis(joystickRotationAxisTwo)), 
+                    () -> -driver_joystick.getRawAxis(joystickRotationAxis) * turning_sensitivity, 
                     () -> false, 
                     () -> -driver_joystick.getPOV(), 
                     () -> {
@@ -141,7 +141,9 @@ public class RobotContainer {
             )
         );
 
-        // No default command for Claw
+        claw.setDefaultCommand(
+            new TeleOpClaw(claw)
+        );
 
         // Cache autonomous commands
         Autonomous.cacheCommandGroups(s_Swerve);
@@ -191,6 +193,7 @@ public class RobotContainer {
     public void teleopInit() {
         doubleArm.teleOpInit();
         doubleArm.resetPID();
+        s_Swerve.changeHeading(0);
     }
 
     /**

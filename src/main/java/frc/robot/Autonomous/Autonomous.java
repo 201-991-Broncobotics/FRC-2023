@@ -143,13 +143,10 @@ public class Autonomous extends SequentialCommandGroup {
             if (autoBalance.equals("Balance")) {
                 addCommands(
                     new Wait(waitTime), 
-                    new ParallelCommandGroup(
-                        drivecommands[0],
-                        new SetArmPosition(doubleArm, topPositionAngles)
-                    ), 
+                    new SetArmPosition(doubleArm, topPositionAngles), 
                     new AutonomousOuttake(swerve, doubleArm, claw),
                     new ParallelCommandGroup(
-                        drivecommands[1], 
+                        drivecommands[0], 
                         new SetArmPosition(doubleArm, idlePositionAngles)
                     ),
                     new AutoBalance(swerve, doubleArm)
@@ -157,13 +154,10 @@ public class Autonomous extends SequentialCommandGroup {
             } else {
                 addCommands(
                     new Wait(waitTime), 
-                    new ParallelCommandGroup(
-                        drivecommands[0],
-                        new SetArmPosition(doubleArm, topPositionAngles)
-                    ), 
+                    new SetArmPosition(doubleArm, topPositionAngles), 
                     new AutonomousOuttake(swerve, doubleArm, claw),
                     new ParallelCommandGroup(
-                        drivecommands[1], 
+                        drivecommands[0], 
                         new SetArmPosition(doubleArm, idlePositionAngles)
                     )
                 );

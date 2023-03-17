@@ -178,6 +178,8 @@ public class DoubleArm extends SubsystemBase {
     }
 
     public double[] getCurrentArmAngles() {
+        // TODO: use arm encoders
+        // first_motor.getAbsoluteEncoder() maybe
         return new double[] {
             normalizeAngle(first_encoder.getDistance() - first_encoder_zero), 
             normalizeAngle(first_encoder.getDistance() - first_encoder_zero + second_encoder.getDistance() - second_encoder_zero)
