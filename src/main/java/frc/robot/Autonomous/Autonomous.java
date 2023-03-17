@@ -10,7 +10,6 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -28,27 +27,39 @@ import static frc.robot.Constants.AutoConstants.*;
 
 public class Autonomous extends SequentialCommandGroup {
 
-    public static HashMap<String, Command> eventMap = new HashMap<>(); 
+    public static HashMap<String, Command[]> autonomousCommands = new HashMap<String, Command[]>(); 
+
+    public static void cacheCommandGroups(Swerve swerve) {
+        double t = System.currentTimeMillis();
+        autonomousCommands.clear();
+        for (String i : new String[] {
+            "Short", "ShortDouble", "ShortBalance", "ShortDoubleBalance", 
+            "Medium", "MediumDouble", "MediumBalance", "MediumDoubleBalance", 
+            "Long", "LongDouble", "LongBalance", "LongDoubleBalance"}
+        ) {
+            autonomousCommands.put("Blue" + i, getTrajectoryCommands(swerve, i, DriverStation.Alliance.Blue));
+            autonomousCommands.put("Red" + i, getTrajectoryCommands(swerve, i, DriverStation.Alliance.Red));
+        }
+        System.out.println("total time " + (System.currentTimeMillis() - t) / 1000.0);
+    }
 
     public Autonomous(Claw claw, DoubleArm doubleArm, Swerve swerve) {
-        addRequirements(doubleArm, claw, swerve);
+        addRequirements(claw, doubleArm, swerve);
 
-        Timer.delay(1.0); // just to get the limelight set up
+        // DriverStation.Alliance alliance = DriverStation.Alliance.Blue; // default
 
-        DriverStation.Alliance alliance = DriverStation.Alliance.Blue; // default
-
-        String location = "Short", numElements = "", autoBalance = "Balance", allianceString = "Blue";
+        String allianceString = "Blue", location = "Short", numElements = "", autoBalance = "Balance";
 
         double[] temp = SmartDashboard.getNumberArray("Auto Data", new double[] {-1});
         if (temp.length != 1) {
             switch ((int) temp[0]) {
                 case 0:
                     allianceString = "Blue";
-                    alliance = DriverStation.Alliance.Blue;
+                    // alliance = DriverStation.Alliance.Blue;
                     break;
                 case 1:
                     allianceString = "Red";
-                    alliance = DriverStation.Alliance.Red;
+                    // alliance = DriverStation.Alliance.Red;
                     break;
             }
             switch ((int) temp[1]) {
@@ -80,14 +91,14 @@ public class Autonomous extends SequentialCommandGroup {
             }
         }
 
-        String selectedAuto = location + numElements + autoBalance;
+        String selectedAuto = allianceString + location + numElements + autoBalance;
             // form of commands: [Short/Medium/Long] [/Double] [/Balance]
 
         System.out.println("Auto Selector gave : " + allianceString + " side and " + selectedAuto);
 
         double waitTime = temp[4];
 
-        Command[] drivecommands = getTrajectoryCommands(swerve, selectedAuto, alliance);
+        Command[] drivecommands = autonomousCommands.get(selectedAuto); // getTrajectoryCommands(swerve, selectedAuto, alliance);
 
         if (numElements.equals("Double")) { // Go forward, drop element, go to intake, pick up element, go back, drop element, go to finish position; 3 stop points
             if (autoBalance.equals("Balance")) {

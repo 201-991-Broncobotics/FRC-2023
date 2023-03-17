@@ -143,6 +143,9 @@ public class RobotContainer {
 
         // No default command for Claw
 
+        // Cache autonomous commands
+        Autonomous.cacheCommandGroups(s_Swerve);
+
         // Configure the button bindings
         configureButtonBindings();
     }
