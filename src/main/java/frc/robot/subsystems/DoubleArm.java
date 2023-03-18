@@ -53,7 +53,7 @@ public class DoubleArm extends SubsystemBase {
         
         first_motor.setSmartCurrentLimit(first_motor_max_current); // current limit
         first_motor_follower.setSmartCurrentLimit(first_motor_max_current);
-        second_motor.setSmartCurrentLimit(second_motor_max_current);
+        second_motor.setSecondaryCurrentLimit(second_motor_max_current);
 
         /* Hopefully these are fine with the defaults
         first_motor.setOpenLoopRampRate(first_motor_acceleration_time); // maximum time for 0 to full throttle
@@ -264,6 +264,10 @@ public class DoubleArm extends SubsystemBase {
             frc.robot.Variables.speed_factor = 1;
         } else {
             frc.robot.Variables.speed_factor = speed_when_arm_extended;
+        }
+
+        if (getCurrentArmAngles()[1] < 0 && second_motor.getOutputCurrent() > second_motor_stop_current && frc.robot.Variables.thor) {
+            throw new IllegalArgumentException("Please don't destroy the robot");
         }
     }
 }

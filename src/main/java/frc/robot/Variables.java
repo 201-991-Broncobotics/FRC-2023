@@ -15,4 +15,6 @@ public class Variables {
     public static boolean go_to_startposition = false;
 
     public static String data = "";
+
+    public static boolean thor = false;
 }

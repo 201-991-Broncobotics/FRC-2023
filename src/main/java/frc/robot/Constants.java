@@ -211,7 +211,7 @@ public final class Constants {
     
         public static final boolean invert_first_motor = true, 
                                     invert_first_motor_follower = false, 
-                                    invert_second_motor = false, 
+                                    invert_second_motor = true, 
                                     invert_first_encoder = true, 
                                     invert_second_encoder = true, 
                                     first_motor_brake = true, 
@@ -219,7 +219,8 @@ public final class Constants {
         
         public static final int first_motor_max_current = 20, // amps
                                 first_motor_follower_max_current = 20, 
-                                second_motor_max_current = 20;
+                                second_motor_max_current = 30, 
+                                second_motor_stop_current = 25;
         
         public static final double first_motor_acceleration_time = 3, 
                                    first_motor_voltage_compensation = 0, 
@@ -409,9 +410,9 @@ public final class Constants {
                                      lowPositionAngles = {-64, 0}, 
 
                                      intakeUpperAngles = {-106.5, 40.6}, 
-                                     intakeLowerAngles = {-82.3, -25}, 
+                                     intakeLowerAngles = {-82.3, -20}, 
 
-                                     idlePositionAngles = {-115, 42};
+                                     idlePositionAngles = {-115, 42}; // TODO Make X cancel arm pid for if its swinging crazy
 
         public static final boolean fancy_drive = true, 
                                     show_drive_data = false, 
@@ -437,10 +438,10 @@ public final class Constants {
         
         /* Arm Constants */
 
-        public static final double p1 = 0.04, 
-                                   d1 = 0.001, 
+        public static final double p1 = 0.05, 
+                                   d1 = 0.0005, 
                                    i1 = 0, 
-                                   p2 = 0.1, 
+                                   p2 = 0.07, 
                                    d2 = 0.001, 
                                    i2 = 0, 
                                    pS = 0.03, 

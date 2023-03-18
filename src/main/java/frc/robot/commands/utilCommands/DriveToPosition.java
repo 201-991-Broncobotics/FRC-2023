@@ -11,11 +11,12 @@ public class DriveToPosition extends CommandBase {
     // if red, y becomes 8.02 - y (because 8.02 is the field width in meters)
 
     // main poi: the single substation is around (14.1, 7.08) with rotation of 90 (we then drive right until we are tight against it)
+    // y should be 0.96
 
     private Swerve swerve;
     private final Pose2d targetPose;
     private Translation2d targetPosition;
-    private final double p = 0.5, tolerance = 0.5, ang_tolerance = 360, maxSpeedHere = 0.8;
+    private final double p = 0.35, tolerance = 0.15, ang_tolerance = 360, maxSpeedHere = 0.8;
 
     public DriveToPosition(Swerve swerve, Pose2d targetPose) {
         this.swerve = swerve;
@@ -26,6 +27,7 @@ public class DriveToPosition extends CommandBase {
 
     @Override
     public void initialize() {
+        // Limelight.setSide("blue"); todo figure this out
         targetPosition = new Translation2d(targetPose.getX(), Limelight.getSide().equals("blue") ? targetPose.getY() : 8.02 - targetPose.getY());
         swerve.setTargetHeading(Limelight.getSide().equals("blue") ? targetPose.getRotation().getDegrees() : -targetPose.getRotation().getDegrees());
     }

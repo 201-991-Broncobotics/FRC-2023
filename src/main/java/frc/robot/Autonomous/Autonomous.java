@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.autoBalance.AutoBalance;
 import frc.robot.commands.setArmPosition.SetArmPosition;
+import frc.robot.commands.setArmPosition.SetProximalConstantDistal;
 import frc.robot.commands.utilCommands.*;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
@@ -118,6 +119,7 @@ public class Autonomous extends SequentialCommandGroup {
         if (numElements.equals("Double")) { // Go forward, drop element, go to intake, pick up element, go back, drop element, go to finish position; 3 stop points
             if (autoBalance.equals("Balance")) {
                 addCommands(
+                    new SetProximalConstantDistal(doubleArm, -123), 
                     new Wait(waitTime), 
                     drivecommands[0],
                     new AutonomousOuttake(swerve, doubleArm, claw),
@@ -131,6 +133,7 @@ public class Autonomous extends SequentialCommandGroup {
                 );
             } else {
                 addCommands(
+                    new SetProximalConstantDistal(doubleArm, -123), 
                     new Wait(waitTime), 
                     drivecommands[0],
                     new AutonomousOuttake(swerve, doubleArm, claw),
@@ -145,6 +148,7 @@ public class Autonomous extends SequentialCommandGroup {
         } else { // Go forward, drop element, go to finish position; 1 stop point
             if (autoBalance.equals("Balance")) {
                 addCommands(
+                    new SetProximalConstantDistal(doubleArm, -123), 
                     new Wait(waitTime), 
                     new SetArmPosition(doubleArm, topPositionAngles), 
                     new AutonomousOuttake(swerve, doubleArm, claw),
@@ -156,6 +160,7 @@ public class Autonomous extends SequentialCommandGroup {
                 );
             } else {
                 addCommands(
+                    new SetProximalConstantDistal(doubleArm, -123), 
                     new Wait(waitTime), 
                     new SetArmPosition(doubleArm, topPositionAngles), 
                     new AutonomousOuttake(swerve, doubleArm, claw),

@@ -26,7 +26,7 @@ public class Claw extends SubsystemBase {
             claw_motor.setIdleMode(IdleMode.kCoast);
         }
 
-        claw_motor.setSmartCurrentLimit(claw_motor_max_current);
+        claw_motor.setSecondaryCurrentLimit(claw_motor_max_current);
 
         Timer.delay(1.0);
     }
