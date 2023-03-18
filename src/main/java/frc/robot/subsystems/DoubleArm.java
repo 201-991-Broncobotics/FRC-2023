@@ -78,8 +78,8 @@ public class DoubleArm extends SubsystemBase {
 
         Timer.delay(1.0); // invert correctly
 
-        first = new PIDMotor(first_motor, () -> getCurrentArmAngles()[0], whiplash_time_one, first_motor_min_angle, first_motor_max_angle, first_motor_max_power, first_motor_max_acceleration, p1, d1, i1);
-        second = new PIDMotor(second_motor, () -> getCurrentArmAngles()[1], whiplash_time_two, second_motor_min_angle, second_motor_max_angle, second_motor_max_power, second_motor_max_acceleration, p2, d2, i2);
+        first = new PIDMotor(first_motor, () -> getCurrentArmAngles()[0], whiplash_time_one, first_motor_min_angle, first_motor_max_angle, first_motor_max_power, first_motor_max_acceleration, p1, d1, i1, e1);
+        second = new PIDMotor(second_motor, () -> getCurrentArmAngles()[1], whiplash_time_two, second_motor_min_angle, second_motor_max_angle, second_motor_max_power, second_motor_max_acceleration, p2, d2, i2, e2);
     }
 
     public void teleOpInit() {
@@ -170,6 +170,8 @@ public class DoubleArm extends SubsystemBase {
     public void resetPID() {
         first.brake();
         second.brake();
+        first.resetTarget();
+        second.resetTarget();
     }
 
     public void stopUsingEncoders() {
@@ -266,7 +268,7 @@ public class DoubleArm extends SubsystemBase {
             frc.robot.Variables.speed_factor = speed_when_arm_extended;
         }
 
-        if (getCurrentArmAngles()[1] < 0 && second_motor.getOutputCurrent() > second_motor_stop_current && frc.robot.Variables.thor) {
+        if (getCurrentArmAngles()[1] < 0 && second_motor.getOutputCurrent() > second_motor_stop_current && frc.robot.Variables.thor && Timer.getFPGATimestamp() - frc.robot.Variables.ats > 2) {
             throw new IllegalArgumentException("Please don't destroy the robot");
         }
     }

@@ -15,14 +15,14 @@ public class PIDMotor {
 
     private double previousTime, time, lmtPosition;
 
-    public PIDMotor(CANSparkMax motor, DoubleSupplier positionSup, double calibrationTime, double minPosition, double maxPosition, double maxPower, double maxAcceleration, double kP, double kD, double kI) {
+    public PIDMotor(CANSparkMax motor, DoubleSupplier positionSup, double calibrationTime, double minPosition, double maxPosition, double maxPower, double maxAcceleration, double kP, double kD, double kI, double kE) {
         this.motor = motor;
         this.positionSup = positionSup;
         this.calibrationTime = calibrationTime;
         this.minPosition = minPosition;
         this.maxPosition = maxPosition;
         this.maxAcceleration = maxAcceleration;
-        pidCalculator = new PIDCalculator(kP, kD, kI, maxPower, positionSup.getAsDouble());
+        pidCalculator = new PIDCalculator(kP, kD, kI, kE, maxPower, positionSup.getAsDouble());
         time = Timer.getFPGATimestamp();
         previousTime = -1000;
     }

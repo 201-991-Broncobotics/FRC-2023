@@ -3,7 +3,7 @@ package frc.lib.util;
 import edu.wpi.first.wpilibj.Timer;
 
 public class PIDCalculator {
-    private final double kP, kD, kI, maxPower;
+    private final double kP, kD, kI, kE, maxPower;
 
     private double previous_time, previous_error, integral, correction, targetPosition;
     private boolean justReset;
@@ -12,6 +12,16 @@ public class PIDCalculator {
         this.kP = kP;
         this.kD = kD;
         this.kI = kI;
+        this.kE = 1;
+        this.maxPower = maxPower;
+        reset(startingPosition);
+    }
+    
+    public PIDCalculator(double kP, double kD, double kI, double kE, double maxPower, double startingPosition) {
+        this.kP = kP;
+        this.kD = kD;
+        this.kI = kI;
+        this.kE = kE;
         this.maxPower = maxPower;
         reset(startingPosition);
     }
@@ -41,6 +51,10 @@ public class PIDCalculator {
         double p, i, d;
 
         p = error * kP;
+        if (Math.abs(p) < maxPower) {
+            p *= Math.pow(Math.abs(error * kP) / maxPower, kE - 1);
+        }
+
         if (justReset) { // only return p
             justReset = false;
             previous_error = error;

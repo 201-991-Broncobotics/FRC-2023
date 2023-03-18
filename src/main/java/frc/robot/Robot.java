@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.autonomous.Autonomous;
 import frc.robot.subsystems.Limelight;
 
@@ -65,6 +66,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         frc.robot.Variables.thor = true;
+        frc.robot.Variables.ats = Timer.getFPGATimestamp();
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)

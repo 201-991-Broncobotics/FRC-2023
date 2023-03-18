@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import static frc.robot.Constants.GeneralConstants.*;
+import static frc.robot.Constants.SwerveConstants.*;
 
 public class TeleopSwerve extends CommandBase {    
     private Swerve s_Swerve;    
@@ -45,7 +46,7 @@ public class TeleopSwerve extends CommandBase {
         /* Drive */
         s_Swerve.drive(
             new Translation2d(translationVal, strafeVal).times(Constants.BaseFalconSwerve.maxSpeed).times(slowSup.getAsDouble()), 
-            rotationVal * Constants.BaseFalconSwerve.maxAngularVelocity * slowSup.getAsDouble(), 
+            rotationVal * Constants.BaseFalconSwerve.maxAngularVelocity * Math.min(1, slowSup.getAsDouble() * tffsmbtcfigfdbnft), 
             !robotCentricSup.getAsBoolean(), 
             true
         );

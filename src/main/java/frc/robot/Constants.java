@@ -290,6 +290,7 @@ public final class Constants {
                                    min_translation = 0.05, 
                                    min_rotation = 0.05, 
                                    slow = 0.2,
+                                   tffsmbtcfigfdbnft = 2, // turn factor for slow motion because the current factor is good for distance but not for turning
                                    turning_sensitivity = 0.65;
     }
 
@@ -438,11 +439,13 @@ public final class Constants {
         
         /* Arm Constants */
 
-        public static final double p1 = 0.05, 
-                                   d1 = 0.0005, 
+        public static final double p1 = 0.035, 
+                                   e1 = 1.25, 
+                                   d1 = 0.0001, 
                                    i1 = 0, 
-                                   p2 = 0.07, 
-                                   d2 = 0.001, 
+                                   p2 = 0.04, 
+                                   e2 = 1.25, 
+                                   d2 = 0.0005, 
                                    i2 = 0, 
                                    pS = 0.03, 
                                    dS = 0.001, 

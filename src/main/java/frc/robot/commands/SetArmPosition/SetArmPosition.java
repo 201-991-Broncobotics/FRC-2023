@@ -14,7 +14,8 @@ public class SetArmPosition extends SequentialCommandGroup {
                 new SequentialCommandGroup(
                     new SetDistalPositionInitial(doubleArm), 
                     new SetProximalPosition(doubleArm, position[0]), 
-                    new SetDistalPosition(doubleArm, position[1])
+                    new SetDistalPosition(doubleArm, position[1]), 
+                    new InstantCommand(() -> doubleArm.resetPID())
                 ), 
                 new InstantCommand(), 
                 () -> doubleArm.getUsingEncoders()

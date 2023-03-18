@@ -16,5 +16,6 @@ public class Variables {
 
     public static String data = "";
 
+    public static double ats = 0;
     public static boolean thor = false;
 }
