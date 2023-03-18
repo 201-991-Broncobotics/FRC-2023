@@ -443,7 +443,7 @@ public final class Constants {
                                    d2 = 0.001, 
                                    i2 = 0, 
                                    pS = 0.03, 
-                                   dS = 0.0005, 
+                                   dS = 0.001, 
                                    iS = 0,
                                    mftfmitdaiwtmdoftoabtc = 0.65, // mutiplier for the first motor if the distal arm is within the minimum distance of the first one allowed by the code
                                    mftfmitdaiwtmdoftoabtcaiicgd = 0.25, // and it is currently going down

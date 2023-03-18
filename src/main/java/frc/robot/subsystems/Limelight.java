@@ -32,6 +32,10 @@ public class Limelight { // NOT a subsystem
         }
     }
 
+    public static String getSide() {
+        return side;
+    }
+
     /** x, y (meters), yaw (degrees), latency (seconds) */
     private static DoubleSupplier[] botpose = new DoubleSupplier[] {
         () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpi" + side).getDoubleArray(new double[7])[0], // x

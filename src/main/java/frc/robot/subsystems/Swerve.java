@@ -26,7 +26,7 @@ import static frc.robot.Constants.GeneralConstants.*;
 import static frc.robot.Constants.AprilTagAlignmentConstants.*;
 
 public class Swerve extends SubsystemBase {
-    public static SwerveDrivePoseEstimator poseEstimator; 
+    public SwerveDrivePoseEstimator poseEstimator; 
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
 
@@ -209,10 +209,10 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-        poseEstimator.update(getYaw(), getModulePositions());
+        poseEstimator.updateWithTime(Timer.getFPGATimestamp(), getYaw(), getModulePositions());
 
         Pose2d vision_estimate = Limelight.getRobotPosition();
-        if (vision_estimate.getTranslation().getNorm() > 0.1 && ((Math.abs(getYaw().getDegrees() - vision_estimate.getRotation().getDegrees()) + max_angular_tolerance) % 90 < 2 * max_angular_tolerance)) {
+        if (vision_estimate.getTranslation().getNorm() > 0.1 && (Math.abs(normalizeAngle(getYaw().getDegrees() - vision_estimate.getRotation().getDegrees())) < max_angular_tolerance)) {
             poseEstimator.addVisionMeasurement(vision_estimate, Timer.getFPGATimestamp() - Limelight.getLatency());
             SmartDashboard.putString("Vision Pose", "" + Math.round(vision_estimate.getTranslation().getX() * 100) / 100.0 + ", " + Math.round(vision_estimate.getTranslation().getY() * 100) / 100.0 + ")");
             SmartDashboard.putString("Vision Heading", "(" + Math.round(vision_estimate.getRotation().getDegrees() * 100) / 100.0 + " degrees");
