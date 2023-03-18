@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -42,6 +44,7 @@ public class RobotContainer {
     // private final Trigger tagAligner = new JoystickButton(driver, tagAlignerButton);
     private final Trigger makeX = new JoystickButton(driver, makeXButton).or(new JoystickButton(driver_joystick, joystickMakeXButton));
     // private final Trigger autoBalance = new JoystickButton(driver, autoBalanceButton);
+    private final Trigger goToSingleSubstation = new JoystickButton(driver_joystick, joystickGoToSingleSubstationButton);
 
     /* Operator Buttons */
     private final Trigger topGoal = new JoystickButton(operator, topGoalButton);
@@ -170,6 +173,7 @@ public class RobotContainer {
         // autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm));
 
         resetArmEncoders.toggleOnTrue(new InstantCommand(() -> doubleArm.stopUsingEncoders()));
+        goToSingleSubstation.toggleOnTrue(new DriveToPosition(s_Swerve, new Pose2d(14.1, 7.08, Rotation2d.fromDegrees(90))));
 
         terminateCommands.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
         

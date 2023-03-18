@@ -3,11 +3,14 @@ package frc.robot.commands.utilCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 
 public class DriveToPosition extends CommandBase {
     // if red, y becomes 8.02 - y (because 8.02 is the field width in meters)
+
+    // main poi: the single substation is around (14.1, 7.08) with rotation of 90 (we then drive right until we are tight against it)
 
     private Swerve swerve;
     private final Pose2d targetPose;
@@ -24,7 +27,7 @@ public class DriveToPosition extends CommandBase {
     @Override
     public void initialize() {
         targetPosition = new Translation2d(targetPose.getX(), Limelight.getSide().equals("blue") ? targetPose.getY() : 8.02 - targetPose.getY());
-        swerve.setTargetHeading(targetPose.getRotation().getDegrees());
+        swerve.setTargetHeading(Limelight.getSide().equals("blue") ? targetPose.getRotation().getDegrees() : -targetPose.getRotation().getDegrees());
     }
 
     @Override
@@ -33,7 +36,7 @@ public class DriveToPosition extends CommandBase {
         error = error.times(p);
         if (error.getNorm() > 1) error.times(1 / error.getNorm());
         swerve.drive(
-            error, // PID I BELIEVE
+            error.times(Constants.BaseFalconSwerve.maxSpeed), // PID I BELIEVE
             0, 
             true, 
             false

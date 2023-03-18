@@ -338,7 +338,8 @@ public final class Constants {
                                 joystickZeroGyroButton = 3, 
                                 joystickMakeXButton = 2, 
                                 joystickTerminateCommandsButton = 4, // if we push the slider forward it cancels commands
-                                joystickResetArmEncodersButton = 12; // make this like some really obscure button that would literally only be pressed on purpose
+                                joystickResetArmEncodersButton = 12, // make this like some really obscure button that would literally only be pressed on purpose
+                                joystickGoToSingleSubstationButton = 13; // TODO
                                 // .getPOV() is the same for joystick; T.Flight Hotas One
 
         /* Operator Buttons */
