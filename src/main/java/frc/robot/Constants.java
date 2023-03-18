@@ -157,7 +157,7 @@ public final class Constants {
                                    sideways_tolerance = 0.5, // in inches
                                    sideways_speed = 0.15, 
                                    rotation_speed = 0.15, // percentage of maxima
-                                   max_angular_tolerance = 15, // degrees
+                                   max_angular_tolerance = 999, // degrees
                                    angular_tolerance = 15,
                                    extra_time_to_be_in_frame = 0.25, 
                                    max_calculation_time = 1, 
@@ -339,7 +339,7 @@ public final class Constants {
                                 joystickMakeXButton = 2, 
                                 joystickTerminateCommandsButton = 4, // if we push the slider forward it cancels commands
                                 joystickResetArmEncodersButton = 12, // make this like some really obscure button that would literally only be pressed on purpose
-                                joystickGoToSingleSubstationButton = 13; // TODO
+                                joystickGoToSingleSubstationButton = 11;
                                 // .getPOV() is the same for joystick; T.Flight Hotas One
 
         /* Operator Buttons */

@@ -52,7 +52,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void passive() {
-        claw_motor.setVoltage(-1);
+        claw_motor.setVoltage(-1.5);
         // claw_motor.set(0);
         
         /*

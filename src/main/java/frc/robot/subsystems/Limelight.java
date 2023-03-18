@@ -11,9 +11,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 public class Limelight { // NOT a subsystem
 
     private static DoubleSupplier tv = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(-1); // 0 --> nothing, 1 --> something
-    // private static DoubleSupplier tx = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(-100);
-    // private static DoubleSupplier ty = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(-100);
-    // private static DoubleSupplier ta = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(-1);
 
     private static DoubleSupplier tid = () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDouble(-2);
     
@@ -23,11 +20,12 @@ public class Limelight { // NOT a subsystem
         () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDoubleArray(new double[6])[2]
     }; // Where the camera is, relative to april tag
     
-    private static String side = "blue";
-    public static void setSide(String side) {
-        if (side.toLowerCase().equals("red")) {
+    public static String side = "blue";
+
+    public static void setSide(String newSide) {
+        if (newSide.toLowerCase().equals("red")) {
             side = "red";
-        } else if (side.toLowerCase().equals("blue")) {
+        } else if (newSide.toLowerCase().equals("blue")) {
             side = "blue";
         }
     }
@@ -47,18 +45,6 @@ public class Limelight { // NOT a subsystem
                     NetworkTableInstance.getDefault().getTable("limelight").getEntry("cl").getDouble(0)
                 ) / 1000.0) // latency
     }; // Where the robot is, relative to april tag
-
-    /*
-     * First value should match what we receive from LeYaw
-     * Second value is how far we are horizontally
-     * Third value is how far we are out from it
-     * Ex. if we were 6m away from the april tag, 2m to the right, and facing at a 10 degree angle to the right of it the measurements would read:
-     * [10, -2, 6] I THINK
-     * We probably will never be 6m away though lmao
-     * Signs might be off, and I'm not sure if it uses radians or degrees
-     * 
-     * April tag width: 6 in = 152.4 mm
-     */
 
     public static void init() {
         setPipeline(0);

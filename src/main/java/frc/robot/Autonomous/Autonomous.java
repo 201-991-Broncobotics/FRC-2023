@@ -58,6 +58,7 @@ public class Autonomous extends SequentialCommandGroup {
 
         double[] temp = SmartDashboard.getNumberArray("Auto Data", new double[] {-1});
         if (temp.length != 1) {
+            System.out.println((int) temp[0]);
             switch ((int) temp[0]) {
                 case 0:
                     allianceString = "Blue";

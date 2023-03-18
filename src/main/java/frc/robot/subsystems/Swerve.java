@@ -214,8 +214,8 @@ public class Swerve extends SubsystemBase {
         Pose2d vision_estimate = Limelight.getRobotPosition();
         if (vision_estimate.getTranslation().getNorm() > 0.1 && (Math.abs(normalizeAngle(getYaw().getDegrees() - vision_estimate.getRotation().getDegrees())) < max_angular_tolerance)) {
             poseEstimator.addVisionMeasurement(vision_estimate, Timer.getFPGATimestamp() - Limelight.getLatency());
-            SmartDashboard.putString("Vision Pose", "" + Math.round(vision_estimate.getTranslation().getX() * 100) / 100.0 + ", " + Math.round(vision_estimate.getTranslation().getY() * 100) / 100.0 + ")");
-            SmartDashboard.putString("Vision Heading", "(" + Math.round(vision_estimate.getRotation().getDegrees() * 100) / 100.0 + " degrees");
+            SmartDashboard.putString("Vision Pose", "(" + Math.round(vision_estimate.getTranslation().getX() * 100) / 100.0 + ", " + Math.round(vision_estimate.getTranslation().getY() * 100) / 100.0 + ")");
+            SmartDashboard.putString("Vision Heading", "" + Math.round(vision_estimate.getRotation().getDegrees() * 100) / 100.0 + " degrees");
         } else if (vision_estimate.getTranslation().getNorm() > 0.1) {
             SmartDashboard.putString("Vision Pose", "Vision estimate did not make sense");
             SmartDashboard.putString("Vision Heading", "Vision estimate did not make sense");
@@ -237,5 +237,7 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
+
+        SmartDashboard.putString("Side", Limelight.getSide());
     }
 }
