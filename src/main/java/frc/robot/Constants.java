@@ -157,7 +157,7 @@ public final class Constants {
                                    sideways_tolerance = 0.5, // in inches
                                    sideways_speed = 0.15, 
                                    rotation_speed = 0.15, // percentage of maxima
-                                   max_angular_tolerance = 999, // degrees
+                                   max_angular_tolerance = 15, // degrees
                                    angular_tolerance = 15,
                                    extra_time_to_be_in_frame = 0.25, 
                                    max_calculation_time = 1, 
@@ -194,7 +194,7 @@ public final class Constants {
         /* Variables */
         
         public static final double intake_power = -1, // intake with negative power
-                                   outtake_power = 1;
+                                   outtake_power = 0.2;
     }
 
     public static final class DoubleArmConstants {
@@ -230,9 +230,9 @@ public final class Constants {
 
         /* Variables */
         
-        public static final double first_motor_sensitivity = 0.55,
+        public static final double first_motor_sensitivity = 0.75,
 
-                                   first_motor_max_power = 0.6, 
+                                   first_motor_max_power = 0.8, 
 
                                    first_motor_max_acceleration = 2.0,
                                    whiplash_time_one = 0.5, 
@@ -244,9 +244,9 @@ public final class Constants {
 
 
 
-                                   second_motor_sensitivity = 0.65,
+                                   second_motor_sensitivity = 0.75,
 
-                                   second_motor_max_power = 0.7, 
+                                   second_motor_max_power = 0.8, 
 
                                    second_motor_max_acceleration = 12.0,
                                    whiplash_time_two = 0.5, 
@@ -437,14 +437,16 @@ public final class Constants {
         /* Arm Constants */
 
         public static final double p1 = 0.04, 
-                                   d1 = 0, 
+                                   d1 = 0.001, 
                                    i1 = 0, 
-                                   p2 = 0.029, 
-                                   d2 = 0, 
+                                   p2 = 0.1, 
+                                   d2 = 0.001, 
                                    i2 = 0, 
-                                   pS = 0.035, 
-                                   dS = 0, 
+                                   pS = 0.03, 
+                                   dS = 0.0005, 
                                    iS = 0,
+                                   mftfmitdaiwtmdoftoabtc = 0.65, // mutiplier for the first motor if the distal arm is within the minimum distance of the first one allowed by the code
+                                   mftfmitdaiwtmdoftoabtcaiicgd = 0.25, // and it is currently going down
                                    pT = 0.4,
                                    dT = 0.2;
     }

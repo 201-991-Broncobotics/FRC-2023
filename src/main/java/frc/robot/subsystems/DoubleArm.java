@@ -146,9 +146,19 @@ public class DoubleArm extends SubsystemBase {
     }
 
     public void pidPowerKeepMaxDistal() {
-        first.pidPower();
 
-        second.setTarget(Math.min(Math.min(second_motor_max_angle, 90), getCurrentArmAngles()[0] + 180 - min_difference));
+        double mftfmbtdaiwtmdoftoabtc = 1;
+        if (Math.min(Math.min(second_motor_max_angle, 90), getCurrentArmAngles()[0] + 180 - min_difference) < Math.min(second_motor_max_angle, 90)) {
+            if (second.getTarget() > getCurrentArmAngles()[1]) {
+                mftfmbtdaiwtmdoftoabtc = mftfmitdaiwtmdoftoabtc;
+            } else {
+                mftfmbtdaiwtmdoftoabtc = mftfmitdaiwtmdoftoabtcaiicgd;
+            }
+            second.setTarget(Math.min(first.getTarget() + 180 - min_difference, getCurrentArmAngles()[0] + 180 - min_difference));
+        } else {
+            second.setTarget(Math.min(second_motor_max_angle, 90));
+        }
+        first.pidPower(mftfmbtdaiwtmdoftoabtc);
         second.pidPower();
     }
 
@@ -235,16 +245,16 @@ public class DoubleArm extends SubsystemBase {
         SmartDashboard.putNumber("Current Angle 1", getCurrentArmAngles()[0]);
         SmartDashboard.putNumber("Current Angle 2", getCurrentArmAngles()[1]);
 
-        SmartDashboard.putNumber("Current x", getCurrentXY()[0]);
-        SmartDashboard.putNumber("Current y", getCurrentXY()[1]);
+        // SmartDashboard.putNumber("Current x", getCurrentXY()[0]);
+        // SmartDashboard.putNumber("Current y", getCurrentXY()[1]);
 
         SmartDashboard.putNumber("Target 1st Angle", getTargetArmAngles()[0]);
         SmartDashboard.putNumber("Target 2nd Angle", getTargetArmAngles()[1]);
 
-        SmartDashboard.putNumber("Target x", getPositionFromAngles(getTargetArmAngles())[0]);
-        SmartDashboard.putNumber("Target y", getPositionFromAngles(getTargetArmAngles())[1]);
+        // SmartDashboard.putNumber("Target x", getPositionFromAngles(getTargetArmAngles())[0]);
+        // SmartDashboard.putNumber("Target y", getPositionFromAngles(getTargetArmAngles())[1]);
 
-        SmartDashboard.putNumber("Error", getTotalError());
+        // SmartDashboard.putNumber("Error", getTotalError());
         
         SmartDashboard.putNumber("Motor One Current", first_motor.getOutputCurrent());
         SmartDashboard.putNumber("Motor One Follower Current", first_motor_follower.getOutputCurrent());

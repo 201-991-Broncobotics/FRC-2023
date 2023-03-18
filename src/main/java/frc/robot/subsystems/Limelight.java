@@ -23,11 +23,20 @@ public class Limelight { // NOT a subsystem
         () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDoubleArray(new double[6])[2]
     }; // Where the camera is, relative to april tag
     
+    private static String side = "blue";
+    public static void setSide(String side) {
+        if (side.toLowerCase().equals("red")) {
+            side = "red";
+        } else if (side.toLowerCase().equals("blue")) {
+            side = "blue";
+        }
+    }
+
     /** x, y (meters), yaw (degrees), latency (seconds) */
     private static DoubleSupplier[] botpose = new DoubleSupplier[] {
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpiblue").getDoubleArray(new double[7])[0], // x
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpiblue").getDoubleArray(new double[7])[1], // y
-        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpiblue").getDoubleArray(new double[7])[5], // yaw
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpi" + side).getDoubleArray(new double[7])[0], // x
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpi" + side).getDoubleArray(new double[7])[1], // y
+        () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpi" + side).getDoubleArray(new double[7])[5], // yaw
         () -> (
                 (
                     NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0) + 
@@ -62,20 +71,12 @@ public class Limelight { // NOT a subsystem
         };
     }
 
-    public static void displayData() {
-        double[] vals = getData();
-        SmartDashboard.putNumber("April Tag ID", vals[0]);
-        SmartDashboard.putNumber("Robot Heading", vals[1]);
-        SmartDashboard.putNumber("Robot x", vals[2]);
-        SmartDashboard.putNumber("Robot z", vals[3]);
-    }
-
     public static Pose2d getRobotPosition() {
         double x = botpose[0].getAsDouble();
         double y = botpose[1].getAsDouble();
         double angle = botpose[2].getAsDouble();
 
-        SmartDashboard.putNumber("Latency", botpose[3].getAsDouble());
+        SmartDashboard.putString("Limelight Ping", "" + Math.round(botpose[3].getAsDouble() * 1000) + " ms");
 
         return new Pose2d(x, y, Rotation2d.fromDegrees(angle)); 
     }

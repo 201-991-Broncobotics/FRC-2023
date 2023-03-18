@@ -86,6 +86,16 @@ public class PIDMotor {
         motor.set(power);
     }
 
+    public void pidPower(double multiplier) {
+        double deltaTime = Timer.getFPGATimestamp() - time;
+        time = Timer.getFPGATimestamp();
+        lmtPosition = 0; // between min and max
+        double power = pidCalculator.update(positionSup.getAsDouble()) * multiplier;
+        power = Math.max(motor.get() - maxAcceleration * deltaTime, Math.min(motor.get() + maxAcceleration * deltaTime, power));
+
+        motor.set(power);
+    }
+
     public void brake() {
         pidCalculator.reset(positionSup.getAsDouble());
         previousTime = Timer.getFPGATimestamp();

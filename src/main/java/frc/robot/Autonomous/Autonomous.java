@@ -20,6 +20,7 @@ import frc.robot.commands.setArmPosition.SetArmPosition;
 import frc.robot.commands.utilCommands.*;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 import frc.robot.Constants;
 
@@ -60,10 +61,12 @@ public class Autonomous extends SequentialCommandGroup {
             switch ((int) temp[0]) {
                 case 0:
                     allianceString = "Blue";
+                    Limelight.setSide("blue");
                     // alliance = DriverStation.Alliance.Blue;
                     break;
                 case 1:
                     allianceString = "Red";
+                    Limelight.setSide("red");
                     // alliance = DriverStation.Alliance.Red;
                     break;
             }
@@ -145,8 +148,8 @@ public class Autonomous extends SequentialCommandGroup {
                     new SetArmPosition(doubleArm, topPositionAngles), 
                     new AutonomousOuttake(swerve, doubleArm, claw),
                     new ParallelCommandGroup(
-                        drivecommands[0], 
-                        new SetArmPosition(doubleArm, idlePositionAngles)
+                        new SetArmPosition(doubleArm, idlePositionAngles), 
+                        drivecommands[0]
                     ),
                     new AutoBalance(swerve, doubleArm)
                 );
@@ -156,8 +159,8 @@ public class Autonomous extends SequentialCommandGroup {
                     new SetArmPosition(doubleArm, topPositionAngles), 
                     new AutonomousOuttake(swerve, doubleArm, claw),
                     new ParallelCommandGroup(
-                        drivecommands[0], 
-                        new SetArmPosition(doubleArm, idlePositionAngles)
+                        new SetArmPosition(doubleArm, idlePositionAngles), 
+                        drivecommands[0]
                     )
                 );
             }

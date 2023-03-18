@@ -213,31 +213,22 @@ public class Swerve extends SubsystemBase {
 
         Pose2d vision_estimate = Limelight.getRobotPosition();
         if (vision_estimate.getTranslation().getNorm() > 0.1 && ((Math.abs(getYaw().getDegrees() - vision_estimate.getRotation().getDegrees()) + max_angular_tolerance) % 90 < 2 * max_angular_tolerance)) {
-
-            // TODO: test if this works for red
             poseEstimator.addVisionMeasurement(vision_estimate, Timer.getFPGATimestamp() - Limelight.getLatency());
-            
+            SmartDashboard.putString("Vision Pose", "" + Math.round(vision_estimate.getTranslation().getX() * 100) / 100.0 + ", " + Math.round(vision_estimate.getTranslation().getY() * 100) / 100.0 + ")");
+            SmartDashboard.putString("Vision Heading", "(" + Math.round(vision_estimate.getRotation().getDegrees() * 100) / 100.0 + " degrees");
+        } else if (vision_estimate.getTranslation().getNorm() > 0.1) {
+            SmartDashboard.putString("Vision Pose", "Vision estimate did not make sense");
+            SmartDashboard.putString("Vision Heading", "Vision estimate did not make sense");
+        } else {
+            SmartDashboard.putString("Vision Pose", "No vision estimate");
+            SmartDashboard.putString("Vision Heading", "No vision estimate");
         }
 
-        // (2, 1) for tag 8, angle -180
-        SmartDashboard.putNumber("Gyro ", getYaw().getDegrees());
+        SmartDashboard.putNumber("Yaw", getYaw().getDegrees());
         SmartDashboard.putNumber("Pitch ", getPitch());
 
-        double ox =  poseEstimator.getEstimatedPosition().getTranslation().getX(), 
-            oy = poseEstimator.getEstimatedPosition().getTranslation().getY(), 
-            od = poseEstimator.getEstimatedPosition().getRotation().getDegrees(); 
-
-        SmartDashboard.putNumber("Odometry Pose X", ox);
-        SmartDashboard.putNumber("Odometry Pose Y", oy);
-        SmartDashboard.putNumber("Odometry Pose Heading", od);
-
-        double vx = vision_estimate.getTranslation().getX();
-        double vy = vision_estimate.getTranslation().getY();
-        double vd = vision_estimate.getRotation().getDegrees();
-
-        SmartDashboard.putNumber("Vision Pose X", vx);
-        SmartDashboard.putNumber("Vision Pose Y", vy);
-        SmartDashboard.putNumber("Vision Pose Heading", vd);
+        SmartDashboard.putString("Odometry Pose", "(" + Math.round(poseEstimator.getEstimatedPosition().getTranslation().getX() * 100) / 100.0 + ", " + Math.round(poseEstimator.getEstimatedPosition().getTranslation().getY() * 100) / 100.0 + ")");
+        SmartDashboard.putString("Odometry Heading", "" + Math.round(poseEstimator.getEstimatedPosition().getRotation().getDegrees() * 100) / 100.0 + " degrees");
         
         // TODO: Make a visualizer in pygame
         

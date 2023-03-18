@@ -16,7 +16,7 @@ public class Claw extends SubsystemBase {
     private boolean hasElement = false;
 
     public Claw() {
-        claw_motor = new CANSparkMax(claw_motor_ID, MotorType.kBrushless);
+        claw_motor = new CANSparkMax(claw_motor_ID, MotorType.kBrushed);
         claw_motor.restoreFactoryDefaults();
         claw_motor.setInverted(false);
 
@@ -52,8 +52,9 @@ public class Claw extends SubsystemBase {
     }
 
     public void passive() {
-        claw_motor.set(0); // -0.05);
-
+        claw_motor.setVoltage(-1);
+        // claw_motor.set(0);
+        
         /*
         if (Math.abs(claw_motor.getEncoder().getVelocity()) > 1000 || !(hasElement)) {
             claw_motor.set(0);
