@@ -232,12 +232,19 @@ public class Swerve extends SubsystemBase {
         
         // TODO: Make a visualizer in pygame
         
+        double angle_current = 0;
+        double drive_current = 0;
+
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+            angle_current += mod.getCurrents()[0] / 4.0;
+            drive_current += mod.getCurrents()[1] / 4.0;
         }
 
+        SmartDashboard.putNumber("Average Angle Motor Current", angle_current);
+        SmartDashboard.putNumber("Average Drive Motor Current", drive_current);
         SmartDashboard.putString("Side", Limelight.getSide());
     }
 }

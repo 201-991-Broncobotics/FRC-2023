@@ -35,8 +35,8 @@ public final class Constants {
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
-        public static final double openLoopRamp = 0.25;
-        public static final double closedLoopRamp = 0.0;
+        public static final double openLoopRamp = 0.5;
+        public static final double closedLoopRamp = 0.5;
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -425,14 +425,14 @@ public final class Constants {
                                    drive_static_voltage = 0.32, 
                                    drive_equilibrium_voltage = 1.51, 
                                    drive_acceleration_voltage = 0.27, // SYSID values: KS, KV, KA; they are automatically divided by 12 later
-                                   max_linear_speed = 12, // feet per second; theoretical max is 13.5
-                                   max_angular_speed = 360; // degrees per second; theoretical max is theoretical maximum is max_linear_speed * 42.7402910527 which is roughly 500
+                                   max_linear_speed = 8, // feet per second; theoretical max is 13.5
+                                   max_angular_speed = 180; // degrees per second; theoretical max is theoretical maximum is max_linear_speed * 42.7402910527 which is roughly 500
 
         /* Auto Constants */
 
-        public static final double max_linear_speed_autonomous = 12,
-                                   ramp_up_time_linear = 1.5, // in seconds to reach max 
-                                   max_angular_speed_autonomous = 360, 
+        public static final double max_linear_speed_autonomous = 8,
+                                   ramp_up_time_linear = 2.5, // in seconds to reach max 
+                                   max_angular_speed_autonomous = 180, 
                                    ramp_up_time_angular = 1.5,
                                    translation_p_controller = 2, 
                                    angle_p_controller = 4;

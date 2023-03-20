@@ -117,4 +117,11 @@ public class SwerveModule {
             getAngle()
         );
     }
+
+    public double[] getCurrents() {
+        return new double[] {
+            mAngleMotor.getStatorCurrent(), 
+            mDriveMotor.getStatorCurrent()
+        };
+    }
 }
