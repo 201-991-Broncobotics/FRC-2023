@@ -9,12 +9,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.*;
-// import frc.robot.commands.alignWithApriltag.AlignWithApriltag;
-// import frc.robot.commands.autoBalance.AutoBalance;
 import frc.robot.commands.defaultCommands.*;
-import frc.robot.commands.intake.*;
-import frc.robot.commands.outtake.Outtake;
 import frc.robot.commands.setArmPosition.*;
+import frc.robot.commands.setClawState.*;
 import frc.robot.commands.utilCommands.*;
 import frc.robot.subsystems.*;
 

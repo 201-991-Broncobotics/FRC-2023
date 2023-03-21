@@ -23,13 +23,13 @@ public final class Constants {
         public static final double wheelBase = Units.inchesToMeters(22.750);
 
         /* Swerve Current Limiting */
-        public static final int angleContinuousCurrentLimit = 25;
-        public static final int anglePeakCurrentLimit = 40;
+        public static final int angleContinuousCurrentLimit = 10;
+        public static final int anglePeakCurrentLimit = 25;
         public static final double anglePeakCurrentDuration = 0.1;
         public static final boolean angleEnableCurrentLimit = true;
 
-        public static final int driveContinuousCurrentLimit = 35;
-        public static final int drivePeakCurrentLimit = 60;
+        public static final int driveContinuousCurrentLimit = 15;
+        public static final int drivePeakCurrentLimit = 25;
         public static final double drivePeakCurrentDuration = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
 
@@ -201,31 +201,36 @@ public final class Constants {
 
         /* CAN IDs and Input Channels */
 
-        public static final int first_motor_ID = 21, 
-                                first_motor_follower_ID = 22, 
-                                second_motor_ID = 23, // CAN IDs
+        public static final int proximal_id = 21, 
+                                proximal_follower_id = 22, 
+                                distal_id = 23, // CAN IDs
+
                                 first_encoder_channel = 1, 
                                 second_encoder_channel = 0; // PWM Input Channels
 
         /* Motor Variables */
     
-        public static final boolean invert_first_motor = true, 
-                                    invert_first_motor_follower = false, 
-                                    invert_second_motor = true, 
+        public static final boolean invert_proximal = true, 
+                                    invert_distal = true, 
+                                    invert_proximal_encoder = false, 
+                                    invert_distal_encoder = false, 
                                     invert_first_encoder = true, 
                                     invert_second_encoder = true, 
-                                    first_motor_brake = true, 
-                                    second_motor_brake = true;
+                                    proximal_brake = true, 
+                                    distal_brake = true;
         
-        public static final int first_motor_max_current = 20, // amps
-                                first_motor_follower_max_current = 20, 
-                                second_motor_max_current = 30, 
-                                second_motor_stop_current = 25;
+        public static final int proximal_max_continuous_current = 20, // amps
+                                proximal_max_peak_current = 25, 
+                                distal_max_continuous_current = 20, 
+                                distal_max_peak_current = 25, 
+                                second_motor_stop_current = 15;
         
-        public static final double first_motor_acceleration_time = 3, 
-                                   first_motor_voltage_compensation = 0, 
-                                   second_motor_acceleration_time = 3, 
-                                   second_motor_voltage_compensation = 0, 
+        public static final double proximal_peak_current_time = 0.1, 
+                                   proximal_open_ramp_rate = 0.5, 
+                                   proximal_closed_ramp_rate = 0.5, 
+                                   distal_peak_current_time = 0.1, 
+                                   distal_open_ramp_rate = 0.5, 
+                                   distal_closed_ramp_rate = 0.5, 
                                    first_encoder_zero = TuningConstants.encoder_one_zero, 
                                    second_encoder_zero = TuningConstants.encoder_two_zero;
 
@@ -233,13 +238,13 @@ public final class Constants {
         
         public static final double first_motor_sensitivity = 0.75,
 
-                                   first_motor_max_power = 0.8, 
+                                   proximal_max_percentoutput = 0.8, 
 
-                                   first_motor_max_acceleration = 2.0,
-                                   whiplash_time_one = 0.5, 
+                                   proximal_max_percentoutput_per_second = 2.0,
+                                   proximal_calibration_time = 0.5, 
 
-                                   first_motor_min_angle = -115, 
-                                   first_motor_max_angle = 20, 
+                                   proximal_min_angle = -115, 
+                                   proximal_max_angle = 20, 
 
                                    first_motor_tolerance = 4, 
 
@@ -247,13 +252,13 @@ public final class Constants {
 
                                    second_motor_sensitivity = 0.75,
 
-                                   second_motor_max_power = 0.8, 
+                                   distal_max_percentoutput = 0.8, 
 
-                                   second_motor_max_acceleration = 12.0,
-                                   whiplash_time_two = 0.5, 
+                                   distal_max_percentoutput_per_second = 12.0,
+                                   distal_calibration_time = 0.5, 
 
-                                   second_motor_min_angle = -45, 
-                                   second_motor_max_angle = 90, 
+                                   distal_min_angle = -45, 
+                                   distal_max_angle = 90, 
 
                                    second_motor_tolerance = 4, 
 
@@ -289,7 +294,7 @@ public final class Constants {
                                    turn_sensitivity = 0.35, 
                                    min_translation = 0.05, 
                                    min_rotation = 0.05, 
-                                   slow = 0.2,
+                                   slow = 0.2, 
                                    tffsmbtcfigfdbnft = 2, // turn factor for slow motion because the current factor is good for distance but not for turning
                                    turning_sensitivity = 0.65;
     }

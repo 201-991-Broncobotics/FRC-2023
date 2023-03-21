@@ -1,4 +1,4 @@
-package frc.robot.commands.outtake;
+package frc.robot.commands.setClawState;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;

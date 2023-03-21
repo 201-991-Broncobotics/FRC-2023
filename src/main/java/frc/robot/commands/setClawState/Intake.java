@@ -1,4 +1,4 @@
-package frc.robot.commands.intake;
+package frc.robot.commands.setClawState;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -33,7 +33,6 @@ public class Intake extends CommandBase {
         claw.stop();
         if (!interrupted) {
             frc.robot.Variables.go_to_startposition = true;
-            claw.hasElementNow();
         }
     }
     

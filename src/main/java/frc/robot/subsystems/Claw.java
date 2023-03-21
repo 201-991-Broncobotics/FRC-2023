@@ -13,7 +13,6 @@ import static frc.robot.Constants.ClawConstants.*;
 public class Claw extends SubsystemBase {
     
     private CANSparkMax claw_motor;
-    private boolean hasElement = false;
 
     public Claw() {
         claw_motor = new CANSparkMax(claw_motor_ID, MotorType.kBrushed);
@@ -38,12 +37,7 @@ public class Claw extends SubsystemBase {
 
     public void outtake() {
         SmartDashboard.putString("claw state", "outtake");
-        hasElement = false;
         claw_motor.set(outtake_power);
-    }
-
-    public void hasElementNow() {
-        hasElement = true;
     }
 
     public void stop() {
@@ -52,16 +46,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void passive() {
-        claw_motor.setVoltage(-1.5);
-        // claw_motor.set(0);
-        
-        /*
-        if (Math.abs(claw_motor.getEncoder().getVelocity()) > 1000 || !(hasElement)) {
-            claw_motor.set(0);
-            hasElement = false;
-        } else {
-            claw_motor.set(-0.1);
-        } this part isn't working for some reason TODO */
+        claw_motor.setVoltage(-0.75);
     }
 
     public double getCurrent() {

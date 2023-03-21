@@ -153,7 +153,7 @@ public class Autonomous extends SequentialCommandGroup {
                     new SetArmPosition(doubleArm, topPositionAngles), 
                     new AutonomousOuttake(swerve, doubleArm, claw),
                     new ParallelCommandGroup(
-                        new SetArmPosition(doubleArm, idlePositionAngles), 
+                        new SetArmPosition(doubleArm, idlePositionAngles), // might not need this but idk
                         drivecommands[0]
                     ),
                     new AutoBalance(swerve, doubleArm)

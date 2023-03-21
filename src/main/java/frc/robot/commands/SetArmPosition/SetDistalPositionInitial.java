@@ -18,7 +18,7 @@ public class SetDistalPositionInitial extends CommandBase { // small arm
     @Override
     public void initialize() {
         doubleArm.resetPID();
-        targetDistal = Math.min(Math.min(90, second_motor_max_angle), doubleArm.getTargetArmAngles()[0] + 180 - min_difference);
+        targetDistal = Math.min(Math.min(90, distal_max_angle), doubleArm.getTargetArmAngles()[0] + 180 - min_difference);
         doubleArm.setTargetAngles(new double[] {doubleArm.getTargetArmAngles()[0], targetDistal});
     }
 
