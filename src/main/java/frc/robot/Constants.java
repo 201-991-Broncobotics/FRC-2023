@@ -195,8 +195,8 @@ public final class Constants {
                                     invert_distal_encoder = false, 
                                     invert_first_encoder = true, 
                                     invert_second_encoder = true, 
-                                    proximal_brake = true, 
-                                    distal_brake = true;
+                                    proximal_brake = false, 
+                                    distal_brake = false;
         
         public static final int proximal_max_continuous_current = 20, // amps
                                 proximal_max_peak_current = 25, 
@@ -225,6 +225,8 @@ public final class Constants {
                                    proximal_min_angle = -115, 
                                    proximal_max_angle = 20, 
 
+                                   proximal_gear_ratio = 12384, 
+
                                    first_motor_tolerance = 4, 
 
 
@@ -238,6 +240,8 @@ public final class Constants {
 
                                    distal_min_angle = -45, 
                                    distal_max_angle = 90, 
+
+                                   distal_gear_ratio = 240.0, 
 
                                    second_motor_tolerance = 4, 
 

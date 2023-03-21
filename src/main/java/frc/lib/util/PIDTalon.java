@@ -22,7 +22,7 @@ public class PIDTalon {
     public PIDTalon(
         int CanID, double continuousCurrentLimit, double peakCurrentLimit, double peakCurrentTime, double openRampRate, double closedRampRate, 
         boolean brake, boolean inverted, double startingAngle, double minPosition, double maxPosition, double maxPercentOutput, double maxPercentOutputPerSecond, 
-        boolean invertEncoder, double calibrationTime, double kP, double kD, double kI, double kE, int ... followerIDs
+        double gear_ratio, boolean invertEncoder, double calibrationTime, double kP, double kD, double kI, double kE, int ... followerIDs
     ) {
 
         TalonFXConfiguration Config = new TalonFXConfiguration();
@@ -46,7 +46,7 @@ public class PIDTalon {
         motor.configAllSettings(Config);
         motor.setInverted(inverted);
         motor.setNeutralMode(neutralMode);
-        motor.setSelectedSensorPosition(startingAngle * 256.0 / 45.0 * (invertEncoder ? -1 : 1)); // 2048 per revolution and its in degrees
+        motor.setSelectedSensorPosition(startingAngle * 256.0 / 45.0 * (invertEncoder ? -1 : 1) * gear_ratio); // 2048 per revolution and its in degrees
 
         for (int i : followerIDs) {
             TalonFX tempMotor = new TalonFX(i);
@@ -63,7 +63,7 @@ public class PIDTalon {
         this.calibrationTime = calibrationTime;
         this.maxPercentOutputPerSecond = maxPercentOutputPerSecond;
 
-        positionSup = () -> motor.getSelectedSensorPosition() * 45.0 / 256.0 * (invertEncoder ? -1 : 1);
+        positionSup = () -> motor.getSelectedSensorPosition() * 45.0 / 256.0 * (invertEncoder ? -1 : 1) / gear_ratio;
 
         pidCalculator = new PIDCalculator(kP, kD, kI, kE, maxPercentOutput, positionSup.getAsDouble());
         time = Timer.getFPGATimestamp();

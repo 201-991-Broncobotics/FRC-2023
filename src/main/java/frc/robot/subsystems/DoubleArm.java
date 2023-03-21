@@ -26,12 +26,12 @@ public class DoubleArm extends SubsystemBase {
         second_encoder.setDistancePerRotation(360.0 * (invert_second_encoder ? -1 : 1));
 
         proximal = new PIDTalon(
-            proximal_id, proximal_max_continuous_current, proximal_max_peak_current, proximal_peak_current_time, proximal_open_ramp_rate, proximal_closed_ramp_rate, proximal_brake, invert_proximal, getInitialArmAngles()[0], proximal_min_angle, proximal_max_angle, proximal_max_percentoutput, proximal_max_percentoutput_per_second, invert_proximal_encoder, proximal_calibration_time, p1, d1, i1, e1, proximal_follower_id
+            proximal_id, proximal_max_continuous_current, proximal_max_peak_current, proximal_peak_current_time, proximal_open_ramp_rate, proximal_closed_ramp_rate, proximal_brake, invert_proximal, getInitialArmAngles()[0], proximal_min_angle, proximal_max_angle, proximal_max_percentoutput, proximal_max_percentoutput_per_second, proximal_gear_ratio, invert_proximal_encoder, proximal_calibration_time, p1, d1, i1, e1, proximal_follower_id
         );
 
         
         distal = new PIDTalon(
-            distal_id, distal_max_continuous_current, distal_max_peak_current, distal_peak_current_time, distal_open_ramp_rate, distal_closed_ramp_rate, distal_brake, invert_distal, getInitialArmAngles()[0], distal_min_angle, distal_max_angle, distal_max_percentoutput, distal_max_percentoutput_per_second, invert_distal_encoder, distal_calibration_time, p2, d2, i2, e2
+            distal_id, distal_max_continuous_current, distal_max_peak_current, distal_peak_current_time, distal_open_ramp_rate, distal_closed_ramp_rate, distal_brake, invert_distal, getInitialArmAngles()[0], distal_min_angle, distal_max_angle, distal_max_percentoutput, distal_max_percentoutput_per_second, distal_gear_ratio, invert_distal_encoder, distal_calibration_time, p2, d2, i2, e2
         );
 
         // we want it so powering the motors rotates the arms counterclockwise
