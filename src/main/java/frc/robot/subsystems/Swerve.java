@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.SwerveConstants.*;
 import static frc.robot.Constants.TuningConstants.*;
 import static frc.robot.Constants.GeneralConstants.*;
-import static frc.robot.Constants.AprilTagAlignmentConstants.*;
 
 public class Swerve extends SubsystemBase {
     public SwerveDrivePoseEstimator poseEstimator; 
@@ -34,7 +33,7 @@ public class Swerve extends SubsystemBase {
     private PIDCalculator pid;
 
     public Swerve() {
-        pid = new PIDCalculator(pS, dS, iS, swerve_max_power * Constants.BaseFalconSwerve.maxAngularVelocity, 180);
+        pid = new PIDCalculator(pS, dS, iS, swerve_max_pid_rotation * Constants.BaseFalconSwerve.maxAngularVelocity, 180);
         gyro = new Pigeon2(Constants.BaseFalconSwerve.pigeonID);
         gyro.configFactoryDefault();
         zeroGyro(180);
@@ -90,22 +89,9 @@ public class Swerve extends SubsystemBase {
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
 
-        if (show_drive_data) {
-            fieldRelative = false;
-            translation = translation.times(0.33);
-            rotation *= 0.33;
-            Variables.data += "{" + 
-                                (Math.round(translation.getX() * 1000.0) / 1000.0) + ", " + 
-                                (Math.round(translation.getY() * 1000.0) / 1000.0) + ", " + 
-                                (Math.round(rotation * 1000.0) / 1000.0) + ", " + 
-                                (Math.round(Timer.getFPGATimestamp() * 1000.0) / 1000.0) + 
-                              "}, "; // not println on purpose
-                             // truncates to 3 decimals because more precision is not necessary
-        }
-
         double current_heading = getYaw().getDegrees();
         if (rotation == 0) {
-            if (Timer.getFPGATimestamp() - last_time < calibration_time) {
+            if (Timer.getFPGATimestamp() - last_time < swerve_calibration_time) {
                 pid.reset(current_heading);
             } else {
                 if (Math.abs(pid.getTarget() - current_heading) > 180) {
@@ -121,8 +107,8 @@ public class Swerve extends SubsystemBase {
         translation = translation.times(frc.robot.Variables.speed_factor);
         rotation *= frc.robot.Variables.speed_factor;
 
-        if (translation.getNorm() < min_translation * Constants.BaseFalconSwerve.maxSpeed) translation = new Translation2d();
-        if (Math.abs(rotation) < min_rotation * Constants.BaseFalconSwerve.maxAngularVelocity) rotation = 0;
+        if (translation.getNorm() < swerve_min_translation * Constants.BaseFalconSwerve.maxSpeed) translation = new Translation2d();
+        if (Math.abs(rotation) < swerve_min_rotation * Constants.BaseFalconSwerve.maxAngularVelocity) rotation = 0;
 
         SwerveModuleState[] swerveModuleStates =
             Constants.BaseFalconSwerve.swerveKinematics.toSwerveModuleStates(
@@ -212,7 +198,7 @@ public class Swerve extends SubsystemBase {
         poseEstimator.updateWithTime(Timer.getFPGATimestamp(), getYaw(), getModulePositions());
 
         Pose2d vision_estimate = Limelight.getRobotPosition();
-        if (vision_estimate.getTranslation().getNorm() > 0.1 && (Math.abs(normalizeAngle(getYaw().getDegrees() - vision_estimate.getRotation().getDegrees())) < max_angular_tolerance)) {
+        if (vision_estimate.getTranslation().getNorm() > 0.1 && (Math.abs(normalizeAngle(getYaw().getDegrees() - vision_estimate.getRotation().getDegrees())) < vision_min_error)) {
             poseEstimator.addVisionMeasurement(vision_estimate, Timer.getFPGATimestamp() - Limelight.getLatency());
             SmartDashboard.putString("Vision Pose", "(" + Math.round(vision_estimate.getTranslation().getX() * 100) / 100.0 + ", " + Math.round(vision_estimate.getTranslation().getY() * 100) / 100.0 + ")");
             SmartDashboard.putString("Vision Heading", "" + Math.round(vision_estimate.getRotation().getDegrees() * 100) / 100.0 + " degrees");

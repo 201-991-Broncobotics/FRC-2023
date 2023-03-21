@@ -32,6 +32,6 @@ public class AutoBalance_Subcommand_1 extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return Math.abs(swerve.getError()) < swerve_min_error;
+        return Math.abs(swerve.getError()) < yaw_tolerance;
     }
 }

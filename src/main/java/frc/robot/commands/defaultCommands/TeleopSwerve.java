@@ -39,7 +39,7 @@ public class TeleopSwerve extends CommandBase {
         /* Get Values, Deadband*/
         double translationVal = signedPower(translationSup.getAsDouble());
         double strafeVal = signedPower(strafeSup.getAsDouble());
-        double rotationVal = signedPower(rotationSup.getAsDouble());
+        double rotationVal = signedPower(rotationSup.getAsDouble()) * swerve_turn_sensitivity;
 
         if ((rotationVal) == 0 && (targetSup.getAsInt() % 90 == 0)) s_Swerve.setTargetHeading(targetSup.getAsInt());
 

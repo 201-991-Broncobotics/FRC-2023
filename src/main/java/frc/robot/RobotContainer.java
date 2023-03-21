@@ -71,8 +71,8 @@ public class RobotContainer {
     ));
 
     private final Trigger resetArmEncoders = new Trigger(() -> (
-        (driver.getRawButton(tagAlignerButton)) &&
-        (driver.getRawButton(autoBalanceButton))
+        (driver.getRawButton(stopUsingEncodersButtonOne)) &&
+        (driver.getRawButton(stopUsingEncodersButtonTwo))
     )).or(new Trigger(() -> driver_joystick.getRawButton(joystickResetArmEncodersButton)));
 
     private final Trigger intakeUpper = new Trigger(() -> (operator.getPOV() == intakeUpperValue));
@@ -94,12 +94,12 @@ public class RobotContainer {
                     s_Swerve, 
                     () -> -driver_joystick.getRawAxis(joystickTranslationAxis), 
                     () -> -driver_joystick.getRawAxis(joystickStrafeAxis), 
-                    () -> -driver_joystick.getRawAxis(joystickRotationAxis) * turning_sensitivity, 
+                    () -> -driver_joystick.getRawAxis(joystickRotationAxis), 
                     () -> false, 
                     () -> -driver_joystick.getPOV(), 
                     () -> {
                         if (driver_joystick.getRawButton(joystickSlowButton)) {
-                            return slow;
+                            return swerve_slow_factor;
                         } else {
                             return 1.0;
                         }

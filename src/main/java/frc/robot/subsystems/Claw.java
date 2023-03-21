@@ -46,7 +46,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void passive() {
-        claw_motor.setVoltage(-0.75);
+        claw_motor.setVoltage(passive_voltage);
     }
 
     public double getCurrent() {

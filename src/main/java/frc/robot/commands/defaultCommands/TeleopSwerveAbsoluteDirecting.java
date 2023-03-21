@@ -9,6 +9,7 @@ import java.util.function.IntSupplier;
 
 import static frc.robot.Constants.SwerveConstants.*;
 import static frc.robot.Constants.GeneralConstants.*;
+import static frc.robot.Constants.TuningConstants.*;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -41,11 +42,11 @@ public class TeleopSwerveAbsoluteDirecting extends CommandBase {
         /* Get Values, Deadband*/
         double translationVal = signedPower(translationSup.getAsDouble());
         double strafeVal = signedPower(strafeSup.getAsDouble());
-        double turnVal = signedPower(turnSup.getAsDouble()) * turn_sensitivity;
+        double turnVal = signedPower(turnSup.getAsDouble()) * swerve_high_turn_sensitivity;
 
         double slowVal = 1;
 
-        if (slowSup.getAsBoolean()) slowVal = slow;
+        if (slowSup.getAsBoolean()) slowVal = swerve_slow_factor;
         
         double x_dir = directionXSup.getAsDouble();
         double y_dir = directionYSup.getAsDouble();
@@ -70,7 +71,7 @@ public class TeleopSwerveAbsoluteDirecting extends CommandBase {
                 } else {
                     target_heading = Math.atan(y_dir / x_dir) * 180.0 / Math.PI - 90;
                 }
-                turnVal = getCorrection(normalizeAngle(target_heading - s_Swerve.getYaw().getDegrees()), 0, swerve_max_error, swerve_exponent, swerve_max_power * Math.sqrt(x_dir * x_dir + y_dir * y_dir));
+                turnVal = getPECorrection(normalizeAngle(target_heading - s_Swerve.getYaw().getDegrees()), pS, eS, swerve_max_pid_rotation * Math.sqrt(x_dir * x_dir + y_dir * y_dir));
 
             } else if (targetSup.getAsInt() % 90 == 0) { // setTargetHeading on purpose
                 s_Swerve.setTargetHeading(targetSup.getAsInt());

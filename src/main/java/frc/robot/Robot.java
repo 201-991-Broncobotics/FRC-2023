@@ -95,9 +95,7 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void teleopExit() {
-        System.out.print(Variables.data);
-    }
+    public void teleopExit() {}
 
     @Override
     public void testInit() {

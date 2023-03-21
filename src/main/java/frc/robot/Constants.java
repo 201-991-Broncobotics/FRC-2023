@@ -146,25 +146,6 @@ public final class Constants {
         );
     }
 
-    public static final class AprilTagAlignmentConstants {
-
-        public static final int angle_trials = 25, 
-                                distance_trials = 10; // longer means slower but more accurate
-
-        public static final double offset = 10.9008, // in inches; from center of robot
-                                   cone_offset = 22, // between center of april tags and center of poles; tags are in line with cube scoring stations
-                                   
-                                   sideways_tolerance = 0.5, // in inches
-                                   sideways_speed = 0.15, 
-                                   rotation_speed = 0.15, // percentage of maxima
-                                   max_angular_tolerance = 999, // degrees
-                                   angular_tolerance = 15,
-                                   extra_time_to_be_in_frame = 0.25, 
-                                   max_calculation_time = 1, 
-                                   max_time_to_get_in_frame = 3,
-                                   max_alignment_time = 5;
-    }
-
     public static final class AutoBalanceConstants {
         public static final double drive_speed = 0.1,
                                    drive_speed_get_on = 0.2, 
@@ -187,14 +168,12 @@ public final class Constants {
         public static final boolean claw_motor_brake = true;
         
         public static final int claw_motor_max_current = 30;
-        
-        public static final double claw_motor_acceleration_time = 3, 
-                                   claw_motor_voltage_compensation = 0;
 
         /* Variables */
         
         public static final double intake_power = -1, // intake with negative power
-                                   outtake_power = 0.2;
+                                   outtake_power = 0.2,
+                                   passive_voltage = -1;
     }
 
     public static final class DoubleArmConstants {
@@ -286,17 +265,18 @@ public final class Constants {
 
     public static final class SwerveConstants {
         
-        public static final double swerve_min_error = 2, 
-                                   swerve_max_error = 30, 
-                                   swerve_exponent = 0.7, 
-                                   swerve_max_power = 0.8,
-                                   calibration_time = 0.5, // seconds
-                                   turn_sensitivity = 0.35, 
-                                   min_translation = 0.05, 
-                                   min_rotation = 0.05, 
-                                   slow = 0.2, 
+        public static final double swerve_max_pid_rotation = 0.8, 
+                                   swerve_calibration_time = 0.5, // seconds
+
+                                   swerve_turn_sensitivity = 0.75, 
+                                   swerve_high_turn_sensitivity = 0.35, 
+                                   swerve_min_translation = 0.05, 
+                                   swerve_min_rotation = 0.05, 
+
+                                   yaw_tolerance = 2, 
+                                   swerve_slow_factor = 0.2, 
                                    tffsmbtcfigfdbnft = 2, // turn factor for slow motion because the current factor is good for distance but not for turning
-                                   turning_sensitivity = 0.65;
+                                   vision_min_error = 15; // degree diff between imu yaw and vision yaw
     }
 
     public static final class Buttons {
@@ -333,9 +313,9 @@ public final class Constants {
                                 robotCentricButton = XboxController.Button.kLeftBumper.value,
 
                                 zeroGyroButton = XboxController.Button.kY.value, 
-                                tagAlignerButton = XboxController.Button.kA.value, 
                                 makeXButton = XboxController.Button.kX.value, 
-                                autoBalanceButton = XboxController.Button.kB.value,
+                                stopUsingEncodersButtonOne = XboxController.Button.kA.value, 
+                                stopUsingEncodersButtonTwo = XboxController.Button.kB.value,
                                 terminateCommandsDriverButton = XboxController.Button.kBack.value,
 
                                 joystickTranslationAxis = 1, // backward is positive
@@ -400,6 +380,14 @@ public final class Constants {
             if (degrees < 0) return ((degrees - 180) % 360 + 180);
             return ((degrees + 180) % 360 - 180);
         }
+
+        public static double getPECorrection(double error, double p, double e, double max_power) {
+            double correction = error * p;
+            if (Math.abs(correction) < max_power) {
+                correction *= Math.pow(Math.abs(error * p) / max_power, e - 1);
+            }
+            return correction;
+        }
     }
 
     public static final class TuningConstants {
@@ -421,7 +409,6 @@ public final class Constants {
                                      idlePositionAngles = {-115, 42}; // TODO Make X cancel arm pid for if its swinging crazy
 
         public static final boolean fancy_drive = true, 
-                                    show_drive_data = false, 
                                     genericHID_drive = true;
         
         /* Swerve Drive Constants */
@@ -453,6 +440,7 @@ public final class Constants {
                                    d2 = 0.0005, 
                                    i2 = 0, 
                                    pS = 0.03, 
+                                   eS = 1.5, 
                                    dS = 0.001, 
                                    iS = 0,
                                    mftfmitdaiwtmdoftoabtc = 0.65, // mutiplier for the first motor if the distal arm is within the minimum distance of the first one allowed by the code
