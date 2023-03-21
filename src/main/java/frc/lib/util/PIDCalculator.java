@@ -67,7 +67,7 @@ public class PIDCalculator {
         }
         integral += error * delta_time;
         i = integral * kI;
-        correction = Math.max(-1, Math.min(1, p + i + d)) * maxPower;
+        correction = Math.max(-maxPower, Math.min(maxPower, p + i + d));
         return correction;
     }
 
