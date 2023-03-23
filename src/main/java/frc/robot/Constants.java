@@ -24,19 +24,19 @@ public final class Constants {
 
         /* Swerve Current Limiting */
         public static final int angleContinuousCurrentLimit = 10;
-        public static final int anglePeakCurrentLimit = 25;
+        public static final int anglePeakCurrentLimit = 20;
         public static final double anglePeakCurrentDuration = 0.1;
         public static final boolean angleEnableCurrentLimit = true;
 
         public static final int driveContinuousCurrentLimit = 15;
-        public static final int drivePeakCurrentLimit = 25;
+        public static final int drivePeakCurrentLimit = 20;
         public static final double drivePeakCurrentDuration = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
-        public static final double openLoopRamp = 0.5;
-        public static final double closedLoopRamp = 0.5;
+        public static final double openLoopRamp = 0.25;
+        public static final double closedLoopRamp = 0.25;
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -173,7 +173,7 @@ public final class Constants {
         
         public static final double intake_power = -1, // intake with negative power
                                    outtake_power = 0.2,
-                                   passive_voltage = -1;
+                                   passive_voltage = -1.5;
     }
 
     public static final class DoubleArmConstants {
@@ -195,29 +195,29 @@ public final class Constants {
                                     invert_distal_encoder = false, 
                                     invert_first_encoder = true, 
                                     invert_second_encoder = true, 
-                                    proximal_brake = false, 
-                                    distal_brake = false;
+                                    proximal_brake = true, 
+                                    distal_brake = true;
         
-        public static final int proximal_max_continuous_current = 20, // amps
-                                proximal_max_peak_current = 25, 
-                                distal_max_continuous_current = 20, 
-                                distal_max_peak_current = 25, 
-                                second_motor_stop_current = 15;
+        public static final int proximal_max_continuous_current = 15, // amps
+                                proximal_max_peak_current = 20, 
+                                distal_max_continuous_current = 15, 
+                                distal_max_peak_current = 20, 
+                                second_motor_stop_current = 19;
         
         public static final double proximal_peak_current_time = 0.1, 
-                                   proximal_open_ramp_rate = 0.5, 
-                                   proximal_closed_ramp_rate = 0.5, 
+                                   proximal_open_ramp_rate = 0.1, 
+                                   proximal_closed_ramp_rate = 0.1, 
                                    distal_peak_current_time = 0.1, 
-                                   distal_open_ramp_rate = 0.5, 
-                                   distal_closed_ramp_rate = 0.5, 
+                                   distal_open_ramp_rate = 0.1, 
+                                   distal_closed_ramp_rate = 0.1, 
                                    first_encoder_zero = TuningConstants.encoder_one_zero, 
                                    second_encoder_zero = TuningConstants.encoder_two_zero;
 
         /* Variables */
         
-        public static final double first_motor_sensitivity = 0.75,
+        public static final double first_motor_sensitivity = 0.55,
 
-                                   proximal_max_percentoutput = 0.8, 
+                                   proximal_max_percentoutput = 0.6, 
 
                                    proximal_max_percentoutput_per_second = 2.0,
                                    proximal_calibration_time = 0.5, 
@@ -225,7 +225,7 @@ public final class Constants {
                                    proximal_min_angle = -115, 
                                    proximal_max_angle = 20, 
 
-                                   proximal_gear_ratio = 12384, 
+                                   proximal_gear_ratio = 1224.0 / 7.0 * 1.2, 
 
                                    first_motor_tolerance = 4, 
 
@@ -241,7 +241,7 @@ public final class Constants {
                                    distal_min_angle = -45, 
                                    distal_max_angle = 90, 
 
-                                   distal_gear_ratio = 240.0, 
+                                   distal_gear_ratio = 680.0 / 3.0 * 1.2, 
 
                                    second_motor_tolerance = 4, 
 
@@ -259,7 +259,7 @@ public final class Constants {
 
                                    middle_x = 45, // above this, we go at a slower rate
                                    middle_y = 0, 
-                                   speed_when_arm_extended = 0.35;
+                                   speed_when_arm_extended = 1; // TODO Change this later once the arm actually works
     }
     
     public static final class IntakeConstants {
@@ -275,7 +275,7 @@ public final class Constants {
                                    swerve_turn_sensitivity = 0.75, 
                                    swerve_high_turn_sensitivity = 0.35, 
                                    swerve_min_translation = 0.05, 
-                                   swerve_min_rotation = 0.05, 
+                                   swerve_min_rotation = 0.02, 
 
                                    yaw_tolerance = 2, 
                                    swerve_slow_factor = 0.2, 
@@ -395,11 +395,11 @@ public final class Constants {
     }
 
     public static final class TuningConstants {
-        public static final double CANCoder0_zero = 260.59, 
-                                   CANCoder1_zero = 299.88, 
-                                   CANCoder2_zero = 318.51, 
-                                   CANCoder3_zero = 211.64, 
-                                   encoder_one_zero = -452.73, 
+        public static final double CANCoder0_zero = 270.17, 
+                                   CANCoder1_zero = 292.06, 
+                                   CANCoder2_zero = 311.92, 
+                                   CANCoder3_zero = 214.89, 
+                                   encoder_one_zero = -92.73, 
                                    encoder_two_zero = -305.55;
         
         /* The angles we want to go to - NOT the x and y */
@@ -421,7 +421,7 @@ public final class Constants {
                                    drive_static_voltage = 0.32, 
                                    drive_equilibrium_voltage = 1.51, 
                                    drive_acceleration_voltage = 0.27, // SYSID values: KS, KV, KA; they are automatically divided by 12 later
-                                   max_linear_speed = 8, // feet per second; theoretical max is 13.5
+                                   max_linear_speed = 10, // feet per second; theoretical max is 13.5
                                    max_angular_speed = 180; // degrees per second; theoretical max is theoretical maximum is max_linear_speed * 42.7402910527 which is roughly 500
 
         /* Auto Constants */
@@ -435,17 +435,17 @@ public final class Constants {
         
         /* Arm Constants */
 
-        public static final double p1 = 0.035, 
-                                   e1 = 1.25, 
-                                   d1 = 0.0001, 
+        public static final double p1 = 0.045, 
+                                   e1 = 1.1, 
+                                   d1 = 0, 
                                    i1 = 0, 
-                                   p2 = 0.04, 
-                                   e2 = 1.25, 
-                                   d2 = 0.0005, 
+                                   p2 = 0.075, 
+                                   e2 = 1.4, 
+                                   d2 = 0, 
                                    i2 = 0, 
-                                   pS = 0.03, 
-                                   eS = 1.5, 
-                                   dS = 0.001, 
+                                   pS = 0.25, 
+                                   eS = 1, 
+                                   dS = 0, 
                                    iS = 0,
                                    mftfmitdaiwtmdoftoabtc = 0.65, // mutiplier for the first motor if the distal arm is within the minimum distance of the first one allowed by the code
                                    mftfmitdaiwtmdoftoabtcaiicgd = 0.25, // and it is currently going down

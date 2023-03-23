@@ -17,7 +17,7 @@ public class PIDTalon {
 
     private final DoubleSupplier positionSup;
     private final double calibrationTime, maxPercentOutputPerSecond;
-    private double minPosition, maxPosition, previousTime, time, lmtPosition;
+    private double minPosition, maxPosition, previousTime, time, lmtPosition, prevPower;
 
     public PIDTalon(
         int CanID, double continuousCurrentLimit, double peakCurrentLimit, double peakCurrentTime, double openRampRate, double closedRampRate, 
@@ -46,7 +46,9 @@ public class PIDTalon {
         motor.configAllSettings(Config);
         motor.setInverted(inverted);
         motor.setNeutralMode(neutralMode);
-        motor.setSelectedSensorPosition(startingAngle * 256.0 / 45.0 * (invertEncoder ? -1 : 1) * gear_ratio); // 2048 per revolution and its in degrees
+        motor.setSelectedSensorPosition(startingAngle * 256.0 / 45.0 * (invertEncoder ? 1 : -1) * gear_ratio); // 2048 per revolution and its in degrees
+        // motor.configVoltageCompSaturation(12);
+        motor.enableVoltageCompensation(true);
 
         for (int i : followerIDs) {
             TalonFX tempMotor = new TalonFX(i);
@@ -54,8 +56,12 @@ public class PIDTalon {
             tempMotor.configAllSettings(Config);
             tempMotor.setInverted(inverted);
             tempMotor.setNeutralMode(neutralMode);
+            // tempMotor.enableVoltageCompSaturation(12); // idk what's happening here
+            tempMotor.enableVoltageCompensation(true);
             tempMotor.follow(motor);
         }
+
+        Timer.delay(1.0);
 
         this.minPosition = minPosition;
         this.maxPosition = maxPosition;
@@ -65,7 +71,7 @@ public class PIDTalon {
 
         positionSup = () -> motor.getSelectedSensorPosition() * 45.0 / 256.0 * (invertEncoder ? -1 : 1) / gear_ratio;
 
-        pidCalculator = new PIDCalculator(kP, kD, kI, kE, maxPercentOutput, positionSup.getAsDouble());
+        pidCalculator = new PIDCalculator(kP, kD, kI, kE, maxPercentOutput, startingAngle);
         time = Timer.getFPGATimestamp();
         previousTime = -1000;
     }
@@ -75,16 +81,18 @@ public class PIDTalon {
         time = Timer.getFPGATimestamp();
 
         double currentPosition = positionSup.getAsDouble();
-
+        
         if (currentPosition < minPosition || lmtPosition <= minPosition) {
             previousTime = -1000;
             power = Math.max(0, power);
+            prevPower = 0;
             motor.set(ControlMode.PercentOutput, 0);
             pidCalculator.reset(minPosition);
             lmtPosition = minPosition;
         } else if (currentPosition > maxPosition || lmtPosition >= maxPosition) {
             previousTime = -1000;
             power = Math.min(0, power);
+            prevPower = 0;
             motor.set(ControlMode.PercentOutput, 0);
             pidCalculator.reset(maxPosition);
             lmtPosition = maxPosition;
@@ -99,8 +107,9 @@ public class PIDTalon {
         } else {
             power = pidCalculator.update(currentPosition);
         }
-        
-        power = Math.max(motor.getMotorOutputPercent() - maxPercentOutputPerSecond * deltaTime, Math.min(motor.getMotorOutputPercent() + maxPercentOutputPerSecond * deltaTime, power));
+
+        power = Math.max(prevPower - maxPercentOutputPerSecond * deltaTime, Math.min(prevPower + maxPercentOutputPerSecond * deltaTime, power));
+        prevPower = power;
 
         motor.set(ControlMode.PercentOutput, power);
     }
@@ -108,6 +117,7 @@ public class PIDTalon {
     public void resetTarget() {
         previousTime = -1000;
         pidCalculator.reset(positionSup.getAsDouble());
+        prevPower = 0;
         motor.set(ControlMode.PercentOutput, 0);
         lmtPosition = positionSup.getAsDouble();
     }
@@ -115,6 +125,7 @@ public class PIDTalon {
     public void setTarget(double targetPosition) {
         previousTime = -1000;
         pidCalculator.reset(targetPosition);
+        prevPower = 0;
         motor.set(ControlMode.PercentOutput, 0);
         lmtPosition = targetPosition;
     }
@@ -124,7 +135,8 @@ public class PIDTalon {
         time = Timer.getFPGATimestamp();
         lmtPosition = 0; // between min and max
         double power = pidCalculator.update(positionSup.getAsDouble());
-        power = Math.max(motor.getMotorOutputPercent() - maxPercentOutputPerSecond * deltaTime, Math.min(motor.getMotorOutputPercent() + maxPercentOutputPerSecond * deltaTime, power));
+        power = Math.max(prevPower - maxPercentOutputPerSecond * deltaTime, Math.min(prevPower + maxPercentOutputPerSecond * deltaTime, power));
+        prevPower = power;
 
         motor.set(ControlMode.PercentOutput, power);
     }
@@ -134,7 +146,8 @@ public class PIDTalon {
         time = Timer.getFPGATimestamp();
         lmtPosition = 0; // between min and max
         double power = pidCalculator.update(positionSup.getAsDouble()) * multiplier;
-        power = Math.max(motor.getMotorOutputPercent() - maxPercentOutputPerSecond * deltaTime, Math.min(motor.getMotorOutputPercent() + maxPercentOutputPerSecond * deltaTime, power));
+        power = Math.max(prevPower - maxPercentOutputPerSecond * deltaTime, Math.min(prevPower + maxPercentOutputPerSecond * deltaTime, power));
+        prevPower = power;
 
         motor.set(ControlMode.PercentOutput, power);
     }
@@ -142,6 +155,7 @@ public class PIDTalon {
     public void brake() {
         pidCalculator.reset(positionSup.getAsDouble());
         previousTime = Timer.getFPGATimestamp();
+        prevPower = 0;
         motor.set(ControlMode.PercentOutput, 0);
     }
 
