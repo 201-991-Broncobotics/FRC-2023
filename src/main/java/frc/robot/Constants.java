@@ -259,7 +259,7 @@ public final class Constants {
 
                                    middle_x = 45, // above this, we go at a slower rate
                                    middle_y = 0, 
-                                   speed_when_arm_extended = 1; // TODO Change this later once the arm actually works
+                                   speed_when_arm_extended = 0.33; // TODO Change this later once the arm actually works
     }
     
     public static final class IntakeConstants {
@@ -357,7 +357,7 @@ public final class Constants {
 
     public static final class GeneralConstants {
 
-        public static final double joystick_deadzone = 0.1,
+        public static final double joystick_deadzone = 0.2,
                                    axis_exponent = 1.3;
 
         public static final double signedPower(double axis_value) {
@@ -395,10 +395,10 @@ public final class Constants {
     }
 
     public static final class TuningConstants {
-        public static final double CANCoder0_zero = 270.17, 
-                                   CANCoder1_zero = 292.06, 
-                                   CANCoder2_zero = 311.92, 
-                                   CANCoder3_zero = 214.89, 
+        public static final double CANCoder0_zero = 272.9, 
+                                   CANCoder1_zero = 298.56, 
+                                   CANCoder2_zero = 318.13, 
+                                   CANCoder3_zero = 197.75, 
                                    encoder_one_zero = -92.73, 
                                    encoder_two_zero = -305.55;
         
@@ -448,7 +448,7 @@ public final class Constants {
                                    dS = 0, 
                                    iS = 0,
                                    mftfmitdaiwtmdoftoabtc = 0.65, // mutiplier for the first motor if the distal arm is within the minimum distance of the first one allowed by the code
-                                   mftfmitdaiwtmdoftoabtcaiicgd = 0.25, // and it is currently going down
+                                   mftfmitdaiwtmdoftoabtcaiicgd = 0.4, // and it is currently going down
                                    pT = 0.4,
                                    dT = 0.2;
     }

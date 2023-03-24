@@ -46,7 +46,7 @@ public class DoubleArm extends SubsystemBase {
     }
 
     public void powerArm(double firstPower, double secondPower) { // power the arms manually
-
+        
         if (useEncoders) {
             double[] current_angles = getCurrentArmAngles();
             if (current_angles[1] > current_angles[0] + 180 - min_difference) {
@@ -229,7 +229,7 @@ public class DoubleArm extends SubsystemBase {
             frc.robot.Variables.speed_factor = speed_when_arm_extended;
         }
 
-        if (getCurrentArmAngles()[1] < 0 && distal.getCurrent() > second_motor_stop_current && frc.robot.Variables.thor && Timer.getFPGATimestamp() - frc.robot.Variables.ats > 2) {
+        if (getCurrentArmAngles()[1] < 0 && distal.getCurrent() > second_motor_stop_current && frc.robot.Variables.thor && Timer.getFPGATimestamp() - frc.robot.Variables.ats > 2 && Timer.getFPGATimestamp() - frc.robot.Variables.ats < 5) {
             throw new IllegalArgumentException("Please don't destroy the robot");
         }
     }

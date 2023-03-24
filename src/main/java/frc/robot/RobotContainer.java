@@ -146,7 +146,7 @@ public class RobotContainer {
         );
 
         // Cache autonomous commands
-        Autonomous.cacheCommandGroups(s_Swerve);
+        Autonomous.cacheCommandGroups(s_Swerve, doubleArm, claw);
 
         // Configure the button bindings
         configureButtonBindings();
@@ -203,10 +203,18 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new Autonomous(claw, doubleArm, s_Swerve);
+        return Autonomous.getAutonomousCommand(claw, doubleArm, s_Swerve);
     }
 
     public Swerve getSwerve() {
         return s_Swerve;
+    }
+
+    public DoubleArm getDoubleArm() {
+        return doubleArm;
+    }
+
+    public Claw getClaw() {
+        return claw;
     }
 }

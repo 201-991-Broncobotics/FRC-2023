@@ -85,14 +85,14 @@ public class PIDTalon {
         if (currentPosition < minPosition || lmtPosition <= minPosition) {
             previousTime = -1000;
             power = Math.max(0, power);
-            prevPower = 0;
+            prevPower = power;
             motor.set(ControlMode.PercentOutput, 0);
             pidCalculator.reset(minPosition);
             lmtPosition = minPosition;
         } else if (currentPosition > maxPosition || lmtPosition >= maxPosition) {
             previousTime = -1000;
             power = Math.min(0, power);
-            prevPower = 0;
+            prevPower = power;
             motor.set(ControlMode.PercentOutput, 0);
             pidCalculator.reset(maxPosition);
             lmtPosition = maxPosition;
