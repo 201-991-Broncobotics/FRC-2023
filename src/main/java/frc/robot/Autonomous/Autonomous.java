@@ -41,7 +41,6 @@ public class Autonomous {
         System.out.println("Started");
         for (String i : new String[] {"Short", "Medium", "Long"}) {
             for (String j : new String[] {"", "Double", "Balance"}) {
-                String trajectory = i + j;
                 Command[] blueCommands = getTrajectoryCommands(swerve, i + j, DriverStation.Alliance.Blue);
                 Command[] redCommands = getTrajectoryCommands(swerve, i + j, DriverStation.Alliance.Red);
                 if (j.equals("Balance")) {
