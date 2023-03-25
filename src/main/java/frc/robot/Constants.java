@@ -413,7 +413,8 @@ public final class Constants {
                                      idlePositionAngles = {-115, 42}; // TODO Make X cancel arm pid for if its swinging crazy
 
         public static final boolean fancy_drive = true, 
-                                    genericHID_drive = true;
+                                    genericHID_drive = true,
+                                    testmode = true;
         
         /* Swerve Drive Constants */
 
@@ -443,8 +444,8 @@ public final class Constants {
                                    e2 = 1.4, 
                                    d2 = 0, 
                                    i2 = 0, 
-                                   pS = 0.25, 
-                                   eS = 1, 
+                                   pS = 0.1, 
+                                   eS = 1.5, 
                                    dS = 0, 
                                    iS = 0,
                                    mftfmitdaiwtmdoftoabtc = 0.65, // mutiplier for the first motor if the distal arm is within the minimum distance of the first one allowed by the code
