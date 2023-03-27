@@ -71,6 +71,17 @@ public class Limelight { // NOT a subsystem
         return new Pose2d(x, y, Rotation2d.fromDegrees(angle)); 
     }
 
+    public static Pose2d adjustPoseForSide(Pose2d pose) {
+        if (side.equals("blue")) {
+            return pose;
+        }
+        return new Pose2d(
+            pose.getX(), 
+            8.02 - pose.getY(), 
+            Rotation2d.fromDegrees(-pose.getRotation().getDegrees())
+        );
+    }
+
     public static double getLatency() {
         return botpose[3].getAsDouble(); 
     }

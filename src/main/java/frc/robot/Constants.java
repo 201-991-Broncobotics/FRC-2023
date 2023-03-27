@@ -330,7 +330,7 @@ public final class Constants {
                                 joystickMakeXButton = 2, 
                                 joystickTerminateCommandsButton = 4, // if we push the slider forward it cancels commands
                                 joystickResetArmEncodersButton = 12, // make this like some really obscure button that would literally only be pressed on purpose
-                                joystickGoToSingleSubstationButton = 11;
+                                joystickAutoConeOuttakeButton = 11;
                                 // .getPOV() is the same for joystick; T.Flight Hotas One
 
         /* Operator Buttons */
@@ -403,7 +403,7 @@ public final class Constants {
                                    encoder_two_zero = -305.55;
         
         /* The angles we want to go to - NOT the x and y */
-        public static final double[] topPositionAngles = {2.7, 19.0}, 
+        public static final double[] topPositionAngles = {7.5, 3.5}, 
                                      midPositionAngles = {-21.4, 0}, 
                                      lowPositionAngles = {-64, 0}, 
 
