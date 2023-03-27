@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import frc.lib.util.PIDCalculator;
 import frc.robot.Constants;
-import frc.robot.Variables;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -170,11 +169,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro() {
-        if (testmode) {
-            poseEstimator.resetPosition(Rotation2d.fromDegrees(0), getModulePositions(), new Pose2d(getPose().getTranslation(), new Rotation2d()));
-        } else {
-            poseEstimator.resetPosition(Rotation2d.fromDegrees(0), getModulePositions(), getPose());
-        }
+        poseEstimator.resetPosition(Rotation2d.fromDegrees(0), getModulePositions(), new Pose2d(getPose().getTranslation(), new Rotation2d()));
         gyro.setYaw(0);
         pid.reset(0);
         last_time = Timer.getFPGATimestamp();

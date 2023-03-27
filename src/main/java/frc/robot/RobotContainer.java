@@ -1,7 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -9,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.*;
+import frc.robot.commands.autoDriveCommands.DriveToNearestCone;
 import frc.robot.commands.defaultCommands.*;
 import frc.robot.commands.setArmPosition.*;
 import frc.robot.commands.setClawState.*;
@@ -37,11 +36,16 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final Trigger zeroGyro = new JoystickButton(driver, zeroGyroButton).or(new JoystickButton(driver_joystick, joystickZeroGyroButton));
-    private final Trigger robotCentric = new JoystickButton(driver, robotCentricButton);
-    // private final Trigger tagAligner = new JoystickButton(driver, tagAlignerButton);
     private final Trigger makeX = new JoystickButton(driver, makeXButton).or(new JoystickButton(driver_joystick, joystickMakeXButton));
-    // private final Trigger autoBalance = new JoystickButton(driver, autoBalanceButton);
-    private final Trigger goToSingleSubstation = new JoystickButton(driver_joystick, joystickGoToSingleSubstationButton);
+
+    private final Trigger robotCentric = new JoystickButton(driver, robotCentricButton);
+
+    private final Trigger autoConeOuttake = new JoystickButton(driver_joystick, joystickAutoConeOuttakeButton);
+
+    private final Trigger resetArmEncoders = new Trigger(() -> (
+        (driver.getRawButton(stopUsingEncodersButtonOne)) &&
+        (driver.getRawButton(stopUsingEncodersButtonTwo))
+    )).or(new Trigger(() -> driver_joystick.getRawButton(joystickResetArmEncodersButton)));
 
     /* Operator Buttons */
     private final Trigger topGoal = new JoystickButton(operator, topGoalButton);
@@ -53,32 +57,17 @@ public class RobotContainer {
     private final Trigger intake = new JoystickButton(operator, intakeButton);
     private final Trigger outtake = new JoystickButton(operator, outtakeButton);
 
-    /* Custom Buttons - this is how you make Triggers based on conditions
-    private final Trigger customTrigger = new Trigger(BooleanSupplier condition);
-
-    for example, if you wanted to make a trigger for when the dpad is pressed up, you would do this:
-    private final Trigger dpad_up = new Trigger(() -> operator.getPOV() == 0);
-    .getPOV() method: increases by 45 degrees clockwise, with up being 0, right being 90, down being 180 and left being 270
-
-    if you wanted to make a trigger for when an axis reaches past a certain value, you would do this:
-    private final Trigger right_trigger = new Trigger(() -> operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > joystick_deadzone);
-
-    you could also make a trigger for something more complicated, like if the double arm's x value is greater than 20 */
-
     private final Trigger stopArmCommands = new Trigger(() -> (
         (operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || 
         (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone)
     ));
 
-    private final Trigger resetArmEncoders = new Trigger(() -> (
-        (driver.getRawButton(stopUsingEncodersButtonOne)) &&
-        (driver.getRawButton(stopUsingEncodersButtonTwo))
-    )).or(new Trigger(() -> driver_joystick.getRawButton(joystickResetArmEncodersButton)));
-
     private final Trigger intakeUpper = new Trigger(() -> (operator.getPOV() == intakeUpperValue));
     private final Trigger intakeLower = new Trigger(() -> (operator.getPOV() == intakeLowerValue));
 
-    private final Trigger doneWithIntake = new Trigger(() -> (frc.robot.Variables.go_to_startposition));
+    /* Custom Triggers */
+
+    private final Trigger goToIdlePosition = new Trigger(() -> (frc.robot.Variables.go_to_startposition));
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -160,20 +149,15 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
 
+        /* Both Controllers */
+        terminateCommands.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
+
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         makeX.onTrue(new Brake(s_Swerve));
 
-        // tagAligner.toggleOnTrue(new AlignWithApriltag(s_Swerve, doubleArm));
-                        // new AlignWithApriltagOld(s_Swerve, () -> false)
-
-        // autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm));
-
         resetArmEncoders.toggleOnTrue(new InstantCommand(() -> doubleArm.stopUsingEncoders()));
-        goToSingleSubstation.toggleOnTrue(new DriveToPosition(s_Swerve, new Pose2d(14.1, 4, Rotation2d.fromDegrees(90))));
-        // should be 14.1, 7.08
-
-        terminateCommands.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
+        autoConeOuttake.toggleOnTrue(new DriveToNearestCone(s_Swerve, doubleArm, claw));
         
         /* Operator Buttons */
         topGoal.toggleOnTrue(new SetArmPosition(doubleArm, topPositionAngles));
@@ -184,12 +168,13 @@ public class RobotContainer {
         intakeUpper.toggleOnTrue(new SetArmPosition(doubleArm, intakeUpperAngles));
         intakeLower.toggleOnTrue(new SetArmPosition(doubleArm, intakeLowerAngles));
 
-        doneWithIntake.toggleOnTrue(new SetArmPositionAfterIntake(claw, doubleArm));
-
         stopArmCommands.onTrue(new TerminateArmCommands(doubleArm));
 
         intake.toggleOnTrue(new Intake(claw));
         outtake.toggleOnTrue(new Outtake(claw, s_Swerve));
+
+        /* Custom Triggers */
+        goToIdlePosition.toggleOnTrue(new SetArmPositionAfterIntake(claw, doubleArm));
     }
 
     public void teleopInit() {
