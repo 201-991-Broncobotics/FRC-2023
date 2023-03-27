@@ -77,4 +77,9 @@ public class DriveToNearestCone extends ConditionalCommand {
             () -> Limelight.adjustPoseForSide(swerve.getPose()).getY() > 1.905
         );
     }
+
+    @Override
+    public InterruptionBehavior getInterruptionBehavior() {
+        return InterruptionBehavior.kCancelIncoming;
+    }
 }
