@@ -343,7 +343,10 @@ public final class Constants {
                                 lowGoalButton = XboxController.Button.kA.value, 
 
                                 intakeUpperValue = dpad_up, 
-                                intakeLowerValue = dpad_down, 
+                                intakeLowerValue = dpad_down,
+                                
+                                armModeCubeValue = dpad_right, 
+                                armModeConeValue = dpad_left, 
 
                                 intakeButton = XboxController.Button.kRightBumper.value, 
                                 outtakeButton = XboxController.Button.kLeftBumper.value, 
@@ -409,8 +412,21 @@ public final class Constants {
 
                                      intakeUpperAngles = {-106.5, 40.6}, 
                                      intakeLowerAngles = {-83.8, -32.3}, 
-
                                      idlePositionAngles = {-115, 42}; // TODO Make X cancel arm pid for if its swinging crazy
+
+        public static final double[] coneTopPositionAngles = {-11.6, 41.0}, 
+                                     coneMidPositionAngles = {-62.6, 65.0}, 
+                                     coneLowPositionAngles = {-64, 0}, 
+                                     coneIntakeUpperAngles = {-106.5, 40.6}, 
+                                     coneIntakeLowerAngles = {-83.8, -32.3}, 
+                                     coneIdlePositionAngles = {-115, 42};
+
+        public static final double[] cubeTopPositionAngles = {2.7, 19.0}, 
+                                     cubeMidPositionAngles = {-21.4, 0}, 
+                                     cubeLowPositionAngles = {-64, 0}, 
+                                     cubeIntakeUpperAngles = {-106.5, 40.6}, 
+                                     cubeIntakeLowerAngles = {-82.3, -20}, 
+                                     cubeIdlePositionAngles = {-115, 42}; 
 
         public static final boolean fancy_drive = true, 
                                     genericHID_drive = true,
