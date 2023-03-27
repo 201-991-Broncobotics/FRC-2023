@@ -146,7 +146,7 @@ public class RobotContainer {
         );
 
         // Cache autonomous commands
-        Autonomous.cacheCommandGroups(s_Swerve);
+        Autonomous.cacheCommandGroups(s_Swerve, doubleArm, claw);
 
         // Configure the button bindings
         configureButtonBindings();
@@ -170,7 +170,8 @@ public class RobotContainer {
         // autoBalance.toggleOnTrue(new AutoBalance(s_Swerve, doubleArm));
 
         resetArmEncoders.toggleOnTrue(new InstantCommand(() -> doubleArm.stopUsingEncoders()));
-        goToSingleSubstation.toggleOnTrue(new DriveToPosition(s_Swerve, new Pose2d(14.1, 7.08, Rotation2d.fromDegrees(90))));
+        goToSingleSubstation.toggleOnTrue(new DriveToPosition(s_Swerve, new Pose2d(14.1, 4, Rotation2d.fromDegrees(90))));
+        // should be 14.1, 7.08
 
         terminateCommands.toggleOnTrue(new TerminateCommands(claw, doubleArm, s_Swerve));
         
@@ -203,10 +204,18 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new Autonomous(claw, doubleArm, s_Swerve);
+        return Autonomous.getAutonomousCommand(claw, doubleArm, s_Swerve);
     }
 
     public Swerve getSwerve() {
         return s_Swerve;
+    }
+
+    public DoubleArm getDoubleArm() {
+        return doubleArm;
+    }
+
+    public Claw getClaw() {
+        return claw;
     }
 }

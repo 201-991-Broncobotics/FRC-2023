@@ -170,6 +170,11 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro() {
+        if (testmode) {
+            poseEstimator.resetPosition(Rotation2d.fromDegrees(0), getModulePositions(), new Pose2d(getPose().getTranslation(), new Rotation2d()));
+        } else {
+            poseEstimator.resetPosition(Rotation2d.fromDegrees(0), getModulePositions(), getPose());
+        }
         gyro.setYaw(0);
         pid.reset(0);
         last_time = Timer.getFPGATimestamp();

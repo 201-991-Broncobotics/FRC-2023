@@ -31,7 +31,7 @@ public class DoubleArm extends SubsystemBase {
 
         
         distal = new PIDTalon(
-            distal_id, distal_max_continuous_current, distal_max_peak_current, distal_peak_current_time, distal_open_ramp_rate, distal_closed_ramp_rate, distal_brake, invert_distal, getInitialArmAngles()[0], distal_min_angle, distal_max_angle, distal_max_percentoutput, distal_max_percentoutput_per_second, distal_gear_ratio, invert_distal_encoder, distal_calibration_time, p2, d2, i2, e2
+            distal_id, distal_max_continuous_current, distal_max_peak_current, distal_peak_current_time, distal_open_ramp_rate, distal_closed_ramp_rate, distal_brake, invert_distal, getInitialArmAngles()[1], distal_min_angle, distal_max_angle, distal_max_percentoutput, distal_max_percentoutput_per_second, distal_gear_ratio, invert_distal_encoder, distal_calibration_time, p2, d2, i2, e2
         );
 
         // we want it so powering the motors rotates the arms counterclockwise
@@ -46,7 +46,7 @@ public class DoubleArm extends SubsystemBase {
     }
 
     public void powerArm(double firstPower, double secondPower) { // power the arms manually
-
+        
         if (useEncoders) {
             double[] current_angles = getCurrentArmAngles();
             if (current_angles[1] > current_angles[0] + 180 - min_difference) {
@@ -212,7 +212,7 @@ public class DoubleArm extends SubsystemBase {
         // SmartDashboard.putNumber("Current x", getCurrentXY()[0]);
         // SmartDashboard.putNumber("Current y", getCurrentXY()[1]);
 
-        SmartDashboard.putNumber("Target 1st Angle", getTargetArmAngles()[0]);
+        SmartDashboard.putNumber("Target 1st Angle", getTargetArmAngles()[0]); // getInitialArmAngles
         SmartDashboard.putNumber("Target 2nd Angle", getTargetArmAngles()[1]);
 
         // SmartDashboard.putNumber("Target x", getPositionFromAngles(getTargetArmAngles())[0]);
@@ -229,7 +229,7 @@ public class DoubleArm extends SubsystemBase {
             frc.robot.Variables.speed_factor = speed_when_arm_extended;
         }
 
-        if (getCurrentArmAngles()[1] < 0 && distal.getCurrent() > second_motor_stop_current && frc.robot.Variables.thor && Timer.getFPGATimestamp() - frc.robot.Variables.ats > 2) {
+        if (getCurrentArmAngles()[1] < 0 && distal.getCurrent() > second_motor_stop_current && frc.robot.Variables.thor && Timer.getFPGATimestamp() - frc.robot.Variables.ats > 2 && Timer.getFPGATimestamp() - frc.robot.Variables.ats < 5) {
             throw new IllegalArgumentException("Please don't destroy the robot");
         }
     }

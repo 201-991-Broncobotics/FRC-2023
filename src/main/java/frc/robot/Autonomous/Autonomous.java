@@ -28,32 +28,110 @@ import frc.robot.Constants;
 import static frc.robot.Constants.TuningConstants.*;
 import static frc.robot.Constants.AutoConstants.*;
 
-public class Autonomous extends SequentialCommandGroup {
+public class Autonomous {
 
-    public static HashMap<String, Command[]> autonomousCommands = new HashMap<String, Command[]>(); 
+    public static HashMap<String, Command> autonomousCommands = new HashMap<String, Command>(); 
 
     public static boolean getCacheEmpty() {
         return autonomousCommands.size() == 0;
     }
 
-    public static void cacheCommandGroups(Swerve swerve) {
+    public static void cacheCommandGroups(Swerve swerve, DoubleArm doubleArm, Claw claw) {
         double t = System.currentTimeMillis();
         System.out.println("Started");
-        for (String i : new String[] {
-            "Short", "ShortDouble", "ShortBalance", "ShortDoubleBalance", 
-            "Medium", "MediumDouble", "MediumBalance", "MediumDoubleBalance", 
-            "Long", "LongDouble", "LongBalance", "LongDoubleBalance"}
-        ) {
-            autonomousCommands.putIfAbsent("Blue" + i, getTrajectoryCommands(swerve, i, DriverStation.Alliance.Blue));
-            autonomousCommands.putIfAbsent("Red" + i, getTrajectoryCommands(swerve, i, DriverStation.Alliance.Red));
+        for (String i : new String[] {"Short", "Medium", "Long"}) {
+            for (String j : new String[] {"", "Double", "Balance"}) {
+                String trajectory = i + j;
+                Command[] blueCommands = getTrajectoryCommands(swerve, i + j, DriverStation.Alliance.Blue);
+                Command[] redCommands = getTrajectoryCommands(swerve, i + j, DriverStation.Alliance.Red);
+                if (j.equals("Balance")) {
+                    autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
+                        new SetProximalConstantDistal(doubleArm, -123), 
+                        new SetArmPosition(doubleArm, topPositionAngles), 
+                        new Drive(swerve, 0.32, 0.4), 
+                        new AutonomousOuttake(swerve, doubleArm, claw),
+                        new ParallelCommandGroup(
+                            blueCommands[0], 
+                            new SetArmPosition(doubleArm, idlePositionAngles)
+                        ), 
+                        new AutoBalance(swerve, doubleArm)
+                    ));
+                    autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
+                        new SetProximalConstantDistal(doubleArm, -123), 
+                        new SetArmPosition(doubleArm, topPositionAngles), 
+                        new Drive(swerve, 0.32, 0.4), 
+                        new AutonomousOuttake(swerve, doubleArm, claw),
+                        new ParallelCommandGroup(
+                            redCommands[0], 
+                            new SetArmPosition(doubleArm, idlePositionAngles)
+                        ), 
+                        new AutoBalance(swerve, doubleArm)
+                    ));
+                } else if (j.equals("Double")) {
+                    autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
+                        new SetProximalConstantDistal(doubleArm, -123), 
+                        new SetArmPosition(doubleArm, topPositionAngles), 
+                        new Drive(swerve, 0.32, 0.4), 
+                        new AutonomousOuttake(swerve, doubleArm, claw),
+                        new ParallelCommandGroup(
+                            blueCommands[0], 
+                            new SetArmPosition(doubleArm, intakeLowerAngles), 
+                            new AutonomousIntake(swerve, claw)
+                        ),
+                        new ParallelCommandGroup(
+                            blueCommands[1], 
+                            new SetArmPosition(doubleArm, topPositionAngles)
+                        ), 
+                        new AutonomousOuttake(swerve, doubleArm, claw), // make it not drive forward???
+                        new Drive(swerve, 0.32, -0.4), 
+                        new SetArmPosition(doubleArm, idlePositionAngles)
+                    ));
+                    autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
+                        new SetProximalConstantDistal(doubleArm, -123), 
+                        new SetArmPosition(doubleArm, topPositionAngles), 
+                        new Drive(swerve, 0.32, 0.4), 
+                        new AutonomousOuttake(swerve, doubleArm, claw),
+                        new ParallelCommandGroup(
+                            redCommands[0], 
+                            new SetArmPosition(doubleArm, intakeLowerAngles), 
+                            new AutonomousIntake(swerve, claw)
+                        ),
+                        new ParallelCommandGroup(
+                            redCommands[1], 
+                            new SetArmPosition(doubleArm, topPositionAngles)
+                        ), 
+                        new AutonomousOuttake(swerve, doubleArm, claw),
+                        new Drive(swerve, 0.32, -0.4), 
+                        new SetArmPosition(doubleArm, idlePositionAngles)
+                    ));
+                } else {
+                    autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
+                        new SetProximalConstantDistal(doubleArm, -123), 
+                        new SetArmPosition(doubleArm, topPositionAngles), 
+                        new Drive(swerve, 0.32, 0.4), 
+                        new AutonomousOuttake(swerve, doubleArm, claw),
+                        new ParallelCommandGroup(
+                            blueCommands[0], 
+                            new SetArmPosition(doubleArm, idlePositionAngles)
+                        )
+                    ));
+                    autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
+                        new SetProximalConstantDistal(doubleArm, -123), 
+                        new SetArmPosition(doubleArm, topPositionAngles), 
+                        new Drive(swerve, 0.32, 0.4), 
+                        new AutonomousOuttake(swerve, doubleArm, claw),
+                        new ParallelCommandGroup(
+                            redCommands[0], 
+                            new SetArmPosition(doubleArm, idlePositionAngles)
+                        )
+                    ));
+                }
+            }
         }
         System.out.println("total time " + (System.currentTimeMillis() - t) / 1000.0);
     }
 
-    public Autonomous(Claw claw, DoubleArm doubleArm, Swerve swerve) {
-        addRequirements(claw, doubleArm, swerve);
-
-        // DriverStation.Alliance alliance = DriverStation.Alliance.Blue; // default
+    public static Command getAutonomousCommand(Claw claw, DoubleArm doubleArm, Swerve swerve) {
 
         String allianceString = "Blue", location = "Short", numElements = "", autoBalance = "Balance";
 
@@ -102,75 +180,11 @@ public class Autonomous extends SequentialCommandGroup {
         }
 
         String selectedAuto = allianceString + location + numElements + autoBalance;
-            // form of commands: [Short/Medium/Long] [/Double] [/Balance]
+            // form of commands: [Blue/Red] [Short/Medium/Long] [/Double/Balance]
 
-        System.out.println("Auto Selector gave : " + allianceString + " side and " + selectedAuto);
+        SmartDashboard.putString("Autonomous", selectedAuto);
 
-        double waitTime;
-        try {
-            waitTime = temp[4];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Auto selector not connected");
-            return;
-        }
-        
-        Command[] drivecommands = autonomousCommands.get(selectedAuto); // getTrajectoryCommands(swerve, selectedAuto, alliance);
-
-        if (numElements.equals("Double")) { // Go forward, drop element, go to intake, pick up element, go back, drop element, go to finish position; 3 stop points
-            if (autoBalance.equals("Balance")) {
-                addCommands(
-                    new SetProximalConstantDistal(doubleArm, -123), 
-                    new Wait(waitTime), 
-                    drivecommands[0],
-                    new AutonomousOuttake(swerve, doubleArm, claw),
-                    drivecommands[1], 
-                    new SetArmPosition(doubleArm, intakeLowerAngles), // I don't think it works if we put it inside autonomousintake
-                    new AutonomousIntake(swerve, claw), 
-                    drivecommands[2], 
-                    new AutonomousOuttake(swerve, doubleArm, claw),
-                    drivecommands[3], 
-                    new AutoBalance(swerve, doubleArm)
-                );
-            } else {
-                addCommands(
-                    new SetProximalConstantDistal(doubleArm, -123), 
-                    new Wait(waitTime), 
-                    drivecommands[0],
-                    new AutonomousOuttake(swerve, doubleArm, claw),
-                    drivecommands[1], 
-                    new SetArmPosition(doubleArm, intakeLowerAngles),
-                    new AutonomousIntake(swerve, claw), 
-                    drivecommands[2], 
-                    new AutonomousOuttake(swerve, doubleArm, claw),
-                    drivecommands[3]
-                ); // Literally the same but without an autobalance
-            }
-        } else { // Go forward, drop element, go to finish position; 1 stop point
-            if (autoBalance.equals("Balance")) {
-                addCommands(
-                    new SetProximalConstantDistal(doubleArm, -123), 
-                    new Wait(waitTime), 
-                    new SetArmPosition(doubleArm, topPositionAngles), 
-                    new AutonomousOuttake(swerve, doubleArm, claw),
-                    new ParallelCommandGroup(
-                        new SetArmPosition(doubleArm, idlePositionAngles), // might not need this but idk
-                        drivecommands[0]
-                    ),
-                    new AutoBalance(swerve, doubleArm)
-                );
-            } else {
-                addCommands(
-                    new SetProximalConstantDistal(doubleArm, -123), 
-                    new Wait(waitTime), 
-                    new SetArmPosition(doubleArm, topPositionAngles), 
-                    new AutonomousOuttake(swerve, doubleArm, claw),
-                    new ParallelCommandGroup(
-                        new SetArmPosition(doubleArm, idlePositionAngles), 
-                        drivecommands[0]
-                    )
-                );
-            }
-        }
+        return autonomousCommands.get(selectedAuto);
     }
 
     private static Command[] getTrajectoryCommands(Swerve swerve, String fileName, DriverStation.Alliance alliance) {
@@ -187,9 +201,7 @@ public class Autonomous extends SequentialCommandGroup {
                     temporaryPathGroup.get(0), alliance
                 );
                 paths[0] = new SequentialCommandGroup(
-                    new InstantCommand(
-                        () -> swerve.resetOdometry(convertedTrajectory.getInitialHolonomicPose())
-                    ), 
+                    new InstantCommand(() -> swerve.resetOdometry(convertedTrajectory.getInitialHolonomicPose())), 
                     new PPSwerveControllerCommand(
                         convertedTrajectory, 
                         swerve::getPose, 
@@ -215,5 +227,16 @@ public class Autonomous extends SequentialCommandGroup {
             }
         }
         return paths;
+    }
+}
+
+class AutonomousSequentialCommandGroup extends SequentialCommandGroup {
+    public AutonomousSequentialCommandGroup(Command ... commands) {
+        super(commands);
+    }
+
+    @Override
+    public InterruptionBehavior getInterruptionBehavior() {
+        return InterruptionBehavior.kCancelIncoming;
     }
 }
