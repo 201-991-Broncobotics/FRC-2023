@@ -172,7 +172,7 @@ public final class Constants {
         /* Variables */
         
         public static final double intake_power = -1, // intake with negative power
-                                   outtake_power = 0.2,
+                                   outtake_power = 0.3,
                                    passive_voltage = -1.5;
     }
 
@@ -395,20 +395,20 @@ public final class Constants {
     }
 
     public static final class TuningConstants {
-        public static final double CANCoder0_zero = 272.9, 
-                                   CANCoder1_zero = 298.56, 
-                                   CANCoder2_zero = 318.13, 
-                                   CANCoder3_zero = 197.75, 
+        public static final double CANCoder0_zero = 268.15, 
+                                   CANCoder1_zero = 314.03, 
+                                   CANCoder2_zero = 317.98, 
+                                   CANCoder3_zero = 184.3, 
                                    encoder_one_zero = -92.73, 
                                    encoder_two_zero = -305.55;
         
         /* The angles we want to go to - NOT the x and y */
-        public static final double[] topPositionAngles = {2.7, 19.0}, 
-                                     midPositionAngles = {-21.4, 0}, 
+        public static final double[] topPositionAngles = {-11.6, 41.0}, 
+                                     midPositionAngles = {-62.6, 65.0}, 
                                      lowPositionAngles = {-64, 0}, 
 
                                      intakeUpperAngles = {-106.5, 40.6}, 
-                                     intakeLowerAngles = {-82.3, -20}, 
+                                     intakeLowerAngles = {-83.8, -32.3}, 
 
                                      idlePositionAngles = {-115, 42}; // TODO Make X cancel arm pid for if its swinging crazy
 
