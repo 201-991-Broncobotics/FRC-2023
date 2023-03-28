@@ -24,7 +24,7 @@ public class DriveToNearestIntakeStation extends ConditionalCommand {
                 new ConditionalCommand(
                     new SequentialCommandGroup(
                         new DriveToPosition(swerve, new Pose2d(15, 7.34, new Rotation2d())), 
-                        new SetArmPosition(doubleArm, topPositionAngles), 
+                        new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new ParallelDeadlineGroup(
                             new Intake(claw), 
                             new DriveToPosition(swerve, new Pose2d(15.5, 7.34, new Rotation2d()))
@@ -32,7 +32,7 @@ public class DriveToNearestIntakeStation extends ConditionalCommand {
                     ), 
                     new SequentialCommandGroup(
                         new DriveToPosition(swerve, new Pose2d(15, 6.02, new Rotation2d())), 
-                        new SetArmPosition(doubleArm, topPositionAngles), 
+                        new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new ParallelDeadlineGroup(
                             new Intake(claw), 
                             new DriveToPosition(swerve, new Pose2d(15.5, 6.02, new Rotation2d()))

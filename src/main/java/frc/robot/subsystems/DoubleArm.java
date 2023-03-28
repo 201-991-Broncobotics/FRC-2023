@@ -10,7 +10,11 @@ import static frc.robot.Constants.DoubleArmConstants.*;
 import static frc.robot.Constants.GeneralConstants.*;
 import static frc.robot.Constants.TuningConstants.*;
 
+import java.util.function.BooleanSupplier;
+
 public class DoubleArm extends SubsystemBase {
+
+    private ArmMode mode = ArmMode.CUBE; 
 
     private final PIDTalon proximal, distal; 
     private final DutyCycleEncoder first_encoder, second_encoder;
@@ -106,7 +110,7 @@ public class DoubleArm extends SubsystemBase {
 
         double mftfmbtdaiwtmdoftoabtc = 1;
         if (Math.min(Math.min(distal_max_angle, 90), getCurrentArmAngles()[0] + 180 - min_difference) < Math.min(distal_max_angle, 90)) {
-            if (distal.getTarget() > getCurrentArmAngles()[1]) {
+            if (proximal.getTarget() > getCurrentArmAngles()[0]) {
                 mftfmbtdaiwtmdoftoabtc = mftfmitdaiwtmdoftoabtc;
             } else {
                 mftfmbtdaiwtmdoftoabtc = mftfmitdaiwtmdoftoabtcaiicgd;
@@ -233,4 +237,19 @@ public class DoubleArm extends SubsystemBase {
             throw new IllegalArgumentException("Please don't destroy the robot");
         }
     }
+
+    public void setToCubeMode() {
+        mode = ArmMode.CUBE; 
+    }
+
+    public void setToConeMode() {
+        mode = ArmMode.CONE; 
+    }
+
+    public BooleanSupplier isConeMode = () -> mode == ArmMode.CONE;
+}
+
+enum ArmMode {
+    CUBE, 
+    CONE
 }

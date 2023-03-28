@@ -17,7 +17,7 @@ public class DriveToPosition extends CommandBase {
     private Swerve swerve;
     private final Pose2d targetPose;
     private Translation2d targetPosition;
-    private final double p = 0.45, tolerance = 0.5, ang_tolerance = 5, maxSpeedHere = 0.8;
+    private final double p = 0.65, e = 1.25, tolerance = 0.15, ang_tolerance = 3, maxSpeedHere = 0.8;
 
     public DriveToPosition(Swerve swerve, Pose2d targetPose) {
         this.swerve = swerve;
@@ -38,7 +38,8 @@ public class DriveToPosition extends CommandBase {
     public void execute() {
         Translation2d error = targetPosition.minus(swerve.poseEstimator.getEstimatedPosition().getTranslation());
         error = error.times(p);
-        if (error.getNorm() > 1) error.times(1 / error.getNorm());
+        if (error.getNorm() > 1) error = error.times(1 / error.getNorm());
+        else error = error.times(Math.pow(error.getNorm(), e - 1));
         swerve.drive(
             error.times(Constants.BaseFalconSwerve.maxSpeed).times(maxSpeedHere), // PID I BELIEVE
             0, 

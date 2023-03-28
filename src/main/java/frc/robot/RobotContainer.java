@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -64,6 +65,8 @@ public class RobotContainer {
 
     private final Trigger intakeUpper = new Trigger(() -> (operator.getPOV() == intakeUpperValue));
     private final Trigger intakeLower = new Trigger(() -> (operator.getPOV() == intakeLowerValue));
+    private final Trigger cubeMode = new Trigger(() -> (operator.getPOV() == armModeCubeValue)); 
+    private final Trigger coneMode = new Trigger(() -> (operator.getPOV() == armModeConeValue)); 
 
     /* Custom Triggers */
 
@@ -160,13 +163,16 @@ public class RobotContainer {
         autoConeOuttake.toggleOnTrue(new DriveToNearestCone(s_Swerve, doubleArm, claw));
         
         /* Operator Buttons */
-        topGoal.toggleOnTrue(new SetArmPosition(doubleArm, topPositionAngles));
-        midGoal.toggleOnTrue(new SetArmPosition(doubleArm, midPositionAngles));
-        lowGoal.toggleOnTrue(new SetArmPosition(doubleArm, lowPositionAngles));
+        topGoal.toggleOnTrue(new ConditionalCommand(new SetArmPosition(doubleArm, coneTopPositionAngles), new SetArmPosition(doubleArm, cubeTopPositionAngles), doubleArm.isConeMode));
+        midGoal.toggleOnTrue(new ConditionalCommand(new SetArmPosition(doubleArm, coneMidPositionAngles), new SetArmPosition(doubleArm, cubeMidPositionAngles), doubleArm.isConeMode));
+        lowGoal.toggleOnTrue(new ConditionalCommand(new SetArmPosition(doubleArm, coneLowPositionAngles), new SetArmPosition(doubleArm, cubeLowPositionAngles), doubleArm.isConeMode));
         idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePositionAngles));
 
         intakeUpper.toggleOnTrue(new SetArmPosition(doubleArm, intakeUpperAngles));
-        intakeLower.toggleOnTrue(new SetArmPosition(doubleArm, intakeLowerAngles));
+        intakeLower.toggleOnTrue(new ConditionalCommand(new SetArmPosition(doubleArm, coneIntakeLowerAngles), new SetArmPosition(doubleArm, cubeIntakeLowerAngles), doubleArm.isConeMode));
+
+        cubeMode.toggleOnTrue(new InstantCommand(() -> doubleArm.setToCubeMode()));
+        coneMode.toggleOnTrue(new InstantCommand(() -> doubleArm.setToConeMode()));
 
         stopArmCommands.onTrue(new TerminateArmCommands(doubleArm));
 

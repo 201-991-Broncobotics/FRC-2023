@@ -46,7 +46,7 @@ public class Autonomous {
                 if (j.equals("Balance")) {
                     autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
                         new SetProximalConstantDistal(doubleArm, -123), 
-                        new SetArmPosition(doubleArm, topPositionAngles), 
+                        new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new Drive(swerve, 0.32, 0.4), 
                         new AutonomousOuttake(swerve, doubleArm, claw),
                         new ParallelCommandGroup(
@@ -57,7 +57,7 @@ public class Autonomous {
                     ));
                     autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
                         new SetProximalConstantDistal(doubleArm, -123), 
-                        new SetArmPosition(doubleArm, topPositionAngles), 
+                        new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new Drive(swerve, 0.32, 0.4), 
                         new AutonomousOuttake(swerve, doubleArm, claw),
                         new ParallelCommandGroup(
@@ -69,7 +69,7 @@ public class Autonomous {
                 } else if (j.equals("Double")) {
                     autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
                         new SetProximalConstantDistal(doubleArm, -123), 
-                        new SetArmPosition(doubleArm, topPositionAngles), 
+                        new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new Drive(swerve, 0.32, 0.4), 
                         new AutonomousOuttake(swerve, doubleArm, claw),
                         new ParallelCommandGroup(
@@ -79,7 +79,7 @@ public class Autonomous {
                         ),
                         new ParallelCommandGroup(
                             blueCommands[1], 
-                            new SetArmPosition(doubleArm, topPositionAngles)
+                            new SetArmPosition(doubleArm, cubeTopPositionAngles)
                         ), 
                         new AutonomousOuttake(swerve, doubleArm, claw), // make it not drive forward???
                         new Drive(swerve, 0.32, -0.4), 
@@ -87,7 +87,7 @@ public class Autonomous {
                     ));
                     autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
                         new SetProximalConstantDistal(doubleArm, -123), 
-                        new SetArmPosition(doubleArm, topPositionAngles), 
+                        new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new Drive(swerve, 0.32, 0.4), 
                         new AutonomousOuttake(swerve, doubleArm, claw),
                         new ParallelCommandGroup(
@@ -97,7 +97,7 @@ public class Autonomous {
                         ),
                         new ParallelCommandGroup(
                             redCommands[1], 
-                            new SetArmPosition(doubleArm, topPositionAngles)
+                            new SetArmPosition(doubleArm, cubeTopPositionAngles)
                         ), 
                         new AutonomousOuttake(swerve, doubleArm, claw),
                         new Drive(swerve, 0.32, -0.4), 
@@ -106,7 +106,7 @@ public class Autonomous {
                 } else {
                     autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
                         new SetProximalConstantDistal(doubleArm, -123), 
-                        new SetArmPosition(doubleArm, topPositionAngles), 
+                        new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new Drive(swerve, 0.32, 0.4), 
                         new AutonomousOuttake(swerve, doubleArm, claw),
                         new ParallelCommandGroup(
@@ -116,7 +116,7 @@ public class Autonomous {
                     ));
                     autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
                         new SetProximalConstantDistal(doubleArm, -123), 
-                        new SetArmPosition(doubleArm, topPositionAngles), 
+                        new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new Drive(swerve, 0.32, 0.4), 
                         new AutonomousOuttake(swerve, doubleArm, claw),
                         new ParallelCommandGroup(

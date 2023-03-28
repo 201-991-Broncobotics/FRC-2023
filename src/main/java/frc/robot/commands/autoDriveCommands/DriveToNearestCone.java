@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.setArmPosition.SetArmPosition;
-import frc.robot.commands.setArmPosition.SetProximalConstantDistal;
+import frc.robot.commands.setArmPosition.SetDistalPosition;
 import frc.robot.commands.setClawState.Outtake_Subcommand;
 import frc.robot.commands.utilCommands.DriveToPosition;
 import frc.robot.subsystems.Claw;
@@ -36,9 +36,9 @@ public class DriveToNearestCone extends ConditionalCommand {
         super(
             new SequentialCommandGroup(
                 condcom(swerve, first_x), 
-                new SetArmPosition(doubleArm, topPositionAngles), 
+                new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                 condcom(swerve, second_x), 
-                new SetProximalConstantDistal(doubleArm, 3.5), 
+                new SetDistalPosition(doubleArm, 30), 
                 new Outtake_Subcommand(claw), 
                 new ParallelCommandGroup(
                     new SetArmPosition(doubleArm, idlePositionAngles), 

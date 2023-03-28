@@ -167,7 +167,7 @@ public final class Constants {
     
         public static final boolean claw_motor_brake = true;
         
-        public static final int claw_motor_max_current = 30;
+        public static final int claw_motor_max_current = 35;
 
         /* Variables */
         
@@ -195,8 +195,8 @@ public final class Constants {
                                     invert_distal_encoder = false, 
                                     invert_first_encoder = true, 
                                     invert_second_encoder = true, 
-                                    proximal_brake = true, 
-                                    distal_brake = true;
+                                    proximal_brake = false, 
+                                    distal_brake = false;
         
         public static final int proximal_max_continuous_current = 15, // amps
                                 proximal_max_peak_current = 20, 
@@ -263,7 +263,7 @@ public final class Constants {
     }
     
     public static final class IntakeConstants {
-        public static final double claw_current_limit = 25, 
+        public static final double claw_current_limit = 30, 
                                    outtake_time = 0.5;
     }
 
@@ -411,22 +411,19 @@ public final class Constants {
                                      lowPositionAngles = {-64, 0}, 
 
                                      intakeUpperAngles = {-106.5, 40.6}, 
-                                     intakeLowerAngles = {-83.8, -32.3}, 
+                                     intakeLowerAngles = {-78, -26}, 
+
                                      idlePositionAngles = {-115, 42}; // TODO Make X cancel arm pid for if its swinging crazy
 
         public static final double[] coneTopPositionAngles = {-11.6, 41.0}, 
                                      coneMidPositionAngles = {-62.6, 65.0}, 
                                      coneLowPositionAngles = {-64, 0}, 
-                                     coneIntakeUpperAngles = {-106.5, 40.6}, 
-                                     coneIntakeLowerAngles = {-83.8, -32.3}, 
-                                     coneIdlePositionAngles = {-115, 42};
+                                     coneIntakeLowerAngles = {-83.8, -32.3};
 
         public static final double[] cubeTopPositionAngles = {2.7, 19.0}, 
                                      cubeMidPositionAngles = {-21.4, 0}, 
                                      cubeLowPositionAngles = {-64, 0}, 
-                                     cubeIntakeUpperAngles = {-106.5, 40.6}, 
-                                     cubeIntakeLowerAngles = {-82.3, -20}, 
-                                     cubeIdlePositionAngles = {-115, 42}; 
+                                     cubeIntakeLowerAngles = {-82.3, -20}; 
 
         public static final boolean fancy_drive = true, 
                                     genericHID_drive = true,

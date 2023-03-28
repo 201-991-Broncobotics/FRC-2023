@@ -47,7 +47,7 @@ public class PIDTalon {
         motor.setInverted(inverted);
         Timer.delay(1.0);
         motor.setNeutralMode(neutralMode);
-        motor.setSelectedSensorPosition(startingAngle * 256.0 / 45.0 * (invertEncoder ? 1 : -1) * gear_ratio); // 2048 per revolution and its in degrees
+        motor.setSelectedSensorPosition(startingAngle * 256.0 / 45.0 * (invertEncoder ? -1 : 1) * gear_ratio); // 2048 per revolution and its in degrees
         // motor.configVoltageCompSaturation(12);
         motor.enableVoltageCompensation(true);
 
@@ -61,6 +61,8 @@ public class PIDTalon {
             tempMotor.enableVoltageCompensation(true);
             tempMotor.follow(motor);
         }
+
+        Timer.delay(1.0);
 
         this.minPosition = minPosition;
         this.maxPosition = maxPosition;
