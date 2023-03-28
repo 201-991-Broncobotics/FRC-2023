@@ -87,6 +87,9 @@ public class Swerve extends SubsystemBase {
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+        drive(translation, rotation, fieldRelative, isOpenLoop, true);
+    }
+    public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop, boolean literally1984) {
 
         double current_heading = getYaw().getDegrees();
         if (rotation == 0) {
@@ -103,8 +106,10 @@ public class Swerve extends SubsystemBase {
             last_time = Timer.getFPGATimestamp();
         }
 
-        translation = translation.times(frc.robot.Variables.speed_factor);
-        rotation *= frc.robot.Variables.speed_factor;
+        if (literally1984) {
+            translation = translation.times(frc.robot.Variables.speed_factor);
+            rotation *= frc.robot.Variables.speed_factor;
+        }
 
         if (translation.getNorm() < swerve_min_translation * Constants.BaseFalconSwerve.maxSpeed) translation = new Translation2d();
         if (Math.abs(rotation) < swerve_min_rotation * Constants.BaseFalconSwerve.maxAngularVelocity) rotation = 0;

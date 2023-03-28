@@ -11,6 +11,7 @@ import frc.robot.commands.setArmPosition.SetArmPosition;
 import frc.robot.commands.setArmPosition.SetDistalPosition;
 import frc.robot.commands.setClawState.Outtake_Subcommand;
 import frc.robot.commands.utilCommands.DriveToPosition;
+import frc.robot.commands.utilCommands.Wait;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DoubleArm;
 import frc.robot.subsystems.Limelight;
@@ -36,9 +37,10 @@ public class DriveToNearestCone extends ConditionalCommand {
         super(
             new SequentialCommandGroup(
                 condcom(swerve, first_x), 
-                new SetArmPosition(doubleArm, cubeTopPositionAngles), 
+                new SetArmPosition(doubleArm, coneTopPositionAngles), 
                 condcom(swerve, second_x), 
-                new SetDistalPosition(doubleArm, 30), 
+                new SetDistalPosition(doubleArm, 5), 
+                new Wait(0.2), 
                 new Outtake_Subcommand(claw), 
                 new ParallelCommandGroup(
                     new SetArmPosition(doubleArm, idlePositionAngles), 

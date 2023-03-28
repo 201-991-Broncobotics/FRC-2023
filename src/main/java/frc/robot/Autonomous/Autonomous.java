@@ -9,6 +9,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -44,41 +45,78 @@ public class Autonomous {
                 Command[] blueCommands = getTrajectoryCommands(swerve, i + j, DriverStation.Alliance.Blue);
                 Command[] redCommands = getTrajectoryCommands(swerve, i + j, DriverStation.Alliance.Red);
                 if (j.equals("Balance")) {
-                    autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
-                        new SetProximalConstantDistal(doubleArm, -123), 
-                        new SetArmPosition(doubleArm, cubeTopPositionAngles), 
-                        new Drive(swerve, 0.32, 0.4), 
-                        new AutonomousOuttake(swerve, doubleArm, claw),
-                        new ParallelCommandGroup(
+                    if (i.equals("Medium")) {
+                        autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
                             blueCommands[0], 
-                            new SetArmPosition(doubleArm, idlePositionAngles)
-                        ), 
-                        new AutoBalance(swerve, doubleArm)
-                    ));
-                    autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
-                        new SetProximalConstantDistal(doubleArm, -123), 
-                        new SetArmPosition(doubleArm, cubeTopPositionAngles), 
-                        new Drive(swerve, 0.32, 0.4), 
-                        new AutonomousOuttake(swerve, doubleArm, claw),
-                        new ParallelCommandGroup(
+                            new SetProximalConstantDistal(doubleArm, -123), 
+                            new SetArmPosition(doubleArm, cubeTopPositionAngles), 
+                            new Drive(swerve, 0.32, 0.4), 
+                            new AutonomousOuttake(swerve, doubleArm, claw),
+                            new ParallelCommandGroup(
+                                new Wait(5), 
+                                new InstantCommand(() -> swerve.drive(new Translation2d(-0.35, 0).times(Constants.BaseFalconSwerve.maxSpeed), 0, false, false, false)), 
+                                new SetArmPosition(doubleArm, idlePositionAngles)
+                            ), 
+                            new InstantCommand(swerve::brake), 
+                            new Turn(swerve, 180),
+                            new AutoBalance(swerve, doubleArm)
+                        ));
+                        
+                        autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
                             redCommands[0], 
-                            new SetArmPosition(doubleArm, idlePositionAngles)
-                        ), 
-                        new AutoBalance(swerve, doubleArm)
-                    ));
+                            new SetProximalConstantDistal(doubleArm, -123), 
+                            new SetArmPosition(doubleArm, cubeTopPositionAngles), 
+                            new Drive(swerve, 0.32, 0.4), 
+                            new AutonomousOuttake(swerve, doubleArm, claw),
+                            new ParallelCommandGroup(
+                                new Wait(5), 
+                                new InstantCommand(() -> swerve.drive(new Translation2d(-0.35, 0).times(Constants.BaseFalconSwerve.maxSpeed), 0, false, false, false)), 
+                                new SetArmPosition(doubleArm, idlePositionAngles)
+                            ), 
+                            new InstantCommand(swerve::brake), 
+                            new Turn(swerve, 180),
+                            new AutoBalance(swerve, doubleArm)
+                        ));
+                    } else {
+                        autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
+                            blueCommands[0], 
+                            new SetProximalConstantDistal(doubleArm, -123), 
+                            new SetArmPosition(doubleArm, cubeTopPositionAngles), 
+                            new Drive(swerve, 0.32, 0.4), 
+                            new AutonomousOuttake(swerve, doubleArm, claw),
+                            new ParallelCommandGroup(
+                                blueCommands[1], 
+                                new SetArmPosition(doubleArm, idlePositionAngles)
+                            ), 
+                            new AutoBalance(swerve, doubleArm)
+                        ));
+                        autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
+                            redCommands[0], 
+                            new SetProximalConstantDistal(doubleArm, -123), 
+                            new SetArmPosition(doubleArm, cubeTopPositionAngles), 
+                            new Drive(swerve, 0.32, 0.4), 
+                            new AutonomousOuttake(swerve, doubleArm, claw),
+                            new ParallelCommandGroup(
+                                redCommands[1], 
+                                new SetArmPosition(doubleArm, idlePositionAngles)
+                            ), 
+                            new AutoBalance(swerve, doubleArm)
+                        ));
+                    }
                 } else if (j.equals("Double")) {
                     autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
+                        blueCommands[0], 
                         new SetProximalConstantDistal(doubleArm, -123), 
                         new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new Drive(swerve, 0.32, 0.4), 
                         new AutonomousOuttake(swerve, doubleArm, claw),
                         new ParallelCommandGroup(
-                            blueCommands[0], 
+                            blueCommands[1], 
                             new SetArmPosition(doubleArm, intakeLowerAngles), 
                             new AutonomousIntake(swerve, claw)
                         ),
                         new ParallelCommandGroup(
-                            blueCommands[1], 
+                            blueCommands[2], 
                             new SetArmPosition(doubleArm, cubeTopPositionAngles)
                         ), 
                         new AutonomousOuttake(swerve, doubleArm, claw), // make it not drive forward???
@@ -86,17 +124,18 @@ public class Autonomous {
                         new SetArmPosition(doubleArm, idlePositionAngles)
                     ));
                     autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
+                        redCommands[0], 
                         new SetProximalConstantDistal(doubleArm, -123), 
                         new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new Drive(swerve, 0.32, 0.4), 
                         new AutonomousOuttake(swerve, doubleArm, claw),
                         new ParallelCommandGroup(
-                            redCommands[0], 
+                            redCommands[1], 
                             new SetArmPosition(doubleArm, intakeLowerAngles), 
                             new AutonomousIntake(swerve, claw)
                         ),
                         new ParallelCommandGroup(
-                            redCommands[1], 
+                            redCommands[2], 
                             new SetArmPosition(doubleArm, cubeTopPositionAngles)
                         ), 
                         new AutonomousOuttake(swerve, doubleArm, claw),
@@ -105,22 +144,24 @@ public class Autonomous {
                     ));
                 } else {
                     autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
+                        blueCommands[0], 
                         new SetProximalConstantDistal(doubleArm, -123), 
                         new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new Drive(swerve, 0.32, 0.4), 
                         new AutonomousOuttake(swerve, doubleArm, claw),
                         new ParallelCommandGroup(
-                            blueCommands[0], 
+                            blueCommands[1], 
                             new SetArmPosition(doubleArm, idlePositionAngles)
                         )
                     ));
                     autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
+                        redCommands[0], 
                         new SetProximalConstantDistal(doubleArm, -123), 
                         new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new Drive(swerve, 0.32, 0.4), 
                         new AutonomousOuttake(swerve, doubleArm, claw),
                         new ParallelCommandGroup(
-                            redCommands[0], 
+                            redCommands[1], 
                             new SetArmPosition(doubleArm, idlePositionAngles)
                         )
                     ));
@@ -192,38 +233,24 @@ public class Autonomous {
 
         List<PathPlannerTrajectory> temporaryPathGroup = PathPlanner.loadPathGroup(fileName, new PathConstraints(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared));
 
-        Command[] paths = new Command[temporaryPathGroup.size()];
+        Command[] paths = new Command[temporaryPathGroup.size() + 1];
 
-        for (int i = 0; i < paths.length; i++) {
+        for (int i = 0; i < paths.length - 1; i++) {
             if (i == 0) {
-                PathPlannerTrajectory convertedTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(
-                    temporaryPathGroup.get(0), alliance
-                );
-                paths[0] = new SequentialCommandGroup(
-                    new InstantCommand(() -> swerve.resetOdometry(convertedTrajectory.getInitialHolonomicPose())), 
-                    new PPSwerveControllerCommand(
-                        convertedTrajectory, 
-                        swerve::getPose, 
-                        Constants.BaseFalconSwerve.swerveKinematics, 
-                        new PIDController(kPXController, 0, 0),
-                        new PIDController(kPYController, 0, 0),
-                        thetaController, 
-                        swerve::setModuleStates, // Module states consumer
-                        swerve
-                    )
-                );
-            } else {
-                paths[i] = new PPSwerveControllerCommand(
-                    PathPlannerTrajectory.transformTrajectoryForAlliance(temporaryPathGroup.get(i), alliance), 
-                    swerve::getPose, 
-                    Constants.BaseFalconSwerve.swerveKinematics, 
-                    new PIDController(kPXController, 0, 0),
-                    new PIDController(kPYController, 0, 0),
-                    thetaController, 
-                    swerve::setModuleStates, // Module states consumer
-                    swerve // Requires this drive subsystem
+                paths[0] = new InstantCommand(
+                    () -> swerve.resetOdometry(PathPlannerTrajectory.transformTrajectoryForAlliance(temporaryPathGroup.get(0), alliance).getInitialHolonomicPose())
                 );
             }
+            paths[i + 1] = new PPSwerveControllerCommand(
+                PathPlannerTrajectory.transformTrajectoryForAlliance(temporaryPathGroup.get(i), alliance), 
+                swerve::getPose, 
+                Constants.BaseFalconSwerve.swerveKinematics, 
+                new PIDController(kPXController, 0, 0),
+                new PIDController(kPYController, 0, 0),
+                thetaController, 
+                swerve::setModuleStates, // Module states consumer
+                swerve // Requires this drive subsystem
+            );
         }
         return paths;
     }

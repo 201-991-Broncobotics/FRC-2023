@@ -3,6 +3,7 @@ package frc.robot.commands.utilCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.Limelight;
@@ -17,7 +18,8 @@ public class DriveToPosition extends CommandBase {
     private Swerve swerve;
     private final Pose2d targetPose;
     private Translation2d targetPosition;
-    private final double p = 0.65, e = 1.25, tolerance = 0.15, ang_tolerance = 3, maxSpeedHere = 0.8;
+    private final double p = 2.8, e = 1.05, tolerance = 0.035, ang_tolerance = 1.2, maxSpeedHere = 0.8, calitime = 0.5;
+    private double end_time = 0;
 
     public DriveToPosition(Swerve swerve, Pose2d targetPose) {
         this.swerve = swerve;
@@ -32,6 +34,7 @@ public class DriveToPosition extends CommandBase {
         targetPosition = new Translation2d(targetPose.getX(), Limelight.getSide().equals("blue") ? targetPose.getY() : 8.02 - targetPose.getY());
         swerve.setTargetHeading(Limelight.getSide().equals("blue") ? targetPose.getRotation().getDegrees() : -targetPose.getRotation().getDegrees());
         SmartDashboard.putString("Target Pose", "(" + Math.round(targetPosition.getX() * 100) / 100.0 + ", " + Math.round(targetPosition.getY() * 100) / 100.0 + ")");
+        end_time = Timer.getFPGATimestamp() + calitime;
     }
 
     @Override
@@ -44,8 +47,12 @@ public class DriveToPosition extends CommandBase {
             error.times(Constants.BaseFalconSwerve.maxSpeed).times(maxSpeedHere), // PID I BELIEVE
             0, 
             true, 
-            true
+            true, 
+            false
         );
+        if (!((targetPosition.minus(swerve.poseEstimator.getEstimatedPosition().getTranslation()).getNorm() < tolerance) && (swerve.getError() < ang_tolerance))) {
+            end_time = Timer.getFPGATimestamp() + calitime;
+        }
     }
 
     @Override
@@ -55,6 +62,6 @@ public class DriveToPosition extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (targetPosition.minus(swerve.poseEstimator.getEstimatedPosition().getTranslation()).getNorm() < tolerance) && (swerve.getError() < ang_tolerance);
+        return Timer.getFPGATimestamp() > end_time;
     }
 }

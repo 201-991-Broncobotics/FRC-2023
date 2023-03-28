@@ -147,13 +147,13 @@ public final class Constants {
     }
 
     public static final class AutoBalanceConstants {
-        public static final double drive_speed = 0.1,
-                                   drive_speed_get_on = 0.2, 
+        public static final double drive_speed = 0.0991,
+                                   drive_speed_get_on = 0.4, 
                                    pitch_tolerance = 7, 
                                    max_linear_acceleration = 2.0,
-                                   ratio = 1.15, 
+                                   ratio = 1.4, 
                                    min_time = 0.5, 
-                                   mt2 = 2.2, 
+                                   mt2 = 0.9, 
                                    min_deriv = 0.025;
     }
 
@@ -195,8 +195,8 @@ public final class Constants {
                                     invert_distal_encoder = false, 
                                     invert_first_encoder = true, 
                                     invert_second_encoder = true, 
-                                    proximal_brake = false, 
-                                    distal_brake = false;
+                                    proximal_brake = true, 
+                                    distal_brake = true;
         
         public static final int proximal_max_continuous_current = 15, // amps
                                 proximal_max_peak_current = 20, 
@@ -277,7 +277,7 @@ public final class Constants {
                                    swerve_min_translation = 0.05, 
                                    swerve_min_rotation = 0.02, 
 
-                                   yaw_tolerance = 2, 
+                                   yaw_tolerance = 3.141592653589793238462643383279502884197169399375105820974944592307816486, 
                                    swerve_slow_factor = 0.2, 
                                    tffsmbtcfigfdbnft = 2, // turn factor for slow motion because the current factor is good for distance but not for turning
                                    vision_min_error = 15; // degree diff between imu yaw and vision yaw
@@ -398,15 +398,15 @@ public final class Constants {
     }
 
     public static final class TuningConstants {
-        public static final double CANCoder0_zero = 268.15, 
-                                   CANCoder1_zero = 314.03, 
-                                   CANCoder2_zero = 317.98, 
-                                   CANCoder3_zero = 184.3, 
+        public static final double CANCoder0_zero = 260.2, 
+                                   CANCoder1_zero = 317.0991, 
+                                   CANCoder2_zero = 317.63, 
+                                   CANCoder3_zero = 167.9, 
                                    encoder_one_zero = -92.73, 
                                    encoder_two_zero = -305.55;
         
         /* The angles we want to go to - NOT the x and y */
-        public static final double[] topPositionAngles = {-11.6, 41.0}, 
+        public static final double[] topPositionAngles = {-11.6, 40.991}, 
                                      midPositionAngles = {-62.6, 65.0}, 
                                      lowPositionAngles = {-64, 0}, 
 
@@ -415,15 +415,15 @@ public final class Constants {
 
                                      idlePositionAngles = {-115, 42}; // TODO Make X cancel arm pid for if its swinging crazy
 
-        public static final double[] coneTopPositionAngles = {-11.6, 41.0}, 
+        public static final double[] coneTopPositionAngles = {3.3, 41.0}, 
                                      coneMidPositionAngles = {-62.6, 65.0}, 
                                      coneLowPositionAngles = {-64, 0}, 
                                      coneIntakeLowerAngles = {-83.8, -32.3};
 
         public static final double[] cubeTopPositionAngles = {2.7, 19.0}, 
-                                     cubeMidPositionAngles = {-21.4, 0}, 
+                                     cubeMidPositionAngles = {-32.6, 8.4}, 
                                      cubeLowPositionAngles = {-64, 0}, 
-                                     cubeIntakeLowerAngles = {-82.3, -20}; 
+                                     cubeIntakeLowerAngles = {-82.3, -25}; 
 
         public static final boolean fancy_drive = true, 
                                     genericHID_drive = true,
@@ -435,7 +435,7 @@ public final class Constants {
                                    drive_static_voltage = 0.32, 
                                    drive_equilibrium_voltage = 1.51, 
                                    drive_acceleration_voltage = 0.27, // SYSID values: KS, KV, KA; they are automatically divided by 12 later
-                                   max_linear_speed = 10, // feet per second; theoretical max is 13.5
+                                   max_linear_speed = 9.91, // feet per second; theoretical max is 13.5
                                    max_angular_speed = 180; // degrees per second; theoretical max is theoretical maximum is max_linear_speed * 42.7402910527 which is roughly 500
 
         /* Auto Constants */
@@ -450,15 +450,15 @@ public final class Constants {
         /* Arm Constants */
 
         public static final double p1 = 0.045, 
-                                   e1 = 1.1, 
+                                   e1 = 1.0991, 
                                    d1 = 0, 
                                    i1 = 0, 
                                    p2 = 0.075, 
                                    e2 = 1.4, 
                                    d2 = 0, 
                                    i2 = 0, 
-                                   pS = 0.1, 
-                                   eS = 1.5, 
+                                   pS = 0.165, 
+                                   eS = 1.35, 
                                    dS = 0, 
                                    iS = 0,
                                    mftfmitdaiwtmdoftoabtc = 0.65, // mutiplier for the first motor if the distal arm is within the minimum distance of the first one allowed by the code
