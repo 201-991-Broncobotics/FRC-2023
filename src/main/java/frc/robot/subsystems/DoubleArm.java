@@ -128,6 +128,11 @@ public class DoubleArm extends SubsystemBase {
         distal.brake();
     }
 
+    public void resetToAbsolute() {
+        proximal.resetSensorPosition(getInitialArmAngles()[0]);
+        distal.resetSensorPosition(getInitialArmAngles()[1]);
+    }
+
     public void resetPID() {
         proximal.brake();
         distal.brake();
@@ -239,11 +244,13 @@ public class DoubleArm extends SubsystemBase {
     }
 
     public void setToCubeMode() {
-        mode = ArmMode.CUBE; 
+        SmartDashboard.putString("ArmMode", "CUBE");
+        mode = ArmMode.CUBE;
     }
 
     public void setToConeMode() {
-        mode = ArmMode.CONE; 
+        SmartDashboard.putString("ArmMode", "CONE");
+        mode = ArmMode.CONE;
     }
 
     public BooleanSupplier isConeMode = () -> mode == ArmMode.CONE;

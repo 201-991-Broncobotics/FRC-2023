@@ -59,14 +59,17 @@ public class RobotContainer {
     private final Trigger outtake = new JoystickButton(operator, outtakeButton);
 
     private final Trigger stopArmCommands = new Trigger(() -> (
-        (operator.getRawAxis(stopArmFromMovingButtonOne) > joystick_deadzone) || 
-        (operator.getRawAxis(stopArmFromMovingButtonTwo) > joystick_deadzone)
+        operator.getRawAxis(stopArmFromMovingButton) > joystick_deadzone
     ));
 
     private final Trigger intakeUpper = new Trigger(() -> (operator.getPOV() == intakeUpperValue));
     private final Trigger intakeLower = new Trigger(() -> (operator.getPOV() == intakeLowerValue));
     private final Trigger cubeMode = new Trigger(() -> (operator.getPOV() == armModeCubeValue)); 
-    private final Trigger coneMode = new Trigger(() -> (operator.getPOV() == armModeConeValue)); 
+    private final Trigger coneMode = new Trigger(() -> (operator.getPOV() == armModeConeValue));
+
+    private final Trigger resetToAbsoluteArmAngles = new Trigger(() -> (
+        operator.getRawAxis(resetToAbsoluteArmAnglesAxis) > joystick_deadzone
+    ));
 
     /* Custom Triggers */
 
@@ -178,6 +181,8 @@ public class RobotContainer {
 
         intake.toggleOnTrue(new Intake(claw));
         outtake.toggleOnTrue(new Outtake(claw, s_Swerve));
+
+        resetToAbsoluteArmAngles.onTrue(new InstantCommand(doubleArm::resetToAbsolute));
 
         /* Custom Triggers */
         goToIdlePosition.toggleOnTrue(new SetArmPositionAfterIntake(claw, doubleArm));

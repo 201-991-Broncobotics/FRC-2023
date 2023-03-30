@@ -348,13 +348,14 @@ public final class Constants {
                                 armModeCubeValue = dpad_right, 
                                 armModeConeValue = dpad_left, 
 
+                                resetToAbsoluteArmAnglesAxis = XboxController.Axis.kLeftTrigger.value,
+
                                 intakeButton = XboxController.Button.kRightBumper.value, 
                                 outtakeButton = XboxController.Button.kLeftBumper.value, 
 
                                 idleButton = XboxController.Button.kStart.value, 
 
-                                stopArmFromMovingButtonOne = XboxController.Axis.kRightTrigger.value,
-                                stopArmFromMovingButtonTwo = XboxController.Axis.kLeftTrigger.value,
+                                stopArmFromMovingButton = XboxController.Axis.kRightTrigger.value,
                                 terminateCommandsOperatorButton = XboxController.Button.kBack.value;
     }
 

@@ -16,7 +16,7 @@ public class PIDTalon {
     private final PIDCalculator pidCalculator;
 
     private final DoubleSupplier positionSup;
-    private final double calibrationTime, maxPercentOutputPerSecond;
+    private final double calibrationTime, maxPercentOutputPerSecond, multiplier;
     private double minPosition, maxPosition, previousTime, time, lmtPosition, prevPower;
 
     public PIDTalon(
@@ -42,12 +42,14 @@ public class PIDTalon {
 
         this.motor = new TalonFX(CanID);
 
+        multiplier = 256.0 / 45.0 * (invertEncoder ? -1 : 1) * gear_ratio; // 2048 per revolution and its in degrees
+
         motor.configFactoryDefault();
         motor.configAllSettings(Config);
         motor.setInverted(inverted);
         Timer.delay(1.0);
         motor.setNeutralMode(neutralMode);
-        motor.setSelectedSensorPosition(startingAngle * 256.0 / 45.0 * (invertEncoder ? -1 : 1) * gear_ratio); // 2048 per revolution and its in degrees
+        motor.setSelectedSensorPosition(startingAngle * multiplier);
         // motor.configVoltageCompSaturation(12);
         motor.enableVoltageCompensation(true);
 
@@ -70,7 +72,7 @@ public class PIDTalon {
         this.calibrationTime = calibrationTime;
         this.maxPercentOutputPerSecond = maxPercentOutputPerSecond;
 
-        positionSup = () -> motor.getSelectedSensorPosition() * 45.0 / 256.0 * (invertEncoder ? -1 : 1) / gear_ratio;
+        positionSup = () -> motor.getSelectedSensorPosition() / multiplier;
 
         pidCalculator = new PIDCalculator(kP, kD, kI, kE, maxPercentOutput, startingAngle);
         time = Timer.getFPGATimestamp();
@@ -113,6 +115,15 @@ public class PIDTalon {
         prevPower = power;
 
         motor.set(ControlMode.PercentOutput, power);
+    }
+
+    public void resetSensorPosition(double angle) {
+        motor.setSelectedSensorPosition(angle * multiplier);
+        previousTime = -1000;
+        pidCalculator.reset(angle);
+        prevPower = 0;
+        motor.set(ControlMode.PercentOutput, 0);
+        lmtPosition = angle;
     }
 
     public void resetTarget() {
