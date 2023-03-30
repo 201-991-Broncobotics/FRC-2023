@@ -15,7 +15,7 @@ public class Claw extends SubsystemBase {
     private CANSparkMax claw_motor;
 
     public Claw() {
-        claw_motor = new CANSparkMax(claw_motor_ID, MotorType.kBrushed);
+        claw_motor = new CANSparkMax(claw_motor_ID, MotorType.kBrushless);
         claw_motor.restoreFactoryDefaults();
         claw_motor.setInverted(false);
 
