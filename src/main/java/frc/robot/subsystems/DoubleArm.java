@@ -14,7 +14,7 @@ import java.util.function.BooleanSupplier;
 
 public class DoubleArm extends SubsystemBase {
 
-    private ArmMode mode = ArmMode.CUBE; 
+    private static ArmMode mode = ArmMode.CUBE; 
 
     private final PIDTalon proximal, distal; 
     private final DutyCycleEncoder first_encoder, second_encoder;
@@ -243,17 +243,17 @@ public class DoubleArm extends SubsystemBase {
         }
     }
 
-    public void setToCubeMode() {
+    public static void setToCubeMode() {
         SmartDashboard.putString("ArmMode", "CUBE");
         mode = ArmMode.CUBE;
     }
 
-    public void setToConeMode() {
+    public static void setToConeMode() {
         SmartDashboard.putString("ArmMode", "CONE");
         mode = ArmMode.CONE;
     }
 
-    public BooleanSupplier isConeMode = () -> mode == ArmMode.CONE;
+    public static BooleanSupplier isConeMode = () -> mode == ArmMode.CONE;
 }
 
 enum ArmMode {

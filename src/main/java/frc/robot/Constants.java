@@ -173,7 +173,7 @@ public final class Constants {
         
         public static final double intake_power = -0.7, // intake with negative power
                                    outtake_power = 0.3,
-                                   passive_voltage = -1.3;
+                                   passive_voltage = -1.1;
     }
 
     public static final class DoubleArmConstants {
@@ -326,7 +326,7 @@ public final class Constants {
 
                                 joystickTranslationAxis = 1, // backward is positive
                                 joystickStrafeAxis = 0, // right is positive
-                                joystickRotationAxis = 5, // right is positive
+                                joystickRotationAxis = 6, // right is positive
                                 joystickSlowButton = 1,
                                 joystickZeroGyroButton = 3, 
                                 joystickMakeXButton = 2, 
@@ -402,9 +402,9 @@ public final class Constants {
 
     public static final class TuningConstants {
         public static final double CANCoder0_zero = 251.98, 
-                                   CANCoder1_zero = 306.38, 
-                                   CANCoder2_zero = 319.16, 
-                                   CANCoder3_zero = 149.94, 
+                                   CANCoder1_zero = 307.88, 
+                                   CANCoder2_zero = 318.25, 
+                                   CANCoder3_zero = 149.85, 
                                    encoder_one_zero = -40.044, 
                                    encoder_two_zero = -305.55;
         
