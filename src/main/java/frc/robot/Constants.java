@@ -147,13 +147,13 @@ public final class Constants {
     }
 
     public static final class AutoBalanceConstants {
-        public static final double drive_speed = 0.0991,
-                                   drive_speed_get_on = 0.4, 
+        public static final double drive_speed = 0.115,
+                                   drive_speed_get_on = 0.35, 
                                    pitch_tolerance = 7, 
-                                   max_linear_acceleration = 2.0,
+                                   max_linear_acceleration = 1.991,
                                    ratio = 1.4, 
                                    min_time = 0.5, 
-                                   mt2 = 0.9, 
+                                   mt2 = 1.2, 
                                    min_deriv = 0.025;
     }
 
@@ -167,13 +167,13 @@ public final class Constants {
     
         public static final boolean claw_motor_brake = true;
         
-        public static final int claw_motor_max_current = 35;
+        public static final int claw_motor_max_current = 25;
 
         /* Variables */
         
-        public static final double intake_power = -1, // intake with negative power
+        public static final double intake_power = -0.7, // intake with negative power
                                    outtake_power = 0.3,
-                                   passive_voltage = -1.5;
+                                   passive_voltage = -1.3;
     }
 
     public static final class DoubleArmConstants {
@@ -263,8 +263,10 @@ public final class Constants {
     }
     
     public static final class IntakeConstants {
-        public static final double claw_current_limit = 30, 
-                                   outtake_time = 0.5;
+        public static final double claw_intake_current_limit = 20, 
+                                   outtake_time = 0.5,
+                                   mitstcmcautmswttmcl = 1.5; // minimum intake time so the claw motor can accelerate up to mac speed without triggering the max current
+                                   // check what leMaxCurrent should be
     }
 
     public static final class SwerveConstants {
@@ -399,11 +401,11 @@ public final class Constants {
     }
 
     public static final class TuningConstants {
-        public static final double CANCoder0_zero = 260.2, 
-                                   CANCoder1_zero = 317.0991, 
-                                   CANCoder2_zero = 317.63, 
-                                   CANCoder3_zero = 167.9, 
-                                   encoder_one_zero = -92.73, 
+        public static final double CANCoder0_zero = 251.98, 
+                                   CANCoder1_zero = 306.38, 
+                                   CANCoder2_zero = 319.16, 
+                                   CANCoder3_zero = 149.94, 
+                                   encoder_one_zero = -40.044, 
                                    encoder_two_zero = -305.55;
         
         /* The angles we want to go to - NOT the x and y */
@@ -411,7 +413,7 @@ public final class Constants {
                                      midPositionAngles = {-62.6, 65.0}, 
                                      lowPositionAngles = {-64, 0}, 
 
-                                     intakeUpperAngles = {-106.5, 40.6}, 
+                                     intakeUpperAngles = {-107.6, 39.1}, 
                                      intakeLowerAngles = {-78, -26}, 
 
                                      idlePositionAngles = {-115, 42}; // TODO Make X cancel arm pid for if its swinging crazy
@@ -422,13 +424,14 @@ public final class Constants {
                                      coneIntakeLowerAngles = {-83.8, -32.3};
 
         public static final double[] cubeTopPositionAngles = {2.7, 19.0}, 
-                                     cubeMidPositionAngles = {-32.6, 8.4}, 
+                                     cubeMidPositionAngles = {-67.3, 37.7}, 
                                      cubeLowPositionAngles = {-64, 0}, 
                                      cubeIntakeLowerAngles = {-82.3, -25}; 
 
         public static final boolean fancy_drive = true, 
                                     genericHID_drive = true,
-                                    testmode = true;
+                                    testmode = true,
+                                    onlySingle = true;
         
         /* Swerve Drive Constants */
 

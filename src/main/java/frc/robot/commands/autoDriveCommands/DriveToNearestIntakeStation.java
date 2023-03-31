@@ -58,12 +58,13 @@ public class DriveToNearestIntakeStation extends ConditionalCommand {
                 new InstantCommand(), 
                 () -> {
                     Pose2d adjustedPose = Limelight.adjustPoseForSide(swerve.getPose());
-                    return (adjustedPose.getX() > 11 && adjustedPose.getY() > 5.8);
+                    return (adjustedPose.getX() > 10.3 && adjustedPose.getY() > 5.8);
                 }
             ), 
             () -> {
                 Pose2d adjustedPose = Limelight.adjustPoseForSide(swerve.getPose());
-                if (adjustedPose.getX() < 11 || adjustedPose.getY() < 5.8) return false; // out of bounds
+                if (adjustedPose.getX() < 10.3 || adjustedPose.getY() < 5.8) return false; // out of bounds
+                if (onlySingle) return false;
                 if (Math.abs(adjustedPose.getRotation().getDegrees()) < 15) return false; // we're not facing in that direction so probably single
                 if (adjustedPose.getX() < 14.5) return false; // we're not close enough so probably single
                 return true;

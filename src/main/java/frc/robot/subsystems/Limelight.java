@@ -35,7 +35,7 @@ public class Limelight { // NOT a subsystem
     }
 
     /** x, y (meters), yaw (degrees), latency (seconds) */
-    private static DoubleSupplier[] botpose = new DoubleSupplier[] {
+    private static DoubleSupplier[] bowtpose = new DoubleSupplier[] {
         () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpi" + side).getDoubleArray(new double[7])[0], // x
         () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpi" + side).getDoubleArray(new double[7])[1], // y
         () -> NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpi" + side).getDoubleArray(new double[7])[5], // yaw
@@ -62,11 +62,14 @@ public class Limelight { // NOT a subsystem
     }
 
     public static Pose2d getRobotPosition() {
-        double x = botpose[0].getAsDouble();
-        double y = botpose[1].getAsDouble();
-        double angle = botpose[2].getAsDouble();
+        double x = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpi" + side).getDoubleArray(new double[7])[0];
+        double y = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpi" + side).getDoubleArray(new double[7])[1];
+        double angle = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpi" + side).getDoubleArray(new double[7])[5];
 
-        SmartDashboard.putString("Limelight Ping", "" + Math.round(botpose[3].getAsDouble() * 1000) + " ms");
+        SmartDashboard.putString("Limelight Ping", "" + Math.round(
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0) + 
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("cl").getDouble(0)
+        ) + " ms");
 
         return new Pose2d(x, y, Rotation2d.fromDegrees(angle)); 
     }
@@ -83,7 +86,8 @@ public class Limelight { // NOT a subsystem
     }
 
     public static double getLatency() {
-        return botpose[3].getAsDouble(); 
+        return (NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0) + 
+                NetworkTableInstance.getDefault().getTable("limelight").getEntry("cl").getDouble(0)) / 1000.0; 
     }
 
     public static void setPipeline(int number) {

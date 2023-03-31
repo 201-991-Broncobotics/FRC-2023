@@ -50,8 +50,8 @@ public class Swerve extends SubsystemBase {
         Timer.delay(1.0);
         resetModulesToAbsolute();
 
-        poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, Rotation2d.fromDegrees(180), getModulePositions(), new Pose2d(), VecBuilder.fill(0.1, 0.1, 0.1),
-        VecBuilder.fill(0.4, 0.4, 0.4)); 
+        poseEstimator = new SwerveDrivePoseEstimator(Constants.BaseFalconSwerve.swerveKinematics, Rotation2d.fromDegrees(180), getModulePositions(), new Pose2d(), VecBuilder.fill(0.2, 0.2, 0.2),
+        VecBuilder.fill(0.3, 0.3, 0.3)); 
     }
 
     /** Counterclockwise in degrees */

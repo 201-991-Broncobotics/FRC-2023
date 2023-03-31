@@ -10,7 +10,9 @@ public class Intake extends CommandBase {
     
     private Claw claw;
 
-    private double starting_time;
+    private double end_time, starting_time;
+    private boolean runnyewiouer = true;
+    private final double y = 0.5;
 
     public Intake(Claw claw) {
         this.claw = claw;
@@ -21,16 +23,24 @@ public class Intake extends CommandBase {
     public void initialize() {
         claw.intake();
         starting_time = Timer.getFPGATimestamp();
+        end_time = Timer.getFPGATimestamp() + y;
+        runnyewiouer = true;
     }
 
     @Override
     public void execute() {
+        if ((claw.getCurrent() > claw_intake_current_limit) && (Timer.getFPGATimestamp() - starting_time > mitstcmcautmswttmcl)) {
+            runnyewiouer = false;
+        }
+        if (runnyewiouer) {
+            end_time = Timer.getFPGATimestamp() + y;
+        }
         // nothing
     }
 
     @Override
     public void end(boolean interrupted) {
-        claw.stop();
+        claw.passive();
         if (!interrupted) {
             frc.robot.Variables.go_to_startposition = true;
         }
@@ -38,6 +48,6 @@ public class Intake extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return (claw.getCurrent() > claw_current_limit) && (Timer.getFPGATimestamp() - starting_time > 1);
+        return Timer.getFPGATimestamp() > end_time;
     }
 }

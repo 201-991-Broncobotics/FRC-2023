@@ -51,14 +51,14 @@ public class Autonomous {
                             new SetProximalConstantDistal(doubleArm, -123), 
                             new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                             new Drive(swerve, 0.32, 0.4), 
-                            new AutonomousOuttake(swerve, doubleArm, claw),
+                            new AutonomousOuttake(swerve, doubleArm, claw), /*
                             new ParallelCommandGroup(
                                 new Wait(5), 
                                 new InstantCommand(() -> swerve.drive(new Translation2d(-0.35, 0).times(Constants.BaseFalconSwerve.maxSpeed), 0, false, false, false)), 
                                 new SetArmPosition(doubleArm, idlePositionAngles)
                             ), 
                             new InstantCommand(swerve::brake), 
-                            new Turn(swerve, 180),
+                            new Turn(swerve, 180), */
                             new AutoBalance(swerve, doubleArm)
                         ));
                         
@@ -67,14 +67,14 @@ public class Autonomous {
                             new SetProximalConstantDistal(doubleArm, -123), 
                             new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                             new Drive(swerve, 0.32, 0.4), 
-                            new AutonomousOuttake(swerve, doubleArm, claw),
+                            new AutonomousOuttake(swerve, doubleArm, claw), /*
                             new ParallelCommandGroup(
                                 new Wait(5), 
                                 new InstantCommand(() -> swerve.drive(new Translation2d(-0.35, 0).times(Constants.BaseFalconSwerve.maxSpeed), 0, false, false, false)), 
                                 new SetArmPosition(doubleArm, idlePositionAngles)
                             ), 
                             new InstantCommand(swerve::brake), 
-                            new Turn(swerve, 180),
+                            new Turn(swerve, 180), */
                             new AutoBalance(swerve, doubleArm)
                         ));
                     } else {

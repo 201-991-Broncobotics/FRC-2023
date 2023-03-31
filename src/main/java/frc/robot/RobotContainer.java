@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.*;
 import frc.robot.commands.autoDriveCommands.DriveToNearestCone;
+import frc.robot.commands.autoDriveCommands.DriveToNearestIntakeStation;
 import frc.robot.commands.defaultCommands.*;
 import frc.robot.commands.setArmPosition.*;
 import frc.robot.commands.setClawState.*;
@@ -163,7 +164,7 @@ public class RobotContainer {
         makeX.onTrue(new Brake(s_Swerve));
 
         resetArmEncoders.toggleOnTrue(new InstantCommand(() -> doubleArm.stopUsingEncoders()));
-        autoConeOuttake.toggleOnTrue(new DriveToNearestCone(s_Swerve, doubleArm, claw));
+        // autoConeOuttake.toggleOnTrue(new DriveToNearestIntakeStation(s_Swerve, doubleArm, claw));
         
         /* Operator Buttons */
         topGoal.toggleOnTrue(new ConditionalCommand(new SetArmPosition(doubleArm, coneTopPositionAngles), new SetArmPosition(doubleArm, cubeTopPositionAngles), doubleArm.isConeMode));
