@@ -160,6 +160,8 @@ public class PIDTalon {
         double power = pidCalculator.update(positionSup.getAsDouble()) * multiplier;
         power = Math.max(prevPower - maxPercentOutputPerSecond * deltaTime, Math.min(prevPower + maxPercentOutputPerSecond * deltaTime, power));
         prevPower = power;
+        if (power < -0.95) power = -0.95;
+        if (power > 0.95) power = 0.95;
 
         motor.set(ControlMode.PercentOutput, power);
     }

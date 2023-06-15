@@ -42,7 +42,9 @@ public class Intake extends CommandBase {
     public void end(boolean interrupted) {
         claw.passive();
         if (!interrupted) {
-            frc.robot.Variables.go_to_startposition = true;
+            // frc.robot.Variables.go_to_startposition = true;
+        } else {
+            
         }
     }
     

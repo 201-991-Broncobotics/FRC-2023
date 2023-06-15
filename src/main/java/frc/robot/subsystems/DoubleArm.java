@@ -109,18 +109,20 @@ public class DoubleArm extends SubsystemBase {
     public void pidPowerKeepMaxDistal() {
 
         double mftfmbtdaiwtmdoftoabtc = 1;
+        double dp = 1;
         if (Math.min(Math.min(distal_max_angle, 90), getCurrentArmAngles()[0] + 180 - min_difference) < Math.min(distal_max_angle, 90)) {
             if (proximal.getTarget() > getCurrentArmAngles()[0]) {
                 mftfmbtdaiwtmdoftoabtc = mftfmitdaiwtmdoftoabtc;
             } else {
                 mftfmbtdaiwtmdoftoabtc = mftfmitdaiwtmdoftoabtcaiicgd;
+                dp = 2;
             }
             distal.setTarget(Math.min(proximal.getTarget() + 180 - min_difference, getCurrentArmAngles()[0] + 180 - min_difference));
         } else {
             distal.setTarget(Math.min(distal_max_angle, 90));
         }
         proximal.pidPower(mftfmbtdaiwtmdoftoabtc);
-        distal.pidPower();
+        distal.pidPower(dp);
     }
 
     public void brake() {

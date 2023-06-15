@@ -48,6 +48,7 @@ public class Autonomous {
                     if (i.equals("Medium")) {
                         autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
                             blueCommands[0], 
+                            new InstantCommand(claw::passive), 
                             new SetProximalConstantDistal(doubleArm, -123), 
                             new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                             new Drive(swerve, 0.32, 0.4), 
@@ -64,6 +65,7 @@ public class Autonomous {
                         
                         autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
                             redCommands[0], 
+                            new InstantCommand(claw::passive), 
                             new SetProximalConstantDistal(doubleArm, -123), 
                             new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                             new Drive(swerve, 0.32, 0.4), 
@@ -80,6 +82,7 @@ public class Autonomous {
                     } else {
                         autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
                             blueCommands[0], 
+                            new InstantCommand(claw::passive), 
                             new SetProximalConstantDistal(doubleArm, -123), 
                             new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                             new Drive(swerve, 0.32, 0.4), 
@@ -92,6 +95,7 @@ public class Autonomous {
                         ));
                         autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
                             redCommands[0], 
+                            new InstantCommand(claw::passive), 
                             new SetProximalConstantDistal(doubleArm, -123), 
                             new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                             new Drive(swerve, 0.32, 0.4), 
@@ -106,6 +110,7 @@ public class Autonomous {
                 } else if (j.equals("Double")) {
                     autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
                         blueCommands[0], 
+                        new InstantCommand(claw::passive), 
                         new SetProximalConstantDistal(doubleArm, -123), 
                         new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new Drive(swerve, 0.32, 0.4), 
@@ -117,7 +122,7 @@ public class Autonomous {
                         ),
                         new ParallelCommandGroup(
                             blueCommands[2], 
-                            new SetArmPosition(doubleArm, cubeTopPositionAngles)
+                            new SetArmPosition(doubleArm, cubeMidPositionAngles)
                         ), 
                         new AutonomousOuttake(swerve, doubleArm, claw), // make it not drive forward???
                         new Drive(swerve, 0.32, -0.4), 
@@ -125,6 +130,7 @@ public class Autonomous {
                     ));
                     autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
                         redCommands[0], 
+                        new InstantCommand(claw::passive), 
                         new SetProximalConstantDistal(doubleArm, -123), 
                         new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new Drive(swerve, 0.32, 0.4), 
@@ -136,7 +142,7 @@ public class Autonomous {
                         ),
                         new ParallelCommandGroup(
                             redCommands[2], 
-                            new SetArmPosition(doubleArm, cubeTopPositionAngles)
+                            new SetArmPosition(doubleArm, cubeMidPositionAngles)
                         ), 
                         new AutonomousOuttake(swerve, doubleArm, claw),
                         new Drive(swerve, 0.32, -0.4), 
@@ -145,6 +151,7 @@ public class Autonomous {
                 } else {
                     autonomousCommands.putIfAbsent("Blue" + i + j, new AutonomousSequentialCommandGroup(
                         blueCommands[0], 
+                        new InstantCommand(claw::passive), 
                         new SetProximalConstantDistal(doubleArm, -123), 
                         new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new Drive(swerve, 0.32, 0.4), 
@@ -156,6 +163,7 @@ public class Autonomous {
                     ));
                     autonomousCommands.putIfAbsent("Red" + i + j, new AutonomousSequentialCommandGroup(
                         redCommands[0], 
+                        new InstantCommand(claw::passive), 
                         new SetProximalConstantDistal(doubleArm, -123), 
                         new SetArmPosition(doubleArm, cubeTopPositionAngles), 
                         new Drive(swerve, 0.32, 0.4), 

@@ -46,6 +46,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void passive() {
+        SmartDashboard.putString("claw state", "stopped"); 
         claw_motor.setVoltage(passive_voltage);
     }
 

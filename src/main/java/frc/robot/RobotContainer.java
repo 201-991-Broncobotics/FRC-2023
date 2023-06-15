@@ -167,16 +167,16 @@ public class RobotContainer {
         // autoConeOuttake.toggleOnTrue(new DriveToNearestIntakeStation(s_Swerve, doubleArm, claw));
         
         /* Operator Buttons */
-        topGoal.toggleOnTrue(new ConditionalCommand(new SetArmPosition(doubleArm, coneTopPositionAngles), new SetArmPosition(doubleArm, cubeTopPositionAngles), doubleArm.isConeMode));
-        midGoal.toggleOnTrue(new ConditionalCommand(new SetArmPosition(doubleArm, coneMidPositionAngles), new SetArmPosition(doubleArm, cubeMidPositionAngles), doubleArm.isConeMode));
-        lowGoal.toggleOnTrue(new ConditionalCommand(new SetArmPosition(doubleArm, coneLowPositionAngles), new SetArmPosition(doubleArm, cubeLowPositionAngles), doubleArm.isConeMode));
+        topGoal.toggleOnTrue(new ConditionalCommand(new SetArmPosition(doubleArm, coneTopPositionAngles), new SetArmPosition(doubleArm, cubeTopPositionAngles), DoubleArm.isConeMode));
+        midGoal.toggleOnTrue(new ConditionalCommand(new SetArmPosition(doubleArm, coneMidPositionAngles), new SetArmPosition(doubleArm, cubeMidPositionAngles), DoubleArm.isConeMode));
+        lowGoal.toggleOnTrue(new ConditionalCommand(new SetArmPosition(doubleArm, coneLowPositionAngles), new SetArmPosition(doubleArm, cubeLowPositionAngles), DoubleArm.isConeMode));
         idle.toggleOnTrue(new SetArmPosition(doubleArm, idlePositionAngles));
 
         intakeUpper.toggleOnTrue(new SetArmPosition(doubleArm, intakeUpperAngles));
-        intakeLower.toggleOnTrue(new ConditionalCommand(new SetArmPosition(doubleArm, coneIntakeLowerAngles), new SetArmPosition(doubleArm, cubeIntakeLowerAngles), doubleArm.isConeMode));
+        intakeLower.toggleOnTrue(new ConditionalCommand(new SetArmPosition(doubleArm, coneIntakeLowerAngles), new SetArmPosition(doubleArm, cubeIntakeLowerAngles), DoubleArm.isConeMode));
 
-        cubeMode.toggleOnTrue(new InstantCommand(() -> doubleArm.setToCubeMode()));
-        coneMode.toggleOnTrue(new InstantCommand(() -> doubleArm.setToConeMode()));
+        cubeMode.toggleOnTrue(new InstantCommand(() -> DoubleArm.setToCubeMode()));
+        coneMode.toggleOnTrue(new InstantCommand(() -> DoubleArm.setToConeMode()));
 
         stopArmCommands.onTrue(new TerminateArmCommands(doubleArm));
 

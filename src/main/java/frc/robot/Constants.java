@@ -171,7 +171,7 @@ public final class Constants {
 
         /* Variables */
         
-        public static final double intake_power = -0.7, // intake with negative power
+        public static final double intake_power = -0.5, // intake with negative power
                                    outtake_power = 0.3,
                                    passive_voltage = -1.1;
     }
@@ -326,7 +326,7 @@ public final class Constants {
 
                                 joystickTranslationAxis = 1, // backward is positive
                                 joystickStrafeAxis = 0, // right is positive
-                                joystickRotationAxis = 6, // right is positive
+                                joystickRotationAxis = 5, // right is positive
                                 joystickSlowButton = 1,
                                 joystickZeroGyroButton = 3, 
                                 joystickMakeXButton = 2, 
@@ -401,12 +401,12 @@ public final class Constants {
     }
 
     public static final class TuningConstants {
-        public static final double CANCoder0_zero = 251.98, 
-                                   CANCoder1_zero = 307.88, 
-                                   CANCoder2_zero = 318.25, 
-                                   CANCoder3_zero = 149.85, 
-                                   encoder_one_zero = -40.044, 
-                                   encoder_two_zero = -305.55;
+        public static final double CANCoder0_zero = 250.75, 
+                                   CANCoder1_zero = 326.51, 
+                                   CANCoder2_zero = 318.16, 
+                                   CANCoder3_zero = 137.98, 
+                                   encoder_one_zero = -39.6, 
+                                   encoder_two_zero = -302.60;
         
         /* The angles we want to go to - NOT the x and y */
         public static final double[] topPositionAngles = {-11.6, 40.991}, 
@@ -416,17 +416,17 @@ public final class Constants {
                                      intakeUpperAngles = {-107.6, 39.1}, 
                                      intakeLowerAngles = {-78, -26}, 
 
-                                     idlePositionAngles = {-115, 42}; // TODO Make X cancel arm pid for if its swinging crazy
+                                     idlePositionAngles = {-115, 42};
 
         public static final double[] coneTopPositionAngles = {3.3, 41.0}, 
-                                     coneMidPositionAngles = {-62.6, 65.0}, 
+                                     coneMidPositionAngles = {-45, 66.0}, 
                                      coneLowPositionAngles = {-64, 0}, 
                                      coneIntakeLowerAngles = {-83.8, -32.3};
 
         public static final double[] cubeTopPositionAngles = {2.7, 19.0}, 
                                      cubeMidPositionAngles = {-67.3, 37.7}, 
                                      cubeLowPositionAngles = {-64, 0}, 
-                                     cubeIntakeLowerAngles = {-82.3, -25}; 
+                                     cubeIntakeLowerAngles = {-83, -17}; 
 
         public static final boolean fancy_drive = true, 
                                     genericHID_drive = true,
